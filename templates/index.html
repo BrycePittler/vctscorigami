@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Valorant Scorigami</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            margin: 0; /* Remove default body margin */
+        }
+        h1 { color: #e0e0e0; }
+        a { color: #4dabf7; } /* Link color */
+        a:hover { color: #74c0fc; } /* Link hover */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px;
+        }
+        .grid-wrapper {
+            max-width: 800px; /* Fit grid within typical screens */
+            margin-right: 20px;
+        }
+        .tile {
+            width: 15px; /* Reduced tile size */
+            height: 15px;
+            background: #333; /* Dark gray for empty tiles */
+            border: 1px solid #555; /* Subtle border */
+            position: relative;
+            cursor: pointer;
+            box-sizing: border-box; /* Ensure borders don't affect size */
+        }
+        .tile:hover {
+            border: 2px solid #4dabf7; /* Blue border on hover */
+        }
+        .tile.active .tooltip {
+            visibility: visible; /* Show tooltip when tile is clicked */
+        }
+        .tile.highlight {
+            background: #444; /* Highlight for row/column */
+            border: 1px solid #666;
+        }
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            background: #333; /* Dark tooltip */
+            color: #e0e0e0; /* Light text */
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px; /* Smaller for smaller grid */
+            white-space: pre-wrap;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px; /* Reduced width for smaller grid */
+            border: 1px solid #555;
+        }
+        .axis-label {
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px; /* Smaller for smaller grid */
+            line-height: 15px; /* Match tile height */
+            height: 15px; /* Match tile height */
+            width: 15px; /* Match tile width for x-axis */
+            color: #e0e0e0; /* Light text */
+            box-sizing: border-box;
+        }
+        .axis-label.y-label {
+            width: 25px; /* Slightly smaller for y-axis */
+            text-align: right;
+            padding-right: 5px; /* Space from grid */
+        }
+        .axis-label.highlight {
+            background: #444; /* Highlight for axis labels */
+        }
+        .y-axis {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 5px; /* Tight alignment */
+        }
+        .x-axis {
+            display: flex;
+            justify-content: space-between;
+        }
+        .leaderboard {
+            width: 200px;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #555; /* Subtle border */
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background: #2a2a2a; /* Dark background */
+        }
+        .leaderboard h2 {
+            font-size: 16px;
+            margin: 0 0 10px 0;
+            color: #e0e0e0;
+        }
+        .leaderboard ul {
+            list-style: none;
+            padding: 0;
+        }
+        .leaderboard li {
+            margin: 5px 0;
+            color: #d0d0d0;
+        }
+        .dropdowns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 10px;
+        }
+        select {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        select:focus {
+            outline: none;
+            border-color: #4dabf7;
+        }
+    </style>
+</head>
+<body>
+    <h1>VCT Scorigami</h1>
+
+    <div class="dropdowns">
+        <div>
+            <label for="player-select">Select Player: </label>
+            <select id="player-select">
+                <option value="all" {% if selected_player == 'all' %}selected{% endif %}>All Players</option>
+                {% for p in unique_players %}
+                    <option value="{{ p.player }}" {% if selected_player == p.player %}selected{% endif %}>{{ p.player }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="tournament-select">Select Tournament: </label>
+            <select id="tournament-select">
+                <option value="all" {% if selected_tournament == 'all' %}selected{% endif %}>All Tournaments</option>
+                {% for t in unique_tournaments %}
+                    <option value="{{ t }}" {% if selected_tournament == t %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid-wrapper">
+            <div style="display: flex;">
+                <div class="y-axis">
+                    <div class="axis-label y-label">Kills</div>
+                    {% for k in range(50, -1, -1) %}
+                        <div class="axis-label y-label" data-kills="{{ k }}">{{ k }}</div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <div style="height: 15px;"></div> <!-- Spacer for no top x-axis, match tile height -->
+                    <div style="display: flex;">
+                        {% for d in range(51) %}
+                            <div style="display: flex; flex-direction: column;">
+                                {% for k in range(50, -1, -1) %}
+                                    {% set key = (k, d) %}
+                                    {% if key in scores %}
+                                        {% set info = scores[key] %}
+                                        {% set count = info['count'] %}
+                                        {% if count == 1 %}
+                                            {% set color = '#28a745' %} <!-- Green for unique -->
+                                        {% else %}
+                                            {% set fraction = (count - 2.0) / (max_count - 1) if max_count > 1 else 0 %}
+                                            {% set hue = (fraction * 180) | round | int %}
+                                            {% set color = 'hsl(' ~ (hue + 210) ~ ', 70%, 60%)' %} <!-- Blue to teal -->
+                                        {% endif %}
+                                        <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}" style="background: {{ color }};">
+                                            <div class="tooltip">
+                                                Kills: {{ k }} | Deaths: {{ d }}<br>
+                                                Occurrences: {{ count }}<br>
+                                                Examples:<br>
+                                                {{ info['details'] | replace('\n', '<br>') | safe }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}"></div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="axis-label x-label" data-deaths="{{ d }}">{{ d }}</div> <!-- X-axis at bottom -->
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="leaderboard">
+                <h2>Tile Leaderboard</h2>
+                <ul>
+                    {% for player in leaderboard_unique %}
+                        <li>{{ player.player }}: {{ player.unique_scores }} Tiles</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="leaderboard">
+                <h2>Scorigami Leaderboard</h2>
+                <ul>
+                    {% for player in leaderboard_exclusive %}
+                        <li>{{ player.player }}: {{ player.exclusive_scores }} Scorigami</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        <div class="leaderboard">
+            <h2>Maps Played Leaderboard</h2>
+            <ul>
+                {% for player in leaderboard_maps_played %}
+                    <li>{{ player.player }}: {{ player.total_matches }} Maps</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="leaderboard">
+            <h2>Scorigami/Map Leaderboard</h2>
+            <ul>
+                {% for player in leaderboard_scorigami_per_match %}
+                    <li>{{ player.player }}: {{ '%.3f' | format(player.scorigami_per_match) }} Scorigami/Map</li>
+                {% endfor %}
+            </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle click to toggle tooltip
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.addEventListener('click', function(e) {
+                // Remove active from all tiles
+                document.querySelectorAll('.tile.active').forEach(t => t.classList.remove('active'));
+                // Toggle active on clicked tile
+                this.classList.toggle('active');
+                // Prevent click from bubbling to document
+                e.stopPropagation();
+            });
+        });
+
+        // Hide tooltip when clicking anywhere else
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('tile')) {
+                document.querySelectorAll('.tile.active').forEach(t => t.classList.remove('active'));
+            }
+        });
+
+        // Handle player dropdown change
+        document.getElementById('player-select').addEventListener('change', function() {
+            const player = this.value;
+            const tournament = document.getElementById('tournament-select').value;
+            window.location.href = '?player=' + encodeURIComponent(player) + '&tournament=' + encodeURIComponent(tournament);
+        });
+
+        // Handle tournament dropdown change
+        document.getElementById('tournament-select').addEventListener('change', function() {
+            const tournament = this.value;
+            const player = document.getElementById('player-select').value;
+            window.location.href = '?player=' + encodeURIComponent(player) + '&tournament=' + encodeURIComponent(tournament);
+        });
+
+        // Handle tile hover for row and column highlighting
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.addEventListener('mouseenter', function() {
+                const kills = this.dataset.kills;
+                const deaths = this.dataset.deaths;
+                // Highlight row (same kills)
+                document.querySelectorAll(`.tile[data-kills="${kills}"]`).forEach(t => t.classList.add('highlight'));
+                // Highlight column (same deaths)
+                document.querySelectorAll(`.tile[data-deaths="${deaths}"]`).forEach(t => t.classList.add('highlight'));
+                // Highlight y-axis label
+                document.querySelector(`.y-label[data-kills="${kills}"]`).classList.add('highlight');
+                // Highlight x-axis label
+                document.querySelector(`.x-label[data-deaths="${deaths}"]`).classList.add('highlight');
+            });
+            tile.addEventListener('mouseleave', function() {
+                // Remove highlights
+                document.querySelectorAll('.tile.highlight').forEach(t => t.classList.remove('highlight'));
+                document.querySelectorAll('.axis-label.highlight').forEach(l => l.classList.remove('highlight'));
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fce02ef815f4ca',t:'MTc1Nzk4OTEzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9803b20e09280570',t:'MTc1ODA2MDY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

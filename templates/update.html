@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Scorigami Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            margin: 0; /* Remove default body margin */
+        }
+        h1 { color: #e0e0e0; }
+        a { color: #4dabf7; } /* Link color */
+        a:hover { color: #74c0fc; } /* Link hover */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px;
+            gap: 20px; /* Space between grid and form */
+        }
+        .grid-wrapper {
+            max-width: 800px; /* Fit grid within typical screens */
+        }
+        .tile {
+            width: 15px; /* Tile size */
+            height: 15px;
+            background: #333; /* Dark gray for empty tiles */
+            border: 1px solid #555; /* Subtle border */
+            position: relative;
+            cursor: pointer;
+            box-sizing: border-box; /* Ensure borders don't affect size */
+        }
+        .tile:hover {
+            border: 2px solid #4dabf7; /* Blue border on hover */
+        }
+        .tile.highlight {
+            background: #444; /* Highlight for row/column */
+            border: 1px solid #666;
+        }
+        .axis-label {
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px; /* Smaller for smaller grid */
+            line-height: 15px; /* Match tile height */
+            height: 15px; /* Match tile height */
+            width: 15px; /* Match tile width for x-axis */
+            color: #e0e0e0; /* Light text */
+            box-sizing: border-box;
+        }
+        .axis-label.y-label {
+            width: 25px; /* Slightly smaller for y-axis */
+            text-align: right;
+            padding-right: 5px; /* Space from grid */
+        }
+        .axis-label.highlight {
+            background: #444; /* Highlight for axis labels */
+        }
+        .y-axis {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 5px; /* Tight alignment */
+        }
+        .x-axis {
+            display: flex;
+            justify-content: space-between;
+        }
+        .add-form {
+            background: #2a2a2a; /* Dark background */
+            padding: 15px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            width: 300px; /* Fixed width for form */
+            display: none; /* Hidden initially */
+            align-self: flex-start; /* Align with top of grid */
+        }
+        .add-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #e0e0e0;
+        }
+        .add-form input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            background: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .add-form input[readonly] {
+            background: #444; /* Slightly lighter for readonly */
+        }
+        .add-form button {
+            padding: 10px 20px;
+            background: #4dabf7;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-form button:hover {
+            background: #74c0fc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Scorigami Data</h1>
+    <p>X: Deaths (0-50) | Y: Kills (0-50)</p>
+    <a href="/">Back to Main Page</a>
+
+    <div class="container">
+        <div class="grid-wrapper">
+            <div style="display: flex;">
+                <div class="y-axis">
+                    <div class="axis-label y-label">Kills</div>
+                    {% for k in range(50, -1, -1) %}
+                        <div class="axis-label y-label" data-kills="{{ k }}">{{ k }}</div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <div style="height: 15px;"></div> <!-- Spacer for no top x-axis -->
+                    <div style="display: flex;">
+                        {% for d in range(51) %}
+                            <div style="display: flex; flex-direction: column;">
+                                {% for k in range(50, -1, -1) %}
+                                    {% set key = (k, d) %}
+                                    <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}"
+                                         {% if key in scores %}
+                                             {% set info = scores[key] %}
+                                             {% set count = info['count'] %}
+                                             {% if count == 1 %}
+                                                 style="background: #28a745;"
+                                             {% else %}
+                                                 {% set fraction = (count - 2.0) / (max_count - 1) if max_count > 1 else 0 %}
+                                                 {% set hue = (fraction * 180) | round | int %}
+                                                 style="background: hsl({{ hue + 210 }}, 70%, 60%);"
+                                             {% endif %}
+                                         {% else %}
+                                             style="background: #333;"
+                                         {% endif %}>
+                                    </div>
+                                {% endfor %}
+                                <div class="axis-label x-label" data-deaths="{{ d }}">{{ d }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-form" id="add-form">
+            <form method="POST" action="/update">
+                <label for="tournament">Tournament:</label>
+                <input type="text" id="tournament" name="tournament" value="{{ tournament }}" required>
+
+                <label for="stage">Stage:</label>
+                <input type="text" id="stage" name="stage" value="{{ stage }}" required>
+
+                <label for="match_type">Match Type:</label>
+                <input type="text" id="match_type" name="match_type" value="{{ match_type }}" required>
+
+                <label for="match_name">Match Name:</label>
+                <input type="text" id="match_name" name="match_name" value="{{ match_name }}" required>
+
+                <label for="map">Map:</label>
+                <input type="text" id="map" name="map" value="{{ map_name }}" required>
+
+                <label for="player">Player:</label>
+                <input type="text" id="player" name="player" required>
+
+                <label for="kills">Kills:</label>
+                <input type="number" id="kills" name="kills" readonly>
+
+                <label for="deaths">Deaths:</label>
+                <input type="number" id="deaths" name="deaths" readonly>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Handle tile click to show form and pre-fill kills/deaths
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.addEventListener('click', function(e) {
+                const kills = this.dataset.kills;
+                const deaths = this.dataset.deaths;
+                // Pre-fill kills and deaths
+                document.getElementById('kills').value = kills;
+                document.getElementById('deaths').value = deaths;
+                // Show the form
+                document.getElementById('add-form').style.display = 'block';
+                // Prevent bubbling
+                e.stopPropagation();
+            });
+        });
+
+        // Handle hover for row and column highlighting
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.addEventListener('mouseenter', function() {
+                const kills = this.dataset.kills;
+                const deaths = this.dataset.deaths;
+                // Highlight row (same kills)
+                document.querySelectorAll(`.tile[data-kills="${kills}"]`).forEach(t => t.classList.add('highlight'));
+                // Highlight column (same deaths)
+                document.querySelectorAll(`.tile[data-deaths="${deaths}"]`).forEach(t => t.classList.add('highlight'));
+                // Highlight y-axis label
+                document.querySelector(`.y-label[data-kills="${kills}"]`).classList.add('highlight');
+                // Highlight x-axis label
+                document.querySelector(`.x-label[data-deaths="${deaths}"]`).classList.add('highlight');
+            });
+            tile.addEventListener('mouseleave', function() {
+                // Remove highlights
+                document.querySelectorAll('.tile.highlight').forEach(t => t.classList.remove('highlight'));
+                document.querySelectorAll('.axis-label.highlight').forEach(l => l.classList.remove('highlight'));
+            });
+        });
+
+        // Hide form when clicking elsewhere
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('tile') && !e.target.closest('.add-form')) {
+                document.getElementById('add-form').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
