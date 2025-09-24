@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Valorant Scorigami</title>
+    <title>Valorant Scorigami - COWSRCOOL</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,7 +85,8 @@
         }
         .x-axis {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; /* Corrected: align to the start */
+            margin-left: 25px; /* Aligns with the y-axis width */
         }
         .leaderboard {
             width: 200px;
@@ -126,10 +127,41 @@
             outline: none;
             border-color: #4dabf7;
         }
+        /* New CSS for scrollable leaderboards */
+        .scrollable-list {
+            max-height: 150px;
+            overflow-y: scroll;
+            padding-right: 5px;
+        }
+        .scrollable-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scrollable-list::-webkit-scrollbar-track {
+            background: #3a3a3a;
+            border-radius: 10px;
+        }
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+            border: 2px solid #3a3a3a;
+        }
+        .total-stats {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border-radius: 4px;
+            border: 1px solid #555;
+            display: inline-block;
+        }
+        .grid-and-labels {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
-    <h1>VCT Scorigami</h1>
+    <h1>VCT Scorigami (2023-2025)</h1>
 
     <div class="dropdowns">
         <div>
@@ -154,83 +186,106 @@
 
     <div class="container">
         <div class="grid-wrapper">
-            <div style="display: flex;">
-                <div class="y-axis">
-                    <div class="axis-label y-label">Kills</div>
-                    {% for k in range(50, -1, -1) %}
-                        <div class="axis-label y-label" data-kills="{{ k }}">{{ k }}</div>
-                    {% endfor %}
-                </div>
-                <div>
-                    <div style="height: 15px;"></div> <!-- Spacer for no top x-axis, match tile height -->
-                    <div style="display: flex;">
-                        {% for d in range(51) %}
-                            <div style="display: flex; flex-direction: column;">
-                                {% for k in range(50, -1, -1) %}
-                                    {% set key = (k, d) %}
-                                    {% if key in scores %}
-                                        {% set info = scores[key] %}
-                                        {% set count = info['count'] %}
-                                        {% if count == 1 %}
-                                            {% set color = '#28a745' %} <!-- Green for unique -->
-                                        {% else %}
-                                            {% set fraction = (count - 2.0) / (max_count - 1) if max_count > 1 else 0 %}
-                                            {% set hue = (fraction * 180) | round | int %}
-                                            {% set color = 'hsl(' ~ (hue + 210) ~ ', 70%, 60%)' %} <!-- Blue to teal -->
-                                        {% endif %}
-                                        <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}" style="background: {{ color }};">
-                                            <div class="tooltip">
-                                                Kills: {{ k }} | Deaths: {{ d }}<br>
-                                                Occurrences: {{ count }}<br>
-                                                Examples:<br>
-                                                {{ info['details'] | replace('\n', '<br>') | safe }}
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}"></div>
-                                    {% endif %}
-                                {% endfor %}
-                                <div class="axis-label x-label" data-deaths="{{ d }}">{{ d }}</div> <!-- X-axis at bottom -->
-                            </div>
+            <div class="grid-and-labels">
+                <div style="display: flex;">
+                    <div class="y-axis">
+                        <div class="axis-label">Kills</div>
+                        {% for k in range(50, -1, -1) %}
+                            <div class="axis-label y-label" data-kills="{{ k }}">{{ k }}</div>
                         {% endfor %}
                     </div>
+                    <div>
+                        <div style="height: 15px;"></div>
+                        <div style="display: flex;">
+                            {% for d in range(51) %}
+                                <div style="display: flex; flex-direction: column;">
+                                    {% for k in range(50, -1, -1) %}
+                                        {% set key = (k, d) %}
+                                        {% if key in scores %}
+                                            {% set info = scores[key] %}
+                                            {% set count = info['count'] %}
+                                            {% set color = '' %}
+                                            
+                                            {# Check if this tile is an overall scorigami #}
+                                            {% if (k, d) in overall_scorigamis %}
+                                                {% set color = '#28a745' %}
+                                            {% else %}
+                                                {% set fraction = (count - 1.0) / (max_count - 1) if max_count > 1 else 0 %}
+                                                {% set hue = (fraction * 180) | round | int %}
+                                                {% set color = 'hsl(' ~ (hue + 210) ~ ', 70%, 60%)' %}
+                                            {% endif %}
+                                            
+                                            <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}" style="background: {{ color }};">
+                                                <div class="tooltip">
+                                                    Kills: {{ k }} | Deaths: {{ d }}<br>
+                                                    Occurrences: {{ count }}<br>
+                                                    Examples:<br>
+                                                    {{ info['details'] | replace('\n', '<br>') | safe }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}"></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
+                <div class="x-axis">
+                    {% for d in range(51) %}
+                        <div class="axis-label x-label" data-deaths="{{ d }}">{{ d }}</div>
+                    {% endfor %}
+                </div>
+                <div class="axis-label" style="margin-top: 10px;">Deaths</div>
+            </div>
+            <div class="total-stats">
+                <strong>Total Kills:</strong> {{ total_kills }}
+                <strong>Total Deaths:</strong> {{ total_deaths }}
             </div>
         </div>
 
         <div>
             <div class="leaderboard">
                 <h2>Tile Leaderboard</h2>
-                <ul>
-                    {% for player in leaderboard_unique %}
-                        <li>{{ player.player }}: {{ player.unique_scores }} Tiles</li>
-                    {% endfor %}
-                </ul>
+                <div class="scrollable-list">
+                    <ul>
+                        {% for player in leaderboard_unique %}
+                            <li>{{ player.rank }}. {{ player.player }}: {{ player.unique_scores }} Tiles</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="leaderboard">
                 <h2>Scorigami Leaderboard</h2>
-                <ul>
-                    {% for player in leaderboard_exclusive %}
-                        <li>{{ player.player }}: {{ player.exclusive_scores }} Scorigami</li>
-                    {% endfor %}
-                </ul>
+                <div class="scrollable-list">
+                    <ul>
+                        {% for player in leaderboard_exclusive %}
+                            <li>{{ player.rank }}. {{ player.player }}: {{ player.exclusive_scores }} Scorigami</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         <div class="leaderboard">
             <h2>Maps Played Leaderboard</h2>
-            <ul>
-                {% for player in leaderboard_maps_played %}
-                    <li>{{ player.player }}: {{ player.total_matches }} Maps</li>
-                {% endfor %}
-            </ul>
+            <div class="scrollable-list">
+                <ul>
+                    {% for player in leaderboard_maps_played %}
+                        <li>{{ player.rank }}. {{ player.player }}: {{ player.total_matches }} Maps</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
         <div class="leaderboard">
-            <h2>Scorigami/Map Leaderboard</h2>
-            <ul>
-                {% for player in leaderboard_scorigami_per_match %}
-                    <li>{{ player.player }}: {{ '%.3f' | format(player.scorigami_per_match) }} Scorigami/Map</li>
-                {% endfor %}
-            </ul>
+            <h2>Kills - Deaths Leaderboard</h2>
+            <div class="scrollable-list">
+                <ul>
+                    {% for player in leaderboard_kd %}
+                        <li>{{ player.rank }}. {{ player.player }}: {{ player.kill_death_difference }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
             </div>
         </div>
     </div>
@@ -290,5 +345,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fce02ef815f4ca',t:'MTc1Nzk4OTEzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9803b20e09280570',t:'MTc1ODA2MDY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
