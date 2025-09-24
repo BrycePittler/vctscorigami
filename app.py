@@ -210,4 +210,6 @@ def update():
                            kills='',
                            deaths='')
 if __name__ == '__main__':
-    app.run()
+    port = int(os.getenv('PORT', 5000))
+    print(f"Starting Flask on port {port}")
+    app.run(host='0.0.0.0', port=port)
