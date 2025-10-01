@@ -110,8 +110,19 @@ def index():
         ORDER BY kill_death_difference DESC
     ''').fetchall()
 
-    # Get total kills and deaths for all players
-    totals = conn.execute('SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches').fetchone()
+    # Get total kills and deaths based on selected filters
+    query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches'
+    params = []
+    conditions = []
+    if selected_player != 'all':
+        conditions.append('player = ?')
+        params.append(selected_player)
+    if selected_tournament != 'all':
+        conditions.append('description LIKE ?')
+        params.append(f'%{selected_tournament}%')
+    if conditions:
+        query += ' WHERE ' + ' AND '.join(conditions)
+    totals = conn.execute(query, params).fetchone()
     total_kills = totals['total_kills'] if totals and totals['total_kills'] else 0
     total_deaths = totals['total_deaths'] if totals and totals['total_deaths'] else 0
 
