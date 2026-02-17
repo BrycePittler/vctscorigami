@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VCT Scorigami</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #ff4655;
+        }
+        
+        .logout-btn {
+            background: #ff4655;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff4655;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section h2 {
+            margin-bottom: 15px;
+            color: #ff4655;
+            font-size: 18px;
+        }
+        
+        .tournament-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .tournament-card {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tournament-info h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .tournament-info span {
+            color: #aaa;
+            font-size: 12px;
+        }
+        
+        .fetch-btn {
+            background: #ff4655;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .fetch-btn:hover {
+            background: #ff6b6b;
+        }
+        
+        .fetch-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .fetch-all-btn {
+            background: #0f4c75;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .fetch-all-btn:hover {
+            background: #1a6fa3;
+        }
+        
+        .status-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .status-box.success {
+            border-left: 3px solid #00ff00;
+        }
+        
+        .status-box.error {
+            border-left: 3px solid #ff0000;
+        }
+        
+        .recent-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .recent-table th,
+        .recent-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .recent-table th {
+            color: #ff4655;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #ff4655;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .back-link {
+            color: #ff4655;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <a href="/" class="back-link">← Back to Scorigami</a>
+                <h1>Admin Dashboard</h1>
+            </div>
+            <a href="/admin/logout" class="logout-btn">Logout</a>
+        </header>
+        
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.total_matches }}</div>
+                <div class="stat-label">Total Matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.unique_players }}</div>
+                <div class="stat-label">Unique Players</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.available_tournaments|length }}</div>
+                <div class="stat-label">Tracked Tournaments</div>
+            </div>
+        </div>
+        
+        <!-- Fetch Controls -->
+        <div class="section">
+            <h2>Fetch Tournament Data</h2>
+            <p style="color: #aaa; margin-bottom: 15px; font-size: 14px;">
+                Click on individual tournaments to fetch their data, or fetch all at once.
+            </p>
+            
+            <div class="tournament-grid">
+                {% for name, tid in stats.available_tournaments.items() %}
+                <div class="tournament-card">
+                    <div class="tournament-info">
+                        <h3>{{ name }}</h3>
+                        <span>ID: {{ tid }}</span>
+                    </div>
+                    <button class="fetch-btn" onclick="fetchTournament({{ tid }}, '{{ name }}')">
+                        Fetch
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button class="fetch-all-btn" onclick="fetchAllTournaments()">
+                Fetch All Tournaments
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Fetching data... This may take a few minutes.</p>
+            </div>
+            
+            <div class="status-box" id="statusBox" style="display: none;"></div>
+        </div>
+        
+        <!-- Recent Matches -->
+        <div class="section">
+            <h2>Recent Additions</h2>
+            <table class="recent-table">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Map</th>
+                        <th>K/D</th>
+                        <th>Tournament</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in stats.recent_matches[:10] %}
+                    <tr>
+                        <td>{{ match.player }}</td>
+                        <td>{{ match.map }}</td>
+                        <td>{{ match.kills }}/{{ match.deaths }}</td>
+                        <td>{{ match.description[:50] }}...</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #aaa;">
+                            No matches yet. Use the fetch controls above to import data.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        function showStatus(message, isError = false) {
+            const box = document.getElementById('statusBox');
+            box.style.display = 'block';
+            box.textContent = message;
+            box.className = 'status-box ' + (isError ? 'error' : 'success');
+        }
+        
+        async function fetchTournament(tournamentId, tournamentName) {
+            showLoading(true);
+            showStatus(`Fetching ${tournamentName}...`);
+            
+            try {
+                const response = await fetch('/admin/fetch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tournament_id: tournamentId,
+                        tournament_name: tournamentName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus(
+                        `Success!\n` +
+                        `Added: ${data.added} records\n` +
+                        `Skipped (duplicates): ${data.skipped}\n` +
+                        `Failed: ${data.failed}`
+                    );
+                    // Reload to update stats
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showStatus('Error: ' + data.error, true);
+                }
+            } catch (error) {
+                showStatus('Request failed: ' + error.message, true);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function fetchAllTournaments() {
+            if (!confirm('This will fetch data for all tournaments. It may take several minutes. Continue?')) {
+                return;
+            }
+            
+            showLoading(true);
+            showStatus('Fetching all tournaments... This may take a while.');
+            
+            try {
+                const response = await fetch('/admin/fetch-all', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    let details = data.details.map(d => 
+                        `${d.tournament}: ${d.success ? '✓ ' + d.added + ' added' : '✗ ' + d.error}`
+                    ).join('\n');
+                    
+                    showStatus(
+                        `Complete!\n\n` +
+                        `Total Added: ${data.total.added}\n` +
+                        `Total Skipped: ${data.total.skipped}\n\n` +
+                        `Details:\n${details}`
+                    );
+                    setTimeout(() => location.reload(), 3000);
+                } else {
+                    showStatus('Error: ' + data.error, true);
+                }
+            } catch (error) {
+                showStatus('Request failed: ' + error.message, true);
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>

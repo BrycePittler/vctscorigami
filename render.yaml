@@ -1,0 +1,17 @@
+services:
+  # Your existing web service
+  - type: web
+    name: vctscorigami
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    plan: free
+
+  # Add this cron job
+  - type: cron
+    name: vctscorigami-updater
+    env: python
+    schedule: "0 */6 * * *"  # Every 6 hours
+    buildCommand: pip install -r requirements.txt
+    startCommand: python update_matches.py
+    plan: free

@@ -1,0 +1,1212 @@
+2026-02-16 20:23:37,111 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:23:37,115 - INFO - ============================================================
+2026-02-16 20:23:37,115 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:23:37.115277
+2026-02-16 20:23:37,115 - INFO - ============================================================
+2026-02-16 20:23:37,116 - INFO - Database initialized successfully
+2026-02-16 20:23:37,116 - ERROR - Scraper failed: No module named 'data_fetcher'
+2026-02-16 20:24:53,833 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:24:53,838 - INFO - ============================================================
+2026-02-16 20:24:53,838 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:24:53.838018
+2026-02-16 20:24:53,838 - INFO - ============================================================
+2026-02-16 20:24:53,839 - INFO - Database initialized successfully
+2026-02-16 20:24:53,842 - ERROR - Scraper failed: cannot import name 'fetch_and_prepare_for_database' from 'data_fetcher' (C:\Users\Bpitt\Desktop\vctscorigami\data_fetcher.py)
+2026-02-16 20:29:17,372 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:29:17,376 - INFO - ============================================================
+2026-02-16 20:29:17,377 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:29:17.376975
+2026-02-16 20:29:17,377 - INFO - ============================================================
+2026-02-16 20:29:17,377 - INFO - Database initialized successfully
+2026-02-16 20:29:17,378 - ERROR - Scraper failed: No module named 'data_fetcher'
+2026-02-16 20:32:27,040 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:32:27,044 - INFO - ============================================================
+2026-02-16 20:32:27,045 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:32:27.044979
+2026-02-16 20:32:27,045 - INFO - ============================================================
+2026-02-16 20:32:27,045 - INFO - Database initialized successfully
+2026-02-16 20:32:27,068 - INFO - Fetching tournament: Valorant Champions 2025 (ID: 2283)
+2026-02-16 20:32:27,757 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:32:27,757 - INFO - Fetching tournament info for event ID: 2283
+2026-02-16 20:32:28,681 - INFO - HTTP Request: GET https://www.vlr.gg/event/2283 "HTTP/2 200 OK"
+2026-02-16 20:32:28,694 - INFO - Tournament: Tournament 2283
+2026-02-16 20:32:30,195 - INFO - Fetching match list...
+2026-02-16 20:32:30,245 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/2283 "HTTP/2 200 OK"
+2026-02-16 20:32:30,383 - INFO - HTTP Request: GET https://www.vlr.gg/542195 "HTTP/2 200 OK"
+2026-02-16 20:32:30,465 - INFO - HTTP Request: GET https://www.vlr.gg/542196 "HTTP/2 200 OK"
+2026-02-16 20:32:30,563 - INFO - HTTP Request: GET https://www.vlr.gg/542207 "HTTP/2 200 OK"
+2026-02-16 20:32:30,662 - INFO - HTTP Request: GET https://www.vlr.gg/542205 "HTTP/2 200 OK"
+2026-02-16 20:32:30,756 - INFO - HTTP Request: GET https://www.vlr.gg/542212 "HTTP/2 200 OK"
+2026-02-16 20:32:30,858 - INFO - HTTP Request: GET https://www.vlr.gg/542211 "HTTP/2 200 OK"
+2026-02-16 20:32:30,969 - INFO - HTTP Request: GET https://www.vlr.gg/542200 "HTTP/2 200 OK"
+2026-02-16 20:32:31,060 - INFO - HTTP Request: GET https://www.vlr.gg/542201 "HTTP/2 200 OK"
+2026-02-16 20:32:31,168 - INFO - HTTP Request: GET https://www.vlr.gg/542197 "HTTP/2 200 OK"
+2026-02-16 20:32:31,276 - INFO - HTTP Request: GET https://www.vlr.gg/542208 "HTTP/2 200 OK"
+2026-02-16 20:32:31,391 - INFO - HTTP Request: GET https://www.vlr.gg/542213 "HTTP/2 200 OK"
+2026-02-16 20:32:31,465 - INFO - HTTP Request: GET https://www.vlr.gg/542202 "HTTP/2 200 OK"
+2026-02-16 20:32:31,561 - INFO - HTTP Request: GET https://www.vlr.gg/542209 "HTTP/2 200 OK"
+2026-02-16 20:32:31,661 - INFO - HTTP Request: GET https://www.vlr.gg/542198 "HTTP/2 200 OK"
+2026-02-16 20:32:31,765 - INFO - HTTP Request: GET https://www.vlr.gg/542203 "HTTP/2 200 OK"
+2026-02-16 20:32:31,858 - INFO - HTTP Request: GET https://www.vlr.gg/542214 "HTTP/2 200 OK"
+2026-02-16 20:32:31,962 - INFO - HTTP Request: GET https://www.vlr.gg/542210 "HTTP/2 200 OK"
+2026-02-16 20:32:32,062 - INFO - HTTP Request: GET https://www.vlr.gg/542199 "HTTP/2 200 OK"
+2026-02-16 20:32:32,167 - INFO - HTTP Request: GET https://www.vlr.gg/542215 "HTTP/2 200 OK"
+2026-02-16 20:32:32,265 - INFO - HTTP Request: GET https://www.vlr.gg/542204 "HTTP/2 200 OK"
+2026-02-16 20:32:32,385 - INFO - HTTP Request: GET https://www.vlr.gg/542265 "HTTP/2 200 OK"
+2026-02-16 20:32:32,475 - INFO - HTTP Request: GET https://www.vlr.gg/542264 "HTTP/2 200 OK"
+2026-02-16 20:32:32,566 - INFO - HTTP Request: GET https://www.vlr.gg/542266 "HTTP/2 200 OK"
+2026-02-16 20:32:32,674 - INFO - HTTP Request: GET https://www.vlr.gg/542267 "HTTP/2 200 OK"
+2026-02-16 20:32:32,766 - INFO - HTTP Request: GET https://www.vlr.gg/542273 "HTTP/2 200 OK"
+2026-02-16 20:32:32,858 - INFO - HTTP Request: GET https://www.vlr.gg/542274 "HTTP/2 200 OK"
+2026-02-16 20:32:32,980 - INFO - HTTP Request: GET https://www.vlr.gg/542268 "HTTP/2 200 OK"
+2026-02-16 20:32:33,059 - INFO - HTTP Request: GET https://www.vlr.gg/542269 "HTTP/2 200 OK"
+2026-02-16 20:32:33,173 - INFO - HTTP Request: GET https://www.vlr.gg/542277 "HTTP/2 200 OK"
+2026-02-16 20:32:33,267 - INFO - HTTP Request: GET https://www.vlr.gg/542276 "HTTP/2 200 OK"
+2026-02-16 20:32:33,406 - INFO - HTTP Request: GET https://www.vlr.gg/542270 "HTTP/2 200 OK"
+2026-02-16 20:32:33,475 - INFO - HTTP Request: GET https://www.vlr.gg/542278 "HTTP/2 200 OK"
+2026-02-16 20:32:33,588 - INFO - HTTP Request: GET https://www.vlr.gg/542279 "HTTP/2 200 OK"
+2026-02-16 20:32:33,702 - INFO - HTTP Request: GET https://www.vlr.gg/542272 "HTTP/2 200 OK"
+2026-02-16 20:32:46,967 - INFO - Found 34 matches
+2026-02-16 20:32:46,968 - INFO - Processing match 1/34: ID 542195
+2026-02-16 20:32:46,969 - ERROR - Error fetching match 542195: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:48,470 - INFO - Processing match 2/34: ID 542196
+2026-02-16 20:32:48,470 - ERROR - Error fetching match 542196: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:49,971 - INFO - Processing match 3/34: ID 542207
+2026-02-16 20:32:49,971 - ERROR - Error fetching match 542207: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:51,472 - INFO - Processing match 4/34: ID 542205
+2026-02-16 20:32:51,472 - ERROR - Error fetching match 542205: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:52,973 - INFO - Processing match 5/34: ID 542212
+2026-02-16 20:32:52,973 - ERROR - Error fetching match 542212: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:54,474 - INFO - Processing match 6/34: ID 542211
+2026-02-16 20:32:54,474 - ERROR - Error fetching match 542211: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:55,975 - INFO - Processing match 7/34: ID 542200
+2026-02-16 20:32:55,976 - ERROR - Error fetching match 542200: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:57,477 - INFO - Processing match 8/34: ID 542201
+2026-02-16 20:32:57,477 - ERROR - Error fetching match 542201: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:32:58,978 - INFO - Processing match 9/34: ID 542197
+2026-02-16 20:32:58,978 - ERROR - Error fetching match 542197: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:00,478 - INFO - Processing match 10/34: ID 542208
+2026-02-16 20:33:00,479 - ERROR - Error fetching match 542208: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:01,980 - INFO - Processing match 11/34: ID 542213
+2026-02-16 20:33:01,980 - ERROR - Error fetching match 542213: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:03,481 - INFO - Processing match 12/34: ID 542202
+2026-02-16 20:33:03,481 - ERROR - Error fetching match 542202: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:04,982 - INFO - Processing match 13/34: ID 542209
+2026-02-16 20:33:04,982 - ERROR - Error fetching match 542209: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:06,483 - INFO - Processing match 14/34: ID 542198
+2026-02-16 20:33:06,483 - ERROR - Error fetching match 542198: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:07,984 - INFO - Processing match 15/34: ID 542203
+2026-02-16 20:33:07,984 - ERROR - Error fetching match 542203: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:09,485 - INFO - Processing match 16/34: ID 542214
+2026-02-16 20:33:09,485 - ERROR - Error fetching match 542214: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:10,987 - INFO - Processing match 17/34: ID 542210
+2026-02-16 20:33:10,987 - ERROR - Error fetching match 542210: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:12,488 - INFO - Processing match 18/34: ID 542199
+2026-02-16 20:33:12,488 - ERROR - Error fetching match 542199: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:13,989 - INFO - Processing match 19/34: ID 542215
+2026-02-16 20:33:13,989 - ERROR - Error fetching match 542215: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:15,489 - INFO - Processing match 20/34: ID 542204
+2026-02-16 20:33:15,489 - ERROR - Error fetching match 542204: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:16,990 - INFO - Processing match 21/34: ID 542265
+2026-02-16 20:33:16,990 - ERROR - Error fetching match 542265: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:18,491 - INFO - Processing match 22/34: ID 542264
+2026-02-16 20:33:18,491 - ERROR - Error fetching match 542264: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:19,991 - INFO - Processing match 23/34: ID 542266
+2026-02-16 20:33:19,991 - ERROR - Error fetching match 542266: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:21,492 - INFO - Processing match 24/34: ID 542267
+2026-02-16 20:33:21,875 - ERROR - Error fetching match 542267: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:23,376 - INFO - Processing match 25/34: ID 542273
+2026-02-16 20:33:23,376 - ERROR - Error fetching match 542273: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:24,878 - INFO - Processing match 26/34: ID 542274
+2026-02-16 20:33:24,878 - ERROR - Error fetching match 542274: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:26,379 - INFO - Processing match 27/34: ID 542268
+2026-02-16 20:33:26,380 - ERROR - Error fetching match 542268: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:27,881 - INFO - Processing match 28/34: ID 542269
+2026-02-16 20:33:27,881 - ERROR - Error fetching match 542269: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:29,382 - INFO - Processing match 29/34: ID 542277
+2026-02-16 20:33:29,382 - ERROR - Error fetching match 542277: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:30,883 - INFO - Processing match 30/34: ID 542276
+2026-02-16 20:33:30,883 - ERROR - Error fetching match 542276: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:32,385 - INFO - Processing match 31/34: ID 542270
+2026-02-16 20:33:32,385 - ERROR - Error fetching match 542270: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:33,885 - INFO - Processing match 32/34: ID 542278
+2026-02-16 20:33:33,886 - ERROR - Error fetching match 542278: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:35,386 - INFO - Processing match 33/34: ID 542279
+2026-02-16 20:33:35,386 - ERROR - Error fetching match 542279: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:36,887 - INFO - Processing match 34/34: ID 542272
+2026-02-16 20:33:36,887 - ERROR - Error fetching match 542272: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:38,388 - INFO - Total player records fetched: 0
+2026-02-16 20:33:38,388 - WARNING - No matches found for Valorant Champions 2025
+2026-02-16 20:33:38,389 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 20:33:38,389 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:33:38,389 - INFO - Fetching tournament info for event ID: 1923
+2026-02-16 20:33:38,545 - INFO - HTTP Request: GET https://www.vlr.gg/event/1923 "HTTP/2 200 OK"
+2026-02-16 20:33:38,554 - INFO - Tournament: Tournament 1923
+2026-02-16 20:33:40,055 - INFO - Fetching match list...
+2026-02-16 20:33:40,088 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1923 "HTTP/2 200 OK"
+2026-02-16 20:33:40,241 - INFO - HTTP Request: GET https://www.vlr.gg/295605 "HTTP/2 200 OK"
+2026-02-16 20:33:40,321 - INFO - HTTP Request: GET https://www.vlr.gg/295606 "HTTP/2 200 OK"
+2026-02-16 20:33:40,413 - INFO - HTTP Request: GET https://www.vlr.gg/295610 "HTTP/2 200 OK"
+2026-02-16 20:33:40,529 - INFO - HTTP Request: GET https://www.vlr.gg/295611 "HTTP/2 200 OK"
+2026-02-16 20:33:40,616 - INFO - HTTP Request: GET https://www.vlr.gg/295615 "HTTP/2 200 OK"
+2026-02-16 20:33:40,715 - INFO - HTTP Request: GET https://www.vlr.gg/295608 "HTTP/2 200 OK"
+2026-02-16 20:33:40,807 - INFO - HTTP Request: GET https://www.vlr.gg/295613 "HTTP/2 200 OK"
+2026-02-16 20:33:40,903 - INFO - HTTP Request: GET https://www.vlr.gg/295607 "HTTP/2 200 OK"
+2026-02-16 20:33:41,028 - INFO - HTTP Request: GET https://www.vlr.gg/295612 "HTTP/2 200 OK"
+2026-02-16 20:33:41,098 - INFO - HTTP Request: GET https://www.vlr.gg/295617 "HTTP/2 200 OK"
+2026-02-16 20:33:41,221 - INFO - HTTP Request: GET https://www.vlr.gg/295609 "HTTP/2 200 OK"
+2026-02-16 20:33:41,328 - INFO - HTTP Request: GET https://www.vlr.gg/295614 "HTTP/2 200 OK"
+2026-02-16 20:33:41,415 - INFO - HTTP Request: GET https://www.vlr.gg/295619 "HTTP/2 200 OK"
+2026-02-16 20:33:41,520 - INFO - HTTP Request: GET https://www.vlr.gg/307572 "HTTP/2 200 OK"
+2026-02-16 20:33:41,607 - INFO - HTTP Request: GET https://www.vlr.gg/307573 "HTTP/2 200 OK"
+2026-02-16 20:33:41,731 - INFO - HTTP Request: GET https://www.vlr.gg/307574 "HTTP/2 200 OK"
+2026-02-16 20:33:41,815 - INFO - HTTP Request: GET https://www.vlr.gg/303087 "HTTP/2 200 OK"
+2026-02-16 20:33:41,948 - INFO - HTTP Request: GET https://www.vlr.gg/303088 "HTTP/2 200 OK"
+2026-02-16 20:33:42,027 - INFO - HTTP Request: GET https://www.vlr.gg/303086 "HTTP/2 200 OK"
+2026-02-16 20:33:44,965 - INFO - Found 19 matches
+2026-02-16 20:33:47,138 - INFO - Processing match 1/19: ID 295605
+2026-02-16 20:33:47,139 - ERROR - Error fetching match 295605: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:48,639 - INFO - Processing match 2/19: ID 295606
+2026-02-16 20:33:48,639 - ERROR - Error fetching match 295606: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:50,140 - INFO - Processing match 3/19: ID 295610
+2026-02-16 20:33:50,141 - ERROR - Error fetching match 295610: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:51,643 - INFO - Processing match 4/19: ID 295611
+2026-02-16 20:33:51,645 - ERROR - Error fetching match 295611: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:53,145 - INFO - Processing match 5/19: ID 295615
+2026-02-16 20:33:53,146 - ERROR - Error fetching match 295615: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:54,647 - INFO - Processing match 6/19: ID 295608
+2026-02-16 20:33:54,648 - ERROR - Error fetching match 295608: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:56,148 - INFO - Processing match 7/19: ID 295613
+2026-02-16 20:33:56,148 - ERROR - Error fetching match 295613: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:57,649 - INFO - Processing match 8/19: ID 295607
+2026-02-16 20:33:57,649 - ERROR - Error fetching match 295607: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:33:59,150 - INFO - Processing match 9/19: ID 295612
+2026-02-16 20:33:59,150 - ERROR - Error fetching match 295612: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:00,651 - INFO - Processing match 10/19: ID 295617
+2026-02-16 20:34:00,651 - ERROR - Error fetching match 295617: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:02,152 - INFO - Processing match 11/19: ID 295609
+2026-02-16 20:34:02,152 - ERROR - Error fetching match 295609: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:03,653 - INFO - Processing match 12/19: ID 295614
+2026-02-16 20:34:03,653 - ERROR - Error fetching match 295614: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:05,154 - INFO - Processing match 13/19: ID 295619
+2026-02-16 20:34:05,154 - ERROR - Error fetching match 295619: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:06,655 - INFO - Processing match 14/19: ID 307572
+2026-02-16 20:34:06,655 - ERROR - Error fetching match 307572: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:08,156 - INFO - Processing match 15/19: ID 307573
+2026-02-16 20:34:08,157 - ERROR - Error fetching match 307573: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:09,658 - INFO - Processing match 16/19: ID 307574
+2026-02-16 20:34:09,658 - ERROR - Error fetching match 307574: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:11,159 - INFO - Processing match 17/19: ID 303087
+2026-02-16 20:34:11,160 - ERROR - Error fetching match 303087: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:12,661 - INFO - Processing match 18/19: ID 303088
+2026-02-16 20:34:12,662 - ERROR - Error fetching match 303088: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:14,162 - INFO - Processing match 19/19: ID 303086
+2026-02-16 20:34:14,162 - ERROR - Error fetching match 303086: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:15,663 - INFO - Total player records fetched: 0
+2026-02-16 20:34:15,664 - WARNING - No matches found for Valorant Champions 2024
+2026-02-16 20:34:15,665 - INFO - Fetching tournament: Champions Tour 2024: Masters Shanghai (ID: 1909)
+2026-02-16 20:34:15,665 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:34:15,666 - INFO - Fetching tournament info for event ID: 1909
+2026-02-16 20:34:15,801 - INFO - HTTP Request: GET https://www.vlr.gg/event/1909 "HTTP/2 200 OK"
+2026-02-16 20:34:15,814 - INFO - Tournament: Tournament 1909
+2026-02-16 20:34:17,315 - INFO - Fetching match list...
+2026-02-16 20:34:17,349 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1909 "HTTP/2 200 OK"
+2026-02-16 20:34:17,484 - INFO - HTTP Request: GET https://www.vlr.gg/287723 "HTTP/2 200 OK"
+2026-02-16 20:34:17,578 - INFO - HTTP Request: GET https://www.vlr.gg/287724 "HTTP/2 200 OK"
+2026-02-16 20:34:17,681 - INFO - HTTP Request: GET https://www.vlr.gg/287725 "HTTP/2 200 OK"
+2026-02-16 20:34:17,784 - INFO - HTTP Request: GET https://www.vlr.gg/287726 "HTTP/2 200 OK"
+2026-02-16 20:34:17,886 - INFO - HTTP Request: GET https://www.vlr.gg/287727 "HTTP/2 200 OK"
+2026-02-16 20:34:17,985 - INFO - HTTP Request: GET https://www.vlr.gg/287728 "HTTP/2 200 OK"
+2026-02-16 20:34:18,084 - INFO - HTTP Request: GET https://www.vlr.gg/287708 "HTTP/2 200 OK"
+2026-02-16 20:34:18,189 - INFO - HTTP Request: GET https://www.vlr.gg/287709 "HTTP/2 200 OK"
+2026-02-16 20:34:18,293 - INFO - HTTP Request: GET https://www.vlr.gg/287710 "HTTP/2 200 OK"
+2026-02-16 20:34:18,391 - INFO - HTTP Request: GET https://www.vlr.gg/287711 "HTTP/2 200 OK"
+2026-02-16 20:34:18,485 - INFO - HTTP Request: GET https://www.vlr.gg/287731 "HTTP/2 200 OK"
+2026-02-16 20:34:18,590 - INFO - HTTP Request: GET https://www.vlr.gg/287732 "HTTP/2 200 OK"
+2026-02-16 20:34:18,693 - INFO - HTTP Request: GET https://www.vlr.gg/287716 "HTTP/2 200 OK"
+2026-02-16 20:34:18,792 - INFO - HTTP Request: GET https://www.vlr.gg/287717 "HTTP/2 200 OK"
+2026-02-16 20:34:18,892 - INFO - HTTP Request: GET https://www.vlr.gg/287733 "HTTP/2 200 OK"
+2026-02-16 20:34:19,008 - INFO - HTTP Request: GET https://www.vlr.gg/287734 "HTTP/2 200 OK"
+2026-02-16 20:34:19,094 - INFO - HTTP Request: GET https://www.vlr.gg/287718 "HTTP/2 200 OK"
+2026-02-16 20:34:19,193 - INFO - HTTP Request: GET https://www.vlr.gg/287719 "HTTP/2 200 OK"
+2026-02-16 20:34:19,301 - INFO - HTTP Request: GET https://www.vlr.gg/287712 "HTTP/2 200 OK"
+2026-02-16 20:34:19,404 - INFO - HTTP Request: GET https://www.vlr.gg/287713 "HTTP/2 200 OK"
+2026-02-16 20:34:19,511 - INFO - HTTP Request: GET https://www.vlr.gg/287729 "HTTP/2 200 OK"
+2026-02-16 20:34:19,608 - INFO - HTTP Request: GET https://www.vlr.gg/287735 "HTTP/2 200 OK"
+2026-02-16 20:34:19,709 - INFO - HTTP Request: GET https://www.vlr.gg/287714 "HTTP/2 200 OK"
+2026-02-16 20:34:19,820 - INFO - HTTP Request: GET https://www.vlr.gg/287720 "HTTP/2 200 OK"
+2026-02-16 20:34:19,907 - INFO - HTTP Request: GET https://www.vlr.gg/287736 "HTTP/2 200 OK"
+2026-02-16 20:34:20,011 - INFO - HTTP Request: GET https://www.vlr.gg/287721 "HTTP/2 200 OK"
+2026-02-16 20:34:20,117 - INFO - HTTP Request: GET https://www.vlr.gg/287730 "HTTP/2 200 OK"
+2026-02-16 20:34:20,214 - INFO - HTTP Request: GET https://www.vlr.gg/287715 "HTTP/2 200 OK"
+2026-02-16 20:34:22,864 - INFO - Found 28 matches
+2026-02-16 20:34:22,864 - INFO - Processing match 1/28: ID 287723
+2026-02-16 20:34:22,864 - ERROR - Error fetching match 287723: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:24,365 - INFO - Processing match 2/28: ID 287724
+2026-02-16 20:34:24,365 - ERROR - Error fetching match 287724: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:25,867 - INFO - Processing match 3/28: ID 287725
+2026-02-16 20:34:25,867 - ERROR - Error fetching match 287725: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:27,368 - INFO - Processing match 4/28: ID 287726
+2026-02-16 20:34:27,369 - ERROR - Error fetching match 287726: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:28,870 - INFO - Processing match 5/28: ID 287727
+2026-02-16 20:34:28,871 - ERROR - Error fetching match 287727: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:30,372 - INFO - Processing match 6/28: ID 287728
+2026-02-16 20:34:30,373 - ERROR - Error fetching match 287728: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:31,874 - INFO - Processing match 7/28: ID 287708
+2026-02-16 20:34:31,874 - ERROR - Error fetching match 287708: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:33,375 - INFO - Processing match 8/28: ID 287709
+2026-02-16 20:34:33,376 - ERROR - Error fetching match 287709: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:34,877 - INFO - Processing match 9/28: ID 287710
+2026-02-16 20:34:34,877 - ERROR - Error fetching match 287710: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:36,378 - INFO - Processing match 10/28: ID 287711
+2026-02-16 20:34:36,379 - ERROR - Error fetching match 287711: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:37,880 - INFO - Processing match 11/28: ID 287731
+2026-02-16 20:34:37,881 - ERROR - Error fetching match 287731: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:39,382 - INFO - Processing match 12/28: ID 287732
+2026-02-16 20:34:39,382 - ERROR - Error fetching match 287732: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:40,883 - INFO - Processing match 13/28: ID 287716
+2026-02-16 20:34:40,885 - ERROR - Error fetching match 287716: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:42,386 - INFO - Processing match 14/28: ID 287717
+2026-02-16 20:34:42,387 - ERROR - Error fetching match 287717: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:43,888 - INFO - Processing match 15/28: ID 287733
+2026-02-16 20:34:43,889 - ERROR - Error fetching match 287733: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:45,390 - INFO - Processing match 16/28: ID 287734
+2026-02-16 20:34:45,391 - ERROR - Error fetching match 287734: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:46,892 - INFO - Processing match 17/28: ID 287718
+2026-02-16 20:34:46,893 - ERROR - Error fetching match 287718: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:48,394 - INFO - Processing match 18/28: ID 287719
+2026-02-16 20:34:48,395 - ERROR - Error fetching match 287719: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:49,896 - INFO - Processing match 19/28: ID 287712
+2026-02-16 20:34:49,896 - ERROR - Error fetching match 287712: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:51,397 - INFO - Processing match 20/28: ID 287713
+2026-02-16 20:34:51,397 - ERROR - Error fetching match 287713: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:52,898 - INFO - Processing match 21/28: ID 287729
+2026-02-16 20:34:52,898 - ERROR - Error fetching match 287729: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:54,399 - INFO - Processing match 22/28: ID 287735
+2026-02-16 20:34:54,399 - ERROR - Error fetching match 287735: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:55,900 - INFO - Processing match 23/28: ID 287714
+2026-02-16 20:34:55,900 - ERROR - Error fetching match 287714: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:57,401 - INFO - Processing match 24/28: ID 287720
+2026-02-16 20:34:57,402 - ERROR - Error fetching match 287720: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:34:58,903 - INFO - Processing match 25/28: ID 287736
+2026-02-16 20:34:58,903 - ERROR - Error fetching match 287736: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:00,403 - INFO - Processing match 26/28: ID 287721
+2026-02-16 20:35:00,404 - ERROR - Error fetching match 287721: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:01,904 - INFO - Processing match 27/28: ID 287730
+2026-02-16 20:35:01,905 - ERROR - Error fetching match 287730: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:03,405 - INFO - Processing match 28/28: ID 287715
+2026-02-16 20:35:03,406 - ERROR - Error fetching match 287715: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:04,907 - INFO - Total player records fetched: 0
+2026-02-16 20:35:04,908 - WARNING - No matches found for Champions Tour 2024: Masters Shanghai
+2026-02-16 20:35:04,909 - INFO - Fetching tournament: Champions Tour 2024: Masters Madrid (ID: 1868)
+2026-02-16 20:35:04,909 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:35:04,909 - INFO - Fetching tournament info for event ID: 1868
+2026-02-16 20:35:05,051 - INFO - HTTP Request: GET https://www.vlr.gg/event/1868 "HTTP/2 200 OK"
+2026-02-16 20:35:05,067 - INFO - Tournament: Tournament 1868
+2026-02-16 20:35:06,570 - INFO - Fetching match list...
+2026-02-16 20:35:06,599 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1868 "HTTP/2 200 OK"
+2026-02-16 20:35:06,750 - INFO - HTTP Request: GET https://www.vlr.gg/282934 "HTTP/2 200 OK"
+2026-02-16 20:35:06,833 - INFO - HTTP Request: GET https://www.vlr.gg/282935 "HTTP/2 200 OK"
+2026-02-16 20:35:06,928 - INFO - HTTP Request: GET https://www.vlr.gg/282936 "HTTP/2 200 OK"
+2026-02-16 20:35:07,032 - INFO - HTTP Request: GET https://www.vlr.gg/282937 "HTTP/2 200 OK"
+2026-02-16 20:35:07,124 - INFO - HTTP Request: GET https://www.vlr.gg/282938 "HTTP/2 200 OK"
+2026-02-16 20:35:07,223 - INFO - HTTP Request: GET https://www.vlr.gg/282939 "HTTP/2 200 OK"
+2026-02-16 20:35:07,322 - INFO - HTTP Request: GET https://www.vlr.gg/282932 "HTTP/2 200 OK"
+2026-02-16 20:35:07,431 - INFO - HTTP Request: GET https://www.vlr.gg/282933 "HTTP/2 200 OK"
+2026-02-16 20:35:08,163 - INFO - Found 8 matches
+2026-02-16 20:35:08,164 - INFO - Processing match 1/8: ID 282934
+2026-02-16 20:35:08,164 - ERROR - Error fetching match 282934: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:09,664 - INFO - Processing match 2/8: ID 282935
+2026-02-16 20:35:09,665 - ERROR - Error fetching match 282935: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:11,166 - INFO - Processing match 3/8: ID 282936
+2026-02-16 20:35:11,166 - ERROR - Error fetching match 282936: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:12,668 - INFO - Processing match 4/8: ID 282937
+2026-02-16 20:35:12,668 - ERROR - Error fetching match 282937: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:14,169 - INFO - Processing match 5/8: ID 282938
+2026-02-16 20:35:14,170 - ERROR - Error fetching match 282938: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:15,671 - INFO - Processing match 6/8: ID 282939
+2026-02-16 20:35:15,672 - ERROR - Error fetching match 282939: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:17,173 - INFO - Processing match 7/8: ID 282932
+2026-02-16 20:35:17,173 - ERROR - Error fetching match 282932: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:18,674 - INFO - Processing match 8/8: ID 282933
+2026-02-16 20:35:18,675 - ERROR - Error fetching match 282933: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:20,175 - INFO - Total player records fetched: 0
+2026-02-16 20:35:20,177 - WARNING - No matches found for Champions Tour 2024: Masters Madrid
+2026-02-16 20:35:20,179 - INFO - Fetching tournament: Valorant Champions 2023 (ID: 1530)
+2026-02-16 20:35:20,179 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:35:20,180 - INFO - Fetching tournament info for event ID: 1530
+2026-02-16 20:35:20,215 - INFO - HTTP Request: GET https://www.vlr.gg/event/1530 "HTTP/2 200 OK"
+2026-02-16 20:35:20,227 - INFO - Tournament: Tournament 1530
+2026-02-16 20:35:21,728 - INFO - Fetching match list...
+2026-02-16 20:35:21,759 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1530 "HTTP/2 200 OK"
+2026-02-16 20:35:21,902 - INFO - HTTP Request: GET https://www.vlr.gg/185730 "HTTP/2 200 OK"
+2026-02-16 20:35:21,977 - INFO - HTTP Request: GET https://www.vlr.gg/185722 "HTTP/2 200 OK"
+2026-02-16 20:35:22,077 - INFO - HTTP Request: GET https://www.vlr.gg/185731 "HTTP/2 200 OK"
+2026-02-16 20:35:22,171 - INFO - HTTP Request: GET https://www.vlr.gg/185723 "HTTP/2 200 OK"
+2026-02-16 20:35:22,274 - INFO - HTTP Request: GET https://www.vlr.gg/185724 "HTTP/2 200 OK"
+2026-02-16 20:35:22,380 - INFO - HTTP Request: GET https://www.vlr.gg/185725 "HTTP/2 200 OK"
+2026-02-16 20:35:22,476 - INFO - HTTP Request: GET https://www.vlr.gg/185729 "HTTP/2 200 OK"
+2026-02-16 20:35:22,577 - INFO - HTTP Request: GET https://www.vlr.gg/185732 "HTTP/2 200 OK"
+2026-02-16 20:35:22,681 - INFO - HTTP Request: GET https://www.vlr.gg/185727 "HTTP/2 200 OK"
+2026-02-16 20:35:22,777 - INFO - HTTP Request: GET https://www.vlr.gg/185733 "HTTP/2 200 OK"
+2026-02-16 20:35:22,882 - INFO - HTTP Request: GET https://www.vlr.gg/185726 "HTTP/2 200 OK"
+2026-02-16 20:35:22,982 - INFO - HTTP Request: GET https://www.vlr.gg/185734 "HTTP/2 200 OK"
+2026-02-16 20:35:23,077 - INFO - HTTP Request: GET https://www.vlr.gg/185728 "HTTP/2 200 OK"
+2026-02-16 20:35:23,182 - INFO - HTTP Request: GET https://www.vlr.gg/185735 "HTTP/2 200 OK"
+2026-02-16 20:35:23,702 - INFO - Found 14 matches
+2026-02-16 20:35:23,702 - INFO - Processing match 1/14: ID 185722
+2026-02-16 20:35:23,702 - ERROR - Error fetching match 185722: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:25,203 - INFO - Processing match 2/14: ID 185730
+2026-02-16 20:35:25,204 - ERROR - Error fetching match 185730: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:26,704 - INFO - Processing match 3/14: ID 185731
+2026-02-16 20:35:26,705 - ERROR - Error fetching match 185731: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:28,206 - INFO - Processing match 4/14: ID 185723
+2026-02-16 20:35:28,206 - ERROR - Error fetching match 185723: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:29,708 - INFO - Processing match 5/14: ID 185724
+2026-02-16 20:35:29,708 - ERROR - Error fetching match 185724: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:31,209 - INFO - Processing match 6/14: ID 185725
+2026-02-16 20:35:31,210 - ERROR - Error fetching match 185725: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:32,711 - INFO - Processing match 7/14: ID 185729
+2026-02-16 20:35:32,711 - ERROR - Error fetching match 185729: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:34,212 - INFO - Processing match 8/14: ID 185732
+2026-02-16 20:35:34,212 - ERROR - Error fetching match 185732: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:35,713 - INFO - Processing match 9/14: ID 185727
+2026-02-16 20:35:35,714 - ERROR - Error fetching match 185727: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:35:37,215 - INFO - Processing match 10/14: ID 185733
+2026-02-16 20:35:37,215 - ERROR - Error fetching match 185733: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:16,580 - INFO - ============================================================
+2026-02-16 20:37:16,580 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:37:16.580754
+2026-02-16 20:37:16,581 - INFO - ============================================================
+2026-02-16 20:37:16,586 - INFO - Database initialized successfully
+2026-02-16 20:37:16,595 - INFO - Fetching tournament: Valorant Champions 2025 (ID: 2283)
+2026-02-16 20:37:16,777 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:37:16,777 - INFO - Fetching tournament info for event ID: 2283
+2026-02-16 20:37:17,161 - INFO - HTTP Request: GET https://www.vlr.gg/event/2283 "HTTP/2 200 OK"
+2026-02-16 20:37:17,175 - INFO - Tournament: Tournament 2283
+2026-02-16 20:37:18,675 - INFO - Fetching match list...
+2026-02-16 20:37:18,716 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/2283 "HTTP/2 200 OK"
+2026-02-16 20:37:18,828 - INFO - HTTP Request: GET https://www.vlr.gg/542195 "HTTP/2 200 OK"
+2026-02-16 20:37:18,933 - INFO - HTTP Request: GET https://www.vlr.gg/542196 "HTTP/2 200 OK"
+2026-02-16 20:37:19,054 - INFO - HTTP Request: GET https://www.vlr.gg/542207 "HTTP/2 200 OK"
+2026-02-16 20:37:19,137 - INFO - HTTP Request: GET https://www.vlr.gg/542205 "HTTP/2 200 OK"
+2026-02-16 20:37:19,225 - INFO - HTTP Request: GET https://www.vlr.gg/542212 "HTTP/2 200 OK"
+2026-02-16 20:37:19,342 - INFO - HTTP Request: GET https://www.vlr.gg/542211 "HTTP/2 200 OK"
+2026-02-16 20:37:19,425 - INFO - HTTP Request: GET https://www.vlr.gg/542200 "HTTP/2 200 OK"
+2026-02-16 20:37:19,529 - INFO - HTTP Request: GET https://www.vlr.gg/542201 "HTTP/2 200 OK"
+2026-02-16 20:37:19,636 - INFO - HTTP Request: GET https://www.vlr.gg/542197 "HTTP/2 200 OK"
+2026-02-16 20:37:19,730 - INFO - HTTP Request: GET https://www.vlr.gg/542208 "HTTP/2 200 OK"
+2026-02-16 20:37:19,826 - INFO - HTTP Request: GET https://www.vlr.gg/542213 "HTTP/2 200 OK"
+2026-02-16 20:37:19,933 - INFO - HTTP Request: GET https://www.vlr.gg/542202 "HTTP/2 200 OK"
+2026-02-16 20:37:20,029 - INFO - HTTP Request: GET https://www.vlr.gg/542209 "HTTP/2 200 OK"
+2026-02-16 20:37:20,136 - INFO - HTTP Request: GET https://www.vlr.gg/542198 "HTTP/2 200 OK"
+2026-02-16 20:37:20,225 - INFO - HTTP Request: GET https://www.vlr.gg/542203 "HTTP/2 200 OK"
+2026-02-16 20:37:20,349 - INFO - HTTP Request: GET https://www.vlr.gg/542214 "HTTP/2 200 OK"
+2026-02-16 20:37:20,429 - INFO - HTTP Request: GET https://www.vlr.gg/542210 "HTTP/2 200 OK"
+2026-02-16 20:37:20,546 - INFO - HTTP Request: GET https://www.vlr.gg/542199 "HTTP/2 200 OK"
+2026-02-16 20:37:20,644 - INFO - HTTP Request: GET https://www.vlr.gg/542215 "HTTP/2 200 OK"
+2026-02-16 20:37:20,730 - INFO - HTTP Request: GET https://www.vlr.gg/542204 "HTTP/2 200 OK"
+2026-02-16 20:37:20,861 - INFO - HTTP Request: GET https://www.vlr.gg/542265 "HTTP/2 200 OK"
+2026-02-16 20:37:20,931 - INFO - HTTP Request: GET https://www.vlr.gg/542264 "HTTP/2 200 OK"
+2026-02-16 20:37:21,030 - INFO - HTTP Request: GET https://www.vlr.gg/542266 "HTTP/2 200 OK"
+2026-02-16 20:37:21,151 - INFO - HTTP Request: GET https://www.vlr.gg/542267 "HTTP/2 200 OK"
+2026-02-16 20:37:21,237 - INFO - HTTP Request: GET https://www.vlr.gg/542273 "HTTP/2 200 OK"
+2026-02-16 20:37:21,333 - INFO - HTTP Request: GET https://www.vlr.gg/542274 "HTTP/2 200 OK"
+2026-02-16 20:37:21,479 - INFO - HTTP Request: GET https://www.vlr.gg/542268 "HTTP/2 200 OK"
+2026-02-16 20:37:21,549 - INFO - HTTP Request: GET https://www.vlr.gg/542269 "HTTP/2 200 OK"
+2026-02-16 20:37:21,665 - INFO - HTTP Request: GET https://www.vlr.gg/542277 "HTTP/2 200 OK"
+2026-02-16 20:37:21,741 - INFO - HTTP Request: GET https://www.vlr.gg/542276 "HTTP/2 200 OK"
+2026-02-16 20:37:21,854 - INFO - HTTP Request: GET https://www.vlr.gg/542270 "HTTP/2 200 OK"
+2026-02-16 20:37:21,930 - INFO - HTTP Request: GET https://www.vlr.gg/542278 "HTTP/2 200 OK"
+2026-02-16 20:37:22,042 - INFO - HTTP Request: GET https://www.vlr.gg/542279 "HTTP/2 200 OK"
+2026-02-16 20:37:22,176 - INFO - HTTP Request: GET https://www.vlr.gg/542272 "HTTP/2 200 OK"
+2026-02-16 20:37:29,278 - INFO - Found 34 matches
+2026-02-16 20:37:29,278 - INFO - Processing match 1/34: ID 542195
+2026-02-16 20:37:29,279 - ERROR - Error fetching match 542195: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:30,779 - INFO - Processing match 2/34: ID 542196
+2026-02-16 20:37:30,779 - ERROR - Error fetching match 542196: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:32,280 - INFO - Processing match 3/34: ID 542207
+2026-02-16 20:37:32,280 - ERROR - Error fetching match 542207: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:33,781 - INFO - Processing match 4/34: ID 542205
+2026-02-16 20:37:33,781 - ERROR - Error fetching match 542205: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:35,282 - INFO - Processing match 5/34: ID 542212
+2026-02-16 20:37:35,283 - ERROR - Error fetching match 542212: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:36,784 - INFO - Processing match 6/34: ID 542211
+2026-02-16 20:37:36,784 - ERROR - Error fetching match 542211: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:38,285 - INFO - Processing match 7/34: ID 542200
+2026-02-16 20:37:38,285 - ERROR - Error fetching match 542200: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:39,786 - INFO - Processing match 8/34: ID 542201
+2026-02-16 20:37:39,787 - ERROR - Error fetching match 542201: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:41,288 - INFO - Processing match 9/34: ID 542197
+2026-02-16 20:37:41,288 - ERROR - Error fetching match 542197: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:42,789 - INFO - Processing match 10/34: ID 542208
+2026-02-16 20:37:42,793 - ERROR - Error fetching match 542208: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:44,294 - INFO - Processing match 11/34: ID 542213
+2026-02-16 20:37:44,295 - ERROR - Error fetching match 542213: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:45,797 - INFO - Processing match 12/34: ID 542202
+2026-02-16 20:37:45,798 - ERROR - Error fetching match 542202: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:47,298 - INFO - Processing match 13/34: ID 542209
+2026-02-16 20:37:47,299 - ERROR - Error fetching match 542209: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:48,799 - INFO - Processing match 14/34: ID 542198
+2026-02-16 20:37:48,800 - ERROR - Error fetching match 542198: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:50,300 - INFO - Processing match 15/34: ID 542203
+2026-02-16 20:37:50,301 - ERROR - Error fetching match 542203: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:51,801 - INFO - Processing match 16/34: ID 542214
+2026-02-16 20:37:51,802 - ERROR - Error fetching match 542214: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:53,302 - INFO - Processing match 17/34: ID 542210
+2026-02-16 20:37:53,302 - ERROR - Error fetching match 542210: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:54,803 - INFO - Processing match 18/34: ID 542199
+2026-02-16 20:37:54,804 - ERROR - Error fetching match 542199: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:56,306 - INFO - Processing match 19/34: ID 542215
+2026-02-16 20:37:56,306 - ERROR - Error fetching match 542215: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:57,808 - INFO - Processing match 20/34: ID 542204
+2026-02-16 20:37:57,808 - ERROR - Error fetching match 542204: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:37:59,309 - INFO - Processing match 21/34: ID 542265
+2026-02-16 20:37:59,310 - ERROR - Error fetching match 542265: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:00,810 - INFO - Processing match 22/34: ID 542264
+2026-02-16 20:38:00,811 - ERROR - Error fetching match 542264: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:02,312 - INFO - Processing match 23/34: ID 542266
+2026-02-16 20:38:02,313 - ERROR - Error fetching match 542266: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:03,814 - INFO - Processing match 24/34: ID 542267
+2026-02-16 20:38:03,814 - ERROR - Error fetching match 542267: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:05,315 - INFO - Processing match 25/34: ID 542273
+2026-02-16 20:38:05,315 - ERROR - Error fetching match 542273: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:06,816 - INFO - Processing match 26/34: ID 542274
+2026-02-16 20:38:06,818 - ERROR - Error fetching match 542274: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:08,318 - INFO - Processing match 27/34: ID 542268
+2026-02-16 20:38:08,318 - ERROR - Error fetching match 542268: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:09,819 - INFO - Processing match 28/34: ID 542269
+2026-02-16 20:38:09,820 - ERROR - Error fetching match 542269: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:11,321 - INFO - Processing match 29/34: ID 542277
+2026-02-16 20:38:11,321 - ERROR - Error fetching match 542277: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:12,822 - INFO - Processing match 30/34: ID 542276
+2026-02-16 20:38:12,823 - ERROR - Error fetching match 542276: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:14,323 - INFO - Processing match 31/34: ID 542270
+2026-02-16 20:38:16,702 - ERROR - Error fetching match 542270: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:18,203 - INFO - Processing match 32/34: ID 542278
+2026-02-16 20:38:18,205 - ERROR - Error fetching match 542278: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:19,705 - INFO - Processing match 33/34: ID 542279
+2026-02-16 20:38:19,706 - ERROR - Error fetching match 542279: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:21,206 - INFO - Processing match 34/34: ID 542272
+2026-02-16 20:38:21,207 - ERROR - Error fetching match 542272: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:22,709 - INFO - Total player records fetched: 0
+2026-02-16 20:38:22,709 - WARNING - No matches found for Valorant Champions 2025
+2026-02-16 20:38:22,709 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 20:38:22,709 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:38:22,709 - INFO - Fetching tournament info for event ID: 1923
+2026-02-16 20:38:22,852 - INFO - HTTP Request: GET https://www.vlr.gg/event/1923 "HTTP/2 200 OK"
+2026-02-16 20:38:22,859 - INFO - Tournament: Tournament 1923
+2026-02-16 20:38:24,360 - INFO - Fetching match list...
+2026-02-16 20:38:24,402 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1923 "HTTP/2 200 OK"
+2026-02-16 20:38:24,537 - INFO - HTTP Request: GET https://www.vlr.gg/295605 "HTTP/2 200 OK"
+2026-02-16 20:38:24,619 - INFO - HTTP Request: GET https://www.vlr.gg/295610 "HTTP/2 200 OK"
+2026-02-16 20:38:24,713 - INFO - HTTP Request: GET https://www.vlr.gg/295611 "HTTP/2 200 OK"
+2026-02-16 20:38:24,808 - INFO - HTTP Request: GET https://www.vlr.gg/295606 "HTTP/2 200 OK"
+2026-02-16 20:38:24,912 - INFO - HTTP Request: GET https://www.vlr.gg/295615 "HTTP/2 200 OK"
+2026-02-16 20:38:25,007 - INFO - HTTP Request: GET https://www.vlr.gg/295608 "HTTP/2 200 OK"
+2026-02-16 20:38:25,120 - INFO - HTTP Request: GET https://www.vlr.gg/295613 "HTTP/2 200 OK"
+2026-02-16 20:38:25,207 - INFO - HTTP Request: GET https://www.vlr.gg/295607 "HTTP/2 200 OK"
+2026-02-16 20:38:25,315 - INFO - HTTP Request: GET https://www.vlr.gg/295612 "HTTP/2 200 OK"
+2026-02-16 20:38:25,408 - INFO - HTTP Request: GET https://www.vlr.gg/295617 "HTTP/2 200 OK"
+2026-02-16 20:38:25,508 - INFO - HTTP Request: GET https://www.vlr.gg/295609 "HTTP/2 200 OK"
+2026-02-16 20:38:25,615 - INFO - HTTP Request: GET https://www.vlr.gg/295614 "HTTP/2 200 OK"
+2026-02-16 20:38:25,705 - INFO - HTTP Request: GET https://www.vlr.gg/295619 "HTTP/2 200 OK"
+2026-02-16 20:38:25,818 - INFO - HTTP Request: GET https://www.vlr.gg/307572 "HTTP/2 200 OK"
+2026-02-16 20:38:25,906 - INFO - HTTP Request: GET https://www.vlr.gg/307573 "HTTP/2 200 OK"
+2026-02-16 20:38:26,028 - INFO - HTTP Request: GET https://www.vlr.gg/307574 "HTTP/2 200 OK"
+2026-02-16 20:38:26,119 - INFO - HTTP Request: GET https://www.vlr.gg/303087 "HTTP/2 200 OK"
+2026-02-16 20:38:26,236 - INFO - HTTP Request: GET https://www.vlr.gg/303088 "HTTP/2 200 OK"
+2026-02-16 20:38:26,323 - INFO - HTTP Request: GET https://www.vlr.gg/303086 "HTTP/2 200 OK"
+2026-02-16 20:38:33,348 - INFO - Found 19 matches
+2026-02-16 20:38:33,349 - INFO - Processing match 1/19: ID 295605
+2026-02-16 20:38:33,349 - ERROR - Error fetching match 295605: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:34,851 - INFO - Processing match 2/19: ID 295606
+2026-02-16 20:38:34,852 - ERROR - Error fetching match 295606: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:36,353 - INFO - Processing match 3/19: ID 295610
+2026-02-16 20:38:36,353 - ERROR - Error fetching match 295610: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:37,854 - INFO - Processing match 4/19: ID 295611
+2026-02-16 20:38:37,855 - ERROR - Error fetching match 295611: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:39,356 - INFO - Processing match 5/19: ID 295615
+2026-02-16 20:38:39,356 - ERROR - Error fetching match 295615: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:40,857 - INFO - Processing match 6/19: ID 295608
+2026-02-16 20:38:40,860 - ERROR - Error fetching match 295608: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:42,360 - INFO - Processing match 7/19: ID 295613
+2026-02-16 20:38:42,361 - ERROR - Error fetching match 295613: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:43,861 - INFO - Processing match 8/19: ID 295607
+2026-02-16 20:38:43,862 - ERROR - Error fetching match 295607: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:45,363 - INFO - Processing match 9/19: ID 295612
+2026-02-16 20:38:45,364 - ERROR - Error fetching match 295612: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:46,864 - INFO - Processing match 10/19: ID 295617
+2026-02-16 20:38:46,865 - ERROR - Error fetching match 295617: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:48,366 - INFO - Processing match 11/19: ID 295609
+2026-02-16 20:38:48,367 - ERROR - Error fetching match 295609: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:49,867 - INFO - Processing match 12/19: ID 295614
+2026-02-16 20:38:49,868 - ERROR - Error fetching match 295614: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:51,369 - INFO - Processing match 13/19: ID 295619
+2026-02-16 20:38:51,369 - ERROR - Error fetching match 295619: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:52,870 - INFO - Processing match 14/19: ID 307572
+2026-02-16 20:38:52,871 - ERROR - Error fetching match 307572: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:54,372 - INFO - Processing match 15/19: ID 307573
+2026-02-16 20:38:54,373 - ERROR - Error fetching match 307573: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:55,874 - INFO - Processing match 16/19: ID 307574
+2026-02-16 20:38:55,875 - ERROR - Error fetching match 307574: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:57,376 - INFO - Processing match 17/19: ID 303087
+2026-02-16 20:38:57,377 - ERROR - Error fetching match 303087: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:38:58,877 - INFO - Processing match 18/19: ID 303088
+2026-02-16 20:38:58,878 - ERROR - Error fetching match 303088: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:00,379 - INFO - Processing match 19/19: ID 303086
+2026-02-16 20:39:02,754 - ERROR - Error fetching match 303086: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:04,256 - INFO - Total player records fetched: 0
+2026-02-16 20:39:04,257 - WARNING - No matches found for Valorant Champions 2024
+2026-02-16 20:39:04,257 - INFO - Fetching tournament: Champions Tour 2024: Masters Shanghai (ID: 1909)
+2026-02-16 20:39:04,257 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:39:04,257 - INFO - Fetching tournament info for event ID: 1909
+2026-02-16 20:39:04,404 - INFO - HTTP Request: GET https://www.vlr.gg/event/1909 "HTTP/2 200 OK"
+2026-02-16 20:39:04,417 - INFO - Tournament: Tournament 1909
+2026-02-16 20:39:05,917 - INFO - Fetching match list...
+2026-02-16 20:39:05,980 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1909 "HTTP/2 200 OK"
+2026-02-16 20:39:06,086 - INFO - HTTP Request: GET https://www.vlr.gg/287723 "HTTP/2 200 OK"
+2026-02-16 20:39:06,159 - INFO - HTTP Request: GET https://www.vlr.gg/287724 "HTTP/2 200 OK"
+2026-02-16 20:39:06,284 - INFO - HTTP Request: GET https://www.vlr.gg/287725 "HTTP/2 200 OK"
+2026-02-16 20:39:06,366 - INFO - HTTP Request: GET https://www.vlr.gg/287726 "HTTP/2 200 OK"
+2026-02-16 20:39:06,476 - INFO - HTTP Request: GET https://www.vlr.gg/287727 "HTTP/2 200 OK"
+2026-02-16 20:39:06,558 - INFO - HTTP Request: GET https://www.vlr.gg/287728 "HTTP/2 200 OK"
+2026-02-16 20:39:06,660 - INFO - HTTP Request: GET https://www.vlr.gg/287708 "HTTP/2 200 OK"
+2026-02-16 20:39:06,766 - INFO - HTTP Request: GET https://www.vlr.gg/287709 "HTTP/2 200 OK"
+2026-02-16 20:39:06,867 - INFO - HTTP Request: GET https://www.vlr.gg/287710 "HTTP/2 200 OK"
+2026-02-16 20:39:06,984 - INFO - HTTP Request: GET https://www.vlr.gg/287711 "HTTP/2 200 OK"
+2026-02-16 20:39:07,068 - INFO - HTTP Request: GET https://www.vlr.gg/287731 "HTTP/2 200 OK"
+2026-02-16 20:39:07,174 - INFO - HTTP Request: GET https://www.vlr.gg/287732 "HTTP/2 200 OK"
+2026-02-16 20:39:07,261 - INFO - HTTP Request: GET https://www.vlr.gg/287716 "HTTP/2 200 OK"
+2026-02-16 20:39:07,361 - INFO - HTTP Request: GET https://www.vlr.gg/287717 "HTTP/2 200 OK"
+2026-02-16 20:39:07,467 - INFO - HTTP Request: GET https://www.vlr.gg/287733 "HTTP/2 200 OK"
+2026-02-16 20:39:07,561 - INFO - HTTP Request: GET https://www.vlr.gg/287734 "HTTP/2 200 OK"
+2026-02-16 20:39:07,698 - INFO - HTTP Request: GET https://www.vlr.gg/287718 "HTTP/2 200 OK"
+2026-02-16 20:39:07,809 - INFO - HTTP Request: GET https://www.vlr.gg/287719 "HTTP/2 200 OK"
+2026-02-16 20:39:07,875 - INFO - HTTP Request: GET https://www.vlr.gg/287712 "HTTP/2 200 OK"
+2026-02-16 20:39:07,969 - INFO - HTTP Request: GET https://www.vlr.gg/287713 "HTTP/2 200 OK"
+2026-02-16 20:39:08,077 - INFO - HTTP Request: GET https://www.vlr.gg/287729 "HTTP/2 200 OK"
+2026-02-16 20:39:08,161 - INFO - HTTP Request: GET https://www.vlr.gg/287735 "HTTP/2 200 OK"
+2026-02-16 20:39:08,275 - INFO - HTTP Request: GET https://www.vlr.gg/287714 "HTTP/2 200 OK"
+2026-02-16 20:39:08,376 - INFO - HTTP Request: GET https://www.vlr.gg/287720 "HTTP/2 200 OK"
+2026-02-16 20:39:08,489 - INFO - HTTP Request: GET https://www.vlr.gg/287736 "HTTP/2 200 OK"
+2026-02-16 20:39:08,578 - INFO - HTTP Request: GET https://www.vlr.gg/287721 "HTTP/2 200 OK"
+2026-02-16 20:39:08,678 - INFO - HTTP Request: GET https://www.vlr.gg/287730 "HTTP/2 200 OK"
+2026-02-16 20:39:08,778 - INFO - HTTP Request: GET https://www.vlr.gg/287715 "HTTP/2 200 OK"
+2026-02-16 20:39:11,971 - INFO - Found 28 matches
+2026-02-16 20:39:11,972 - INFO - Processing match 1/28: ID 287723
+2026-02-16 20:39:11,973 - ERROR - Error fetching match 287723: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:13,474 - INFO - Processing match 2/28: ID 287724
+2026-02-16 20:39:13,474 - ERROR - Error fetching match 287724: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:14,974 - INFO - Processing match 3/28: ID 287725
+2026-02-16 20:39:14,975 - ERROR - Error fetching match 287725: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:16,476 - INFO - Processing match 4/28: ID 287726
+2026-02-16 20:39:16,476 - ERROR - Error fetching match 287726: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:17,977 - INFO - Processing match 5/28: ID 287727
+2026-02-16 20:39:17,977 - ERROR - Error fetching match 287727: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:19,478 - INFO - Processing match 6/28: ID 287728
+2026-02-16 20:39:19,478 - ERROR - Error fetching match 287728: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:20,978 - INFO - Processing match 7/28: ID 287708
+2026-02-16 20:39:20,978 - ERROR - Error fetching match 287708: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:22,479 - INFO - Processing match 8/28: ID 287709
+2026-02-16 20:39:22,479 - ERROR - Error fetching match 287709: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:23,980 - INFO - Processing match 9/28: ID 287710
+2026-02-16 20:39:23,986 - ERROR - Error fetching match 287710: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:25,486 - INFO - Processing match 10/28: ID 287711
+2026-02-16 20:39:25,487 - ERROR - Error fetching match 287711: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:26,987 - INFO - Processing match 11/28: ID 287731
+2026-02-16 20:39:26,989 - ERROR - Error fetching match 287731: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:28,490 - INFO - Processing match 12/28: ID 287732
+2026-02-16 20:39:28,490 - ERROR - Error fetching match 287732: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:29,991 - INFO - Processing match 13/28: ID 287716
+2026-02-16 20:39:29,991 - ERROR - Error fetching match 287716: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:31,492 - INFO - Processing match 14/28: ID 287717
+2026-02-16 20:39:31,493 - ERROR - Error fetching match 287717: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:32,995 - INFO - Processing match 15/28: ID 287733
+2026-02-16 20:39:32,995 - ERROR - Error fetching match 287733: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:34,496 - INFO - Processing match 16/28: ID 287734
+2026-02-16 20:39:34,497 - ERROR - Error fetching match 287734: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:35,998 - INFO - Processing match 17/28: ID 287718
+2026-02-16 20:39:35,999 - ERROR - Error fetching match 287718: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:37,499 - INFO - Processing match 18/28: ID 287719
+2026-02-16 20:39:37,500 - ERROR - Error fetching match 287719: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:39,001 - INFO - Processing match 19/28: ID 287712
+2026-02-16 20:39:39,002 - ERROR - Error fetching match 287712: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:40,503 - INFO - Processing match 20/28: ID 287713
+2026-02-16 20:39:40,503 - ERROR - Error fetching match 287713: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:42,004 - INFO - Processing match 21/28: ID 287729
+2026-02-16 20:39:42,005 - ERROR - Error fetching match 287729: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:43,506 - INFO - Processing match 22/28: ID 287735
+2026-02-16 20:39:43,507 - ERROR - Error fetching match 287735: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:45,008 - INFO - Processing match 23/28: ID 287714
+2026-02-16 20:39:45,009 - ERROR - Error fetching match 287714: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:46,510 - INFO - Processing match 24/28: ID 287720
+2026-02-16 20:39:46,511 - ERROR - Error fetching match 287720: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:48,011 - INFO - Processing match 25/28: ID 287736
+2026-02-16 20:39:48,012 - ERROR - Error fetching match 287736: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:49,513 - INFO - Processing match 26/28: ID 287721
+2026-02-16 20:39:49,514 - ERROR - Error fetching match 287721: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:51,015 - INFO - Processing match 27/28: ID 287730
+2026-02-16 20:39:51,015 - ERROR - Error fetching match 287730: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:52,516 - INFO - Processing match 28/28: ID 287715
+2026-02-16 20:39:52,516 - ERROR - Error fetching match 287715: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:54,017 - INFO - Total player records fetched: 0
+2026-02-16 20:39:54,017 - WARNING - No matches found for Champions Tour 2024: Masters Shanghai
+2026-02-16 20:39:54,017 - INFO - Fetching tournament: Champions Tour 2024: Masters Madrid (ID: 1868)
+2026-02-16 20:39:54,018 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:39:54,018 - INFO - Fetching tournament info for event ID: 1868
+2026-02-16 20:39:54,175 - INFO - HTTP Request: GET https://www.vlr.gg/event/1868 "HTTP/2 200 OK"
+2026-02-16 20:39:54,184 - INFO - Tournament: Tournament 1868
+2026-02-16 20:39:55,685 - INFO - Fetching match list...
+2026-02-16 20:39:55,715 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1868 "HTTP/2 200 OK"
+2026-02-16 20:39:55,851 - INFO - HTTP Request: GET https://www.vlr.gg/282936 "HTTP/2 200 OK"
+2026-02-16 20:39:55,938 - INFO - HTTP Request: GET https://www.vlr.gg/282935 "HTTP/2 200 OK"
+2026-02-16 20:39:56,037 - INFO - HTTP Request: GET https://www.vlr.gg/282934 "HTTP/2 200 OK"
+2026-02-16 20:39:56,136 - INFO - HTTP Request: GET https://www.vlr.gg/282937 "HTTP/2 200 OK"
+2026-02-16 20:39:56,229 - INFO - HTTP Request: GET https://www.vlr.gg/282938 "HTTP/2 200 OK"
+2026-02-16 20:39:56,331 - INFO - HTTP Request: GET https://www.vlr.gg/282939 "HTTP/2 200 OK"
+2026-02-16 20:39:56,427 - INFO - HTTP Request: GET https://www.vlr.gg/282932 "HTTP/2 200 OK"
+2026-02-16 20:39:56,533 - INFO - HTTP Request: GET https://www.vlr.gg/282933 "HTTP/2 200 OK"
+2026-02-16 20:39:57,158 - INFO - Found 8 matches
+2026-02-16 20:39:57,158 - INFO - Processing match 1/8: ID 282934
+2026-02-16 20:39:57,159 - ERROR - Error fetching match 282934: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:39:58,659 - INFO - Processing match 2/8: ID 282935
+2026-02-16 20:39:58,660 - ERROR - Error fetching match 282935: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:00,161 - INFO - Processing match 3/8: ID 282936
+2026-02-16 20:40:00,161 - ERROR - Error fetching match 282936: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:01,662 - INFO - Processing match 4/8: ID 282937
+2026-02-16 20:40:01,662 - ERROR - Error fetching match 282937: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:03,165 - INFO - Processing match 5/8: ID 282938
+2026-02-16 20:40:03,165 - ERROR - Error fetching match 282938: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:04,666 - INFO - Processing match 6/8: ID 282939
+2026-02-16 20:40:04,667 - ERROR - Error fetching match 282939: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:06,167 - INFO - Processing match 7/8: ID 282932
+2026-02-16 20:40:06,168 - ERROR - Error fetching match 282932: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:07,669 - INFO - Processing match 8/8: ID 282933
+2026-02-16 20:40:07,669 - ERROR - Error fetching match 282933: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:09,170 - INFO - Total player records fetched: 0
+2026-02-16 20:40:09,171 - WARNING - No matches found for Champions Tour 2024: Masters Madrid
+2026-02-16 20:40:09,171 - INFO - Fetching tournament: Valorant Champions 2023 (ID: 1530)
+2026-02-16 20:40:09,171 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:40:09,171 - INFO - Fetching tournament info for event ID: 1530
+2026-02-16 20:40:09,224 - INFO - HTTP Request: GET https://www.vlr.gg/event/1530 "HTTP/2 200 OK"
+2026-02-16 20:40:09,235 - INFO - Tournament: Tournament 1530
+2026-02-16 20:40:10,737 - INFO - Fetching match list...
+2026-02-16 20:40:10,772 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1530 "HTTP/2 200 OK"
+2026-02-16 20:40:10,896 - INFO - HTTP Request: GET https://www.vlr.gg/185722 "HTTP/2 200 OK"
+2026-02-16 20:40:10,978 - INFO - HTTP Request: GET https://www.vlr.gg/185730 "HTTP/2 200 OK"
+2026-02-16 20:40:11,077 - INFO - HTTP Request: GET https://www.vlr.gg/185731 "HTTP/2 200 OK"
+2026-02-16 20:40:11,179 - INFO - HTTP Request: GET https://www.vlr.gg/185723 "HTTP/2 200 OK"
+2026-02-16 20:40:11,278 - INFO - HTTP Request: GET https://www.vlr.gg/185724 "HTTP/2 200 OK"
+2026-02-16 20:40:11,379 - INFO - HTTP Request: GET https://www.vlr.gg/185725 "HTTP/2 200 OK"
+2026-02-16 20:40:11,478 - INFO - HTTP Request: GET https://www.vlr.gg/185729 "HTTP/2 200 OK"
+2026-02-16 20:40:11,580 - INFO - HTTP Request: GET https://www.vlr.gg/185732 "HTTP/2 200 OK"
+2026-02-16 20:40:11,678 - INFO - HTTP Request: GET https://www.vlr.gg/185727 "HTTP/2 200 OK"
+2026-02-16 20:40:11,782 - INFO - HTTP Request: GET https://www.vlr.gg/185733 "HTTP/2 200 OK"
+2026-02-16 20:40:11,881 - INFO - HTTP Request: GET https://www.vlr.gg/185726 "HTTP/2 200 OK"
+2026-02-16 20:40:11,978 - INFO - HTTP Request: GET https://www.vlr.gg/185734 "HTTP/2 200 OK"
+2026-02-16 20:40:12,079 - INFO - HTTP Request: GET https://www.vlr.gg/185728 "HTTP/2 200 OK"
+2026-02-16 20:40:12,180 - INFO - HTTP Request: GET https://www.vlr.gg/185735 "HTTP/2 200 OK"
+2026-02-16 20:40:12,741 - INFO - Found 14 matches
+2026-02-16 20:40:12,742 - INFO - Processing match 1/14: ID 185722
+2026-02-16 20:40:12,742 - ERROR - Error fetching match 185722: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:14,242 - INFO - Processing match 2/14: ID 185730
+2026-02-16 20:40:14,243 - ERROR - Error fetching match 185730: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:15,743 - INFO - Processing match 3/14: ID 185731
+2026-02-16 20:40:15,744 - ERROR - Error fetching match 185731: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:17,245 - INFO - Processing match 4/14: ID 185723
+2026-02-16 20:40:17,245 - ERROR - Error fetching match 185723: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:18,747 - INFO - Processing match 5/14: ID 185724
+2026-02-16 20:40:18,748 - ERROR - Error fetching match 185724: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:20,249 - INFO - Processing match 6/14: ID 185725
+2026-02-16 20:40:20,249 - ERROR - Error fetching match 185725: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:21,750 - INFO - Processing match 7/14: ID 185729
+2026-02-16 20:40:21,750 - ERROR - Error fetching match 185729: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:23,251 - INFO - Processing match 8/14: ID 185732
+2026-02-16 20:40:23,251 - ERROR - Error fetching match 185732: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:24,752 - INFO - Processing match 9/14: ID 185727
+2026-02-16 20:40:24,752 - ERROR - Error fetching match 185727: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:26,252 - INFO - Processing match 10/14: ID 185733
+2026-02-16 20:40:26,253 - ERROR - Error fetching match 185733: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:40:27,753 - INFO - Processing match 11/14: ID 185726
+2026-02-16 20:40:27,753 - ERROR - Error fetching match 185726: module 'vlrdevapi.matches' has no attribute 'stats'
+2026-02-16 20:47:52,543 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:47:52,548 - INFO - ============================================================
+2026-02-16 20:47:52,548 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:47:52.548495
+2026-02-16 20:47:52,548 - INFO - ============================================================
+2026-02-16 20:47:52,549 - INFO - Database initialized successfully
+2026-02-16 20:47:52,564 - ERROR - Scraper failed: expected an indented block after function definition on line 175 (data_fetcher.py, line 176)
+2026-02-16 20:49:05,546 - INFO - DRY RUN MODE - No data will be written
+2026-02-16 20:49:05,551 - INFO - ============================================================
+2026-02-16 20:49:05,551 - INFO - VCT Scorigami Scraper Started at 2026-02-16 20:49:05.551176
+2026-02-16 20:49:05,551 - INFO - ============================================================
+2026-02-16 20:49:05,552 - INFO - Database initialized successfully
+2026-02-16 20:49:05,576 - INFO - Fetching tournament: Valorant Champions 2025 (ID: 2283)
+2026-02-16 20:49:05,762 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:49:05,762 - INFO - Fetching tournament info for event ID: 2283
+2026-02-16 20:49:06,158 - INFO - HTTP Request: GET https://www.vlr.gg/event/2283 "HTTP/2 200 OK"
+2026-02-16 20:49:06,171 - INFO - Tournament: Tournament 2283
+2026-02-16 20:49:07,671 - INFO - Fetching match list...
+2026-02-16 20:49:07,721 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/2283 "HTTP/2 200 OK"
+2026-02-16 20:49:07,844 - INFO - HTTP Request: GET https://www.vlr.gg/542195 "HTTP/2 200 OK"
+2026-02-16 20:49:07,927 - INFO - HTTP Request: GET https://www.vlr.gg/542196 "HTTP/2 200 OK"
+2026-02-16 20:49:08,040 - INFO - HTTP Request: GET https://www.vlr.gg/542207 "HTTP/2 200 OK"
+2026-02-16 20:49:08,116 - INFO - HTTP Request: GET https://www.vlr.gg/542205 "HTTP/2 200 OK"
+2026-02-16 20:49:08,220 - INFO - HTTP Request: GET https://www.vlr.gg/542212 "HTTP/2 200 OK"
+2026-02-16 20:49:08,330 - INFO - HTTP Request: GET https://www.vlr.gg/542211 "HTTP/2 200 OK"
+2026-02-16 20:49:08,426 - INFO - HTTP Request: GET https://www.vlr.gg/542200 "HTTP/2 200 OK"
+2026-02-16 20:49:08,522 - INFO - HTTP Request: GET https://www.vlr.gg/542201 "HTTP/2 200 OK"
+2026-02-16 20:49:08,626 - INFO - HTTP Request: GET https://www.vlr.gg/542197 "HTTP/2 200 OK"
+2026-02-16 20:49:08,724 - INFO - HTTP Request: GET https://www.vlr.gg/542208 "HTTP/2 200 OK"
+2026-02-16 20:49:08,845 - INFO - HTTP Request: GET https://www.vlr.gg/542213 "HTTP/2 200 OK"
+2026-02-16 20:49:08,958 - INFO - HTTP Request: GET https://www.vlr.gg/542202 "HTTP/2 200 OK"
+2026-02-16 20:49:09,027 - INFO - HTTP Request: GET https://www.vlr.gg/542209 "HTTP/2 200 OK"
+2026-02-16 20:49:09,129 - INFO - HTTP Request: GET https://www.vlr.gg/542198 "HTTP/2 200 OK"
+2026-02-16 20:49:09,226 - INFO - HTTP Request: GET https://www.vlr.gg/542203 "HTTP/2 200 OK"
+2026-02-16 20:49:09,326 - INFO - HTTP Request: GET https://www.vlr.gg/542214 "HTTP/2 200 OK"
+2026-02-16 20:49:09,424 - INFO - HTTP Request: GET https://www.vlr.gg/542210 "HTTP/2 200 OK"
+2026-02-16 20:49:09,524 - INFO - HTTP Request: GET https://www.vlr.gg/542199 "HTTP/2 200 OK"
+2026-02-16 20:49:09,644 - INFO - HTTP Request: GET https://www.vlr.gg/542215 "HTTP/2 200 OK"
+2026-02-16 20:49:09,727 - INFO - HTTP Request: GET https://www.vlr.gg/542204 "HTTP/2 200 OK"
+2026-02-16 20:49:09,848 - INFO - HTTP Request: GET https://www.vlr.gg/542265 "HTTP/2 200 OK"
+2026-02-16 20:49:09,937 - INFO - HTTP Request: GET https://www.vlr.gg/542264 "HTTP/2 200 OK"
+2026-02-16 20:49:10,030 - INFO - HTTP Request: GET https://www.vlr.gg/542266 "HTTP/2 200 OK"
+2026-02-16 20:49:10,131 - INFO - HTTP Request: GET https://www.vlr.gg/542267 "HTTP/2 200 OK"
+2026-02-16 20:49:10,265 - INFO - HTTP Request: GET https://www.vlr.gg/542273 "HTTP/2 200 OK"
+2026-02-16 20:49:10,347 - INFO - HTTP Request: GET https://www.vlr.gg/542274 "HTTP/2 200 OK"
+2026-02-16 20:49:10,447 - INFO - HTTP Request: GET https://www.vlr.gg/542268 "HTTP/2 200 OK"
+2026-02-16 20:49:10,526 - INFO - HTTP Request: GET https://www.vlr.gg/542269 "HTTP/2 200 OK"
+2026-02-16 20:49:10,640 - INFO - HTTP Request: GET https://www.vlr.gg/542277 "HTTP/2 200 OK"
+2026-02-16 20:49:10,730 - INFO - HTTP Request: GET https://www.vlr.gg/542276 "HTTP/2 200 OK"
+2026-02-16 20:49:10,870 - INFO - HTTP Request: GET https://www.vlr.gg/542270 "HTTP/2 200 OK"
+2026-02-16 20:49:10,969 - INFO - HTTP Request: GET https://www.vlr.gg/542278 "HTTP/2 200 OK"
+2026-02-16 20:49:11,038 - INFO - HTTP Request: GET https://www.vlr.gg/542279 "HTTP/2 200 OK"
+2026-02-16 20:49:11,191 - INFO - HTTP Request: GET https://www.vlr.gg/542272 "HTTP/2 200 OK"
+2026-02-16 20:49:18,036 - INFO - Found 34 matches
+2026-02-16 20:49:18,036 - INFO - Processing match 1/34: ID 542195
+2026-02-16 20:49:18,037 - ERROR - Error fetching match 542195: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:19,537 - INFO - Processing match 2/34: ID 542196
+2026-02-16 20:49:19,537 - ERROR - Error fetching match 542196: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:21,038 - INFO - Processing match 3/34: ID 542207
+2026-02-16 20:49:21,038 - ERROR - Error fetching match 542207: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:22,539 - INFO - Processing match 4/34: ID 542205
+2026-02-16 20:49:22,539 - ERROR - Error fetching match 542205: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:24,040 - INFO - Processing match 5/34: ID 542212
+2026-02-16 20:49:24,040 - ERROR - Error fetching match 542212: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:25,541 - INFO - Processing match 6/34: ID 542211
+2026-02-16 20:49:25,541 - ERROR - Error fetching match 542211: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:27,042 - INFO - Processing match 7/34: ID 542200
+2026-02-16 20:49:27,043 - ERROR - Error fetching match 542200: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:28,543 - INFO - Processing match 8/34: ID 542201
+2026-02-16 20:49:36,683 - ERROR - Error fetching match 542201: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:38,184 - INFO - Processing match 9/34: ID 542197
+2026-02-16 20:49:38,184 - ERROR - Error fetching match 542197: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:39,685 - INFO - Processing match 10/34: ID 542208
+2026-02-16 20:49:39,685 - ERROR - Error fetching match 542208: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:41,192 - INFO - Processing match 11/34: ID 542213
+2026-02-16 20:49:41,192 - ERROR - Error fetching match 542213: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:42,693 - INFO - Processing match 12/34: ID 542202
+2026-02-16 20:49:42,693 - ERROR - Error fetching match 542202: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:44,194 - INFO - Processing match 13/34: ID 542209
+2026-02-16 20:49:44,195 - ERROR - Error fetching match 542209: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:45,695 - INFO - Processing match 14/34: ID 542198
+2026-02-16 20:49:45,696 - ERROR - Error fetching match 542198: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:47,197 - INFO - Processing match 15/34: ID 542203
+2026-02-16 20:49:47,197 - ERROR - Error fetching match 542203: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:48,698 - INFO - Processing match 16/34: ID 542214
+2026-02-16 20:49:48,698 - ERROR - Error fetching match 542214: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:50,199 - INFO - Processing match 17/34: ID 542210
+2026-02-16 20:49:50,199 - ERROR - Error fetching match 542210: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:51,700 - INFO - Processing match 18/34: ID 542199
+2026-02-16 20:49:51,700 - ERROR - Error fetching match 542199: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:53,202 - INFO - Processing match 19/34: ID 542215
+2026-02-16 20:49:53,202 - ERROR - Error fetching match 542215: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:54,702 - INFO - Processing match 20/34: ID 542204
+2026-02-16 20:49:54,703 - ERROR - Error fetching match 542204: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:56,203 - INFO - Processing match 21/34: ID 542265
+2026-02-16 20:49:56,204 - ERROR - Error fetching match 542265: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:57,704 - INFO - Processing match 22/34: ID 542264
+2026-02-16 20:49:57,704 - ERROR - Error fetching match 542264: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:49:59,205 - INFO - Processing match 23/34: ID 542266
+2026-02-16 20:49:59,207 - ERROR - Error fetching match 542266: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:00,708 - INFO - Processing match 24/34: ID 542267
+2026-02-16 20:50:00,708 - ERROR - Error fetching match 542267: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:02,209 - INFO - Processing match 25/34: ID 542273
+2026-02-16 20:50:02,209 - ERROR - Error fetching match 542273: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:03,709 - INFO - Processing match 26/34: ID 542274
+2026-02-16 20:50:03,710 - ERROR - Error fetching match 542274: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:05,211 - INFO - Processing match 27/34: ID 542268
+2026-02-16 20:50:05,211 - ERROR - Error fetching match 542268: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:06,712 - INFO - Processing match 28/34: ID 542269
+2026-02-16 20:50:06,712 - ERROR - Error fetching match 542269: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:08,213 - INFO - Processing match 29/34: ID 542277
+2026-02-16 20:50:08,213 - ERROR - Error fetching match 542277: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:09,713 - INFO - Processing match 30/34: ID 542276
+2026-02-16 20:50:09,713 - ERROR - Error fetching match 542276: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:11,214 - INFO - Processing match 31/34: ID 542270
+2026-02-16 20:50:11,214 - ERROR - Error fetching match 542270: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:12,714 - INFO - Processing match 32/34: ID 542278
+2026-02-16 20:50:12,715 - ERROR - Error fetching match 542278: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:14,215 - INFO - Processing match 33/34: ID 542279
+2026-02-16 20:50:14,215 - ERROR - Error fetching match 542279: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:15,716 - INFO - Processing match 34/34: ID 542272
+2026-02-16 20:50:15,716 - ERROR - Error fetching match 542272: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:17,216 - INFO - Total player records fetched: 0
+2026-02-16 20:50:17,217 - WARNING - No matches found for Valorant Champions 2025
+2026-02-16 20:50:17,217 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 20:50:17,217 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:50:17,217 - INFO - Fetching tournament info for event ID: 1923
+2026-02-16 20:50:17,367 - INFO - HTTP Request: GET https://www.vlr.gg/event/1923 "HTTP/2 200 OK"
+2026-02-16 20:50:17,376 - INFO - Tournament: Tournament 1923
+2026-02-16 20:50:18,876 - INFO - Fetching match list...
+2026-02-16 20:50:18,925 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1923 "HTTP/2 200 OK"
+2026-02-16 20:50:19,126 - INFO - HTTP Request: GET https://www.vlr.gg/295605 "HTTP/2 200 OK"
+2026-02-16 20:50:19,209 - INFO - HTTP Request: GET https://www.vlr.gg/295606 "HTTP/2 200 OK"
+2026-02-16 20:50:19,295 - INFO - HTTP Request: GET https://www.vlr.gg/295611 "HTTP/2 200 OK"
+2026-02-16 20:50:19,359 - INFO - HTTP Request: GET https://www.vlr.gg/295610 "HTTP/2 200 OK"
+2026-02-16 20:50:19,456 - INFO - HTTP Request: GET https://www.vlr.gg/295615 "HTTP/2 200 OK"
+2026-02-16 20:50:19,539 - INFO - HTTP Request: GET https://www.vlr.gg/295608 "HTTP/2 200 OK"
+2026-02-16 20:50:19,659 - INFO - HTTP Request: GET https://www.vlr.gg/295613 "HTTP/2 200 OK"
+2026-02-16 20:50:19,775 - INFO - HTTP Request: GET https://www.vlr.gg/295607 "HTTP/2 200 OK"
+2026-02-16 20:50:19,855 - INFO - HTTP Request: GET https://www.vlr.gg/295612 "HTTP/2 200 OK"
+2026-02-16 20:50:19,945 - INFO - HTTP Request: GET https://www.vlr.gg/295617 "HTTP/2 200 OK"
+2026-02-16 20:50:20,043 - INFO - HTTP Request: GET https://www.vlr.gg/295609 "HTTP/2 200 OK"
+2026-02-16 20:50:20,153 - INFO - HTTP Request: GET https://www.vlr.gg/295614 "HTTP/2 200 OK"
+2026-02-16 20:50:20,221 - INFO - HTTP Request: GET https://www.vlr.gg/295619 "HTTP/2 200 OK"
+2026-02-16 20:50:20,343 - INFO - HTTP Request: GET https://www.vlr.gg/307572 "HTTP/2 200 OK"
+2026-02-16 20:50:20,450 - INFO - HTTP Request: GET https://www.vlr.gg/307573 "HTTP/2 200 OK"
+2026-02-16 20:50:20,548 - INFO - HTTP Request: GET https://www.vlr.gg/307574 "HTTP/2 200 OK"
+2026-02-16 20:50:20,653 - INFO - HTTP Request: GET https://www.vlr.gg/303087 "HTTP/2 200 OK"
+2026-02-16 20:50:20,773 - INFO - HTTP Request: GET https://www.vlr.gg/303088 "HTTP/2 200 OK"
+2026-02-16 20:50:20,855 - INFO - HTTP Request: GET https://www.vlr.gg/303086 "HTTP/2 200 OK"
+2026-02-16 20:50:25,810 - INFO - Found 19 matches
+2026-02-16 20:50:25,810 - INFO - Processing match 1/19: ID 295605
+2026-02-16 20:50:25,810 - ERROR - Error fetching match 295605: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:27,311 - INFO - Processing match 2/19: ID 295606
+2026-02-16 20:50:27,312 - ERROR - Error fetching match 295606: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:28,812 - INFO - Processing match 3/19: ID 295610
+2026-02-16 20:50:28,812 - ERROR - Error fetching match 295610: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:30,314 - INFO - Processing match 4/19: ID 295611
+2026-02-16 20:50:30,315 - ERROR - Error fetching match 295611: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:31,816 - INFO - Processing match 5/19: ID 295615
+2026-02-16 20:50:31,816 - ERROR - Error fetching match 295615: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:33,317 - INFO - Processing match 6/19: ID 295608
+2026-02-16 20:50:33,318 - ERROR - Error fetching match 295608: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:34,818 - INFO - Processing match 7/19: ID 295613
+2026-02-16 20:50:34,819 - ERROR - Error fetching match 295613: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:36,320 - INFO - Processing match 8/19: ID 295607
+2026-02-16 20:50:36,320 - ERROR - Error fetching match 295607: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:37,821 - INFO - Processing match 9/19: ID 295612
+2026-02-16 20:50:37,824 - ERROR - Error fetching match 295612: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:39,325 - INFO - Processing match 10/19: ID 295617
+2026-02-16 20:50:39,326 - ERROR - Error fetching match 295617: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:40,826 - INFO - Processing match 11/19: ID 295609
+2026-02-16 20:50:40,828 - ERROR - Error fetching match 295609: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:42,329 - INFO - Processing match 12/19: ID 295614
+2026-02-16 20:50:42,329 - ERROR - Error fetching match 295614: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:43,830 - INFO - Processing match 13/19: ID 295619
+2026-02-16 20:50:43,830 - ERROR - Error fetching match 295619: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:45,330 - INFO - Processing match 14/19: ID 307572
+2026-02-16 20:50:45,331 - ERROR - Error fetching match 307572: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:46,833 - INFO - Processing match 15/19: ID 307573
+2026-02-16 20:50:46,833 - ERROR - Error fetching match 307573: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:48,334 - INFO - Processing match 16/19: ID 307574
+2026-02-16 20:50:48,334 - ERROR - Error fetching match 307574: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:49,835 - INFO - Processing match 17/19: ID 303087
+2026-02-16 20:50:49,836 - ERROR - Error fetching match 303087: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:51,337 - INFO - Processing match 18/19: ID 303088
+2026-02-16 20:50:51,337 - ERROR - Error fetching match 303088: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:52,838 - INFO - Processing match 19/19: ID 303086
+2026-02-16 20:50:52,839 - ERROR - Error fetching match 303086: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:50:54,340 - INFO - Total player records fetched: 0
+2026-02-16 20:50:54,341 - WARNING - No matches found for Valorant Champions 2024
+2026-02-16 20:50:54,341 - INFO - Fetching tournament: Champions Tour 2024: Masters Shanghai (ID: 1909)
+2026-02-16 20:50:54,341 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:50:54,341 - INFO - Fetching tournament info for event ID: 1909
+2026-02-16 20:50:54,483 - INFO - HTTP Request: GET https://www.vlr.gg/event/1909 "HTTP/2 200 OK"
+2026-02-16 20:50:54,512 - INFO - Tournament: Tournament 1909
+2026-02-16 20:50:56,014 - INFO - Fetching match list...
+2026-02-16 20:50:56,055 - INFO - HTTP Request: GET https://www.vlr.gg/event/matches/1909 "HTTP/2 200 OK"
+2026-02-16 20:50:56,166 - INFO - HTTP Request: GET https://www.vlr.gg/287723 "HTTP/2 200 OK"
+2026-02-16 20:50:56,261 - INFO - HTTP Request: GET https://www.vlr.gg/287724 "HTTP/2 200 OK"
+2026-02-16 20:50:56,363 - INFO - HTTP Request: GET https://www.vlr.gg/287725 "HTTP/2 200 OK"
+2026-02-16 20:50:56,472 - INFO - HTTP Request: GET https://www.vlr.gg/287726 "HTTP/2 200 OK"
+2026-02-16 20:50:56,569 - INFO - HTTP Request: GET https://www.vlr.gg/287727 "HTTP/2 200 OK"
+2026-02-16 20:50:56,669 - INFO - HTTP Request: GET https://www.vlr.gg/287728 "HTTP/2 200 OK"
+2026-02-16 20:50:56,771 - INFO - HTTP Request: GET https://www.vlr.gg/287708 "HTTP/2 200 OK"
+2026-02-16 20:50:56,866 - INFO - HTTP Request: GET https://www.vlr.gg/287709 "HTTP/2 200 OK"
+2026-02-16 20:50:56,976 - INFO - HTTP Request: GET https://www.vlr.gg/287710 "HTTP/2 200 OK"
+2026-02-16 20:50:57,072 - INFO - HTTP Request: GET https://www.vlr.gg/287711 "HTTP/2 200 OK"
+2026-02-16 20:50:57,172 - INFO - HTTP Request: GET https://www.vlr.gg/287731 "HTTP/2 200 OK"
+2026-02-16 20:50:57,271 - INFO - HTTP Request: GET https://www.vlr.gg/287732 "HTTP/2 200 OK"
+2026-02-16 20:50:57,371 - INFO - HTTP Request: GET https://www.vlr.gg/287716 "HTTP/2 200 OK"
+2026-02-16 20:50:57,479 - INFO - HTTP Request: GET https://www.vlr.gg/287717 "HTTP/2 200 OK"
+2026-02-16 20:50:57,577 - INFO - HTTP Request: GET https://www.vlr.gg/287733 "HTTP/2 200 OK"
+2026-02-16 20:50:57,671 - INFO - HTTP Request: GET https://www.vlr.gg/287734 "HTTP/2 200 OK"
+2026-02-16 20:50:57,771 - INFO - HTTP Request: GET https://www.vlr.gg/287718 "HTTP/2 200 OK"
+2026-02-16 20:50:57,872 - INFO - HTTP Request: GET https://www.vlr.gg/287719 "HTTP/2 200 OK"
+2026-02-16 20:50:57,972 - INFO - HTTP Request: GET https://www.vlr.gg/287712 "HTTP/2 200 OK"
+2026-02-16 20:50:58,071 - INFO - HTTP Request: GET https://www.vlr.gg/287713 "HTTP/2 200 OK"
+2026-02-16 20:50:58,188 - INFO - HTTP Request: GET https://www.vlr.gg/287729 "HTTP/2 200 OK"
+2026-02-16 20:50:58,275 - INFO - HTTP Request: GET https://www.vlr.gg/287735 "HTTP/2 200 OK"
+2026-02-16 20:50:58,388 - INFO - HTTP Request: GET https://www.vlr.gg/287714 "HTTP/2 200 OK"
+2026-02-16 20:50:58,473 - INFO - HTTP Request: GET https://www.vlr.gg/287720 "HTTP/2 200 OK"
+2026-02-16 20:50:58,579 - INFO - HTTP Request: GET https://www.vlr.gg/287736 "HTTP/2 200 OK"
+2026-02-16 20:50:58,687 - INFO - HTTP Request: GET https://www.vlr.gg/287721 "HTTP/2 200 OK"
+2026-02-16 20:50:58,802 - INFO - HTTP Request: GET https://www.vlr.gg/287730 "HTTP/2 200 OK"
+2026-02-16 20:50:58,887 - INFO - HTTP Request: GET https://www.vlr.gg/287715 "HTTP/2 200 OK"
+2026-02-16 20:51:00,699 - INFO - Found 28 matches
+2026-02-16 20:51:00,700 - INFO - Processing match 1/28: ID 287723
+2026-02-16 20:51:00,700 - ERROR - Error fetching match 287723: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:02,201 - INFO - Processing match 2/28: ID 287724
+2026-02-16 20:51:02,202 - ERROR - Error fetching match 287724: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:03,705 - INFO - Processing match 3/28: ID 287725
+2026-02-16 20:51:03,705 - ERROR - Error fetching match 287725: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:05,207 - INFO - Processing match 4/28: ID 287726
+2026-02-16 20:51:05,208 - ERROR - Error fetching match 287726: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:06,709 - INFO - Processing match 5/28: ID 287727
+2026-02-16 20:51:06,709 - ERROR - Error fetching match 287727: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:08,210 - INFO - Processing match 6/28: ID 287728
+2026-02-16 20:51:08,210 - ERROR - Error fetching match 287728: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:09,711 - INFO - Processing match 7/28: ID 287708
+2026-02-16 20:51:09,711 - ERROR - Error fetching match 287708: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:11,212 - INFO - Processing match 8/28: ID 287709
+2026-02-16 20:51:11,212 - ERROR - Error fetching match 287709: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:12,713 - INFO - Processing match 9/28: ID 287710
+2026-02-16 20:51:12,714 - ERROR - Error fetching match 287710: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:14,214 - INFO - Processing match 10/28: ID 287711
+2026-02-16 20:51:14,216 - ERROR - Error fetching match 287711: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:15,717 - INFO - Processing match 11/28: ID 287731
+2026-02-16 20:51:15,717 - ERROR - Error fetching match 287731: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:17,218 - INFO - Processing match 12/28: ID 287732
+2026-02-16 20:51:17,218 - ERROR - Error fetching match 287732: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:18,719 - INFO - Processing match 13/28: ID 287716
+2026-02-16 20:51:18,719 - ERROR - Error fetching match 287716: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:20,220 - INFO - Processing match 14/28: ID 287717
+2026-02-16 20:51:20,221 - ERROR - Error fetching match 287717: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:21,721 - INFO - Processing match 15/28: ID 287733
+2026-02-16 20:51:21,721 - ERROR - Error fetching match 287733: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:23,222 - INFO - Processing match 16/28: ID 287734
+2026-02-16 20:51:23,222 - ERROR - Error fetching match 287734: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:24,724 - INFO - Processing match 17/28: ID 287718
+2026-02-16 20:51:24,724 - ERROR - Error fetching match 287718: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:26,225 - INFO - Processing match 18/28: ID 287719
+2026-02-16 20:51:26,225 - ERROR - Error fetching match 287719: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:27,726 - INFO - Processing match 19/28: ID 287712
+2026-02-16 20:51:27,726 - ERROR - Error fetching match 287712: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:29,227 - INFO - Processing match 20/28: ID 287713
+2026-02-16 20:51:29,228 - ERROR - Error fetching match 287713: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:30,728 - INFO - Processing match 21/28: ID 287729
+2026-02-16 20:51:30,728 - ERROR - Error fetching match 287729: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:32,229 - INFO - Processing match 22/28: ID 287735
+2026-02-16 20:51:32,230 - ERROR - Error fetching match 287735: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:33,730 - INFO - Processing match 23/28: ID 287714
+2026-02-16 20:51:33,730 - ERROR - Error fetching match 287714: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:35,231 - INFO - Processing match 24/28: ID 287720
+2026-02-16 20:51:35,232 - ERROR - Error fetching match 287720: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:36,733 - INFO - Processing match 25/28: ID 287736
+2026-02-16 20:51:36,733 - ERROR - Error fetching match 287736: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:38,234 - INFO - Processing match 26/28: ID 287721
+2026-02-16 20:51:38,234 - ERROR - Error fetching match 287721: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:39,734 - INFO - Processing match 27/28: ID 287730
+2026-02-16 20:51:39,735 - ERROR - Error fetching match 287730: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:41,235 - INFO - Processing match 28/28: ID 287715
+2026-02-16 20:51:41,235 - ERROR - Error fetching match 287715: match_summary() got an unexpected keyword argument 'match_id'
+2026-02-16 20:51:42,736 - INFO - Total player records fetched: 0
+2026-02-16 20:51:42,737 - WARNING - No matches found for Champions Tour 2024: Masters Shanghai
+2026-02-16 20:51:42,737 - INFO - Fetching tournament: Champions Tour 2024: Masters Madrid (ID: 1868)
+2026-02-16 20:51:42,737 - INFO - vlrdevapi initialized successfully
+2026-02-16 20:51:42,737 - INFO - Fetching tournament info for event ID: 1868
+2026-02-16 20:51:42,888 - INFO - HTTP Request: GET https://www.vlr.gg/event/1868 "HTTP/2 200 OK"
+2026-02-16 22:01:30,799 - INFO - ============================================================
+2026-02-16 22:01:30,799 - INFO - VCT Scorigami Scraper Started at 2026-02-16 22:01:30.799043
+2026-02-16 22:01:30,799 - INFO - ============================================================
+2026-02-16 22:01:30,804 - INFO - Database initialized successfully
+2026-02-16 22:01:30,940 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 22:01:30,941 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-16 22:01:31,256 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-16 22:01:32,758 - INFO - Found 3 matches
+2026-02-16 22:01:32,758 - INFO - Processing match 1/3: ID 303086
+2026-02-16 22:01:34,718 - INFO - Processing match 2/3: ID 303087
+2026-02-16 22:01:36,535 - INFO - Processing match 3/3: ID 303088
+2026-02-16 22:01:38,554 - INFO - Total player records fetched: 140
+2026-02-16 22:01:38,569 - INFO - Batch insert complete: 110 added, 30 skipped, 0 failed
+2026-02-16 22:01:38,569 - INFO - Completed Valorant Champions 2024: 110 added, 30 skipped
+2026-02-16 22:01:38,569 - INFO - ============================================================
+2026-02-16 22:01:38,569 - INFO - SCRAPER SUMMARY
+2026-02-16 22:01:38,569 - INFO - ============================================================
+2026-02-16 22:01:38,569 - INFO - Duration: 0:00:07.770459
+2026-02-16 22:01:38,569 - INFO - Tournaments processed: 1/1
+2026-02-16 22:01:38,569 - INFO - Total records added: 110
+2026-02-16 22:01:38,569 - INFO - Total records skipped (duplicates): 30
+2026-02-16 22:01:38,569 - INFO - Total failures: 0
+2026-02-16 22:01:38,571 - INFO - Database now has: 110 total records
+2026-02-16 22:01:38,571 - INFO - ============================================================
+2026-02-16 22:14:14,590 - INFO - ============================================================
+2026-02-16 22:14:14,590 - INFO - VCT Scorigami Scraper Started at 2026-02-16 22:14:14.590481
+2026-02-16 22:14:14,590 - INFO - ============================================================
+2026-02-16 22:14:14,595 - INFO - Database initialized successfully
+2026-02-16 22:14:14,726 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 22:14:14,727 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-16 22:14:15,088 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-16 22:14:16,590 - INFO - Found 3 matches
+2026-02-16 22:14:16,590 - INFO - Processing match 1/3: ID 303086
+2026-02-16 22:14:18,546 - INFO - Processing match 2/3: ID 303087
+2026-02-16 22:14:20,355 - INFO - Processing match 3/3: ID 303088
+2026-02-16 22:14:22,357 - INFO - Total player records fetched: 140
+2026-02-16 22:14:22,365 - INFO - Batch insert complete: 110 added, 30 skipped, 0 failed
+2026-02-16 22:14:22,365 - INFO - Completed Valorant Champions 2024: 110 added, 30 skipped
+2026-02-16 22:14:22,365 - INFO - ============================================================
+2026-02-16 22:14:22,365 - INFO - SCRAPER SUMMARY
+2026-02-16 22:14:22,365 - INFO - ============================================================
+2026-02-16 22:14:22,365 - INFO - Duration: 0:00:07.774979
+2026-02-16 22:14:22,365 - INFO - Tournaments processed: 1/1
+2026-02-16 22:14:22,365 - INFO - Total records added: 110
+2026-02-16 22:14:22,365 - INFO - Total records skipped (duplicates): 30
+2026-02-16 22:14:22,365 - INFO - Total failures: 0
+2026-02-16 22:14:22,367 - INFO - Database now has: 110 total records
+2026-02-16 22:14:22,367 - INFO - ============================================================
+2026-02-16 23:22:20,626 - INFO - ============================================================
+2026-02-16 23:22:20,626 - INFO - VCT Scorigami Scraper Started at 2026-02-16 23:22:20.626191
+2026-02-16 23:22:20,626 - INFO - ============================================================
+2026-02-16 23:22:20,631 - INFO - Database initialized successfully
+2026-02-16 23:22:20,767 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-16 23:22:20,767 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-16 23:22:21,083 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-16 23:22:22,585 - INFO - Found 3 matches
+2026-02-16 23:22:22,585 - INFO - Processing match 1/3: ID 303086
+2026-02-16 23:22:24,521 - INFO - Processing match 2/3: ID 303087
+2026-02-16 23:22:26,325 - INFO - Processing match 3/3: ID 303088
+2026-02-16 23:22:28,293 - INFO - Total player records fetched: 110
+2026-02-16 23:22:28,301 - INFO - Batch insert complete: 90 added, 20 skipped, 0 failed
+2026-02-16 23:22:28,301 - INFO - Completed Valorant Champions 2024: 90 added, 20 skipped
+2026-02-16 23:22:28,301 - INFO - ============================================================
+2026-02-16 23:22:28,302 - INFO - SCRAPER SUMMARY
+2026-02-16 23:22:28,302 - INFO - ============================================================
+2026-02-16 23:22:28,303 - INFO - Duration: 0:00:07.675587
+2026-02-16 23:22:28,303 - INFO - Tournaments processed: 1/1
+2026-02-16 23:22:28,303 - INFO - Total records added: 90
+2026-02-16 23:22:28,303 - INFO - Total records skipped (duplicates): 20
+2026-02-16 23:22:28,303 - INFO - Total failures: 0
+2026-02-16 23:22:28,304 - INFO - Database now has: 90 total records
+2026-02-16 23:22:28,304 - INFO - ============================================================
+2026-02-17 13:52:29,468 - INFO - ============================================================
+2026-02-17 13:52:29,469 - INFO - VCT Scorigami Scraper Started at 2026-02-17 13:52:29.468921
+2026-02-17 13:52:29,469 - INFO - ============================================================
+2026-02-17 13:52:29,475 - INFO - Database initialized successfully
+2026-02-17 13:52:29,617 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-17 13:52:29,618 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-17 13:52:29,939 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-17 13:52:31,440 - INFO - Found 3 matches
+2026-02-17 13:52:31,441 - INFO - Processing match 1/3: ID 303086
+2026-02-17 13:52:33,376 - INFO - Processing match 2/3: ID 303087
+2026-02-17 13:52:35,189 - INFO - Processing match 3/3: ID 303088
+2026-02-17 13:52:37,193 - INFO - Total player records fetched: 110
+2026-02-17 13:52:37,202 - INFO - Batch insert complete: 90 added, 20 skipped, 0 failed
+2026-02-17 13:52:37,202 - INFO - Completed Valorant Champions 2024: 90 added, 20 skipped
+2026-02-17 13:52:37,202 - INFO - ============================================================
+2026-02-17 13:52:37,202 - INFO - SCRAPER SUMMARY
+2026-02-17 13:52:37,202 - INFO - ============================================================
+2026-02-17 13:52:37,202 - INFO - Duration: 0:00:07.733839
+2026-02-17 13:52:37,203 - INFO - Tournaments processed: 1/1
+2026-02-17 13:52:37,203 - INFO - Total records added: 90
+2026-02-17 13:52:37,203 - INFO - Total records skipped (duplicates): 20
+2026-02-17 13:52:37,203 - INFO - Total failures: 0
+2026-02-17 13:52:37,205 - INFO - Database now has: 90 total records
+2026-02-17 13:52:37,205 - INFO - ============================================================
+2026-02-17 14:25:01,246 - INFO - ============================================================
+2026-02-17 14:25:01,247 - INFO - VCT Scorigami Scraper Started at 2026-02-17 14:25:01.246802
+2026-02-17 14:25:01,247 - INFO - ============================================================
+2026-02-17 14:25:01,252 - INFO - Database initialized successfully
+2026-02-17 14:25:01,387 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-17 14:25:01,387 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-17 14:25:01,690 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-17 14:25:03,192 - INFO - Found 3 matches
+2026-02-17 14:25:03,192 - INFO - Processing match 1/3: ID 303086
+2026-02-17 14:25:05,106 - INFO - Processing match 2/3: ID 303087
+2026-02-17 14:25:06,908 - INFO - Processing match 3/3: ID 303088
+2026-02-17 14:25:08,880 - INFO - Total player records fetched: 110
+2026-02-17 14:25:08,888 - INFO - Batch insert complete: 90 added, 20 skipped, 0 failed
+2026-02-17 14:25:08,888 - INFO - Completed Valorant Champions 2024: 90 added, 20 skipped
+2026-02-17 14:25:08,888 - INFO - ============================================================
+2026-02-17 14:25:08,888 - INFO - SCRAPER SUMMARY
+2026-02-17 14:25:08,888 - INFO - ============================================================
+2026-02-17 14:25:08,888 - INFO - Duration: 0:00:07.641482
+2026-02-17 14:25:08,888 - INFO - Tournaments processed: 1/1
+2026-02-17 14:25:08,888 - INFO - Total records added: 90
+2026-02-17 14:25:08,888 - INFO - Total records skipped (duplicates): 20
+2026-02-17 14:25:08,888 - INFO - Total failures: 0
+2026-02-17 14:25:08,890 - INFO - Database now has: 90 total records
+2026-02-17 14:25:08,890 - INFO - ============================================================
+2026-02-17 14:32:43,523 - INFO - ============================================================
+2026-02-17 14:32:43,523 - INFO - VCT Scorigami Scraper Started at 2026-02-17 14:32:43.523458
+2026-02-17 14:32:43,523 - INFO - ============================================================
+2026-02-17 14:32:43,529 - INFO - Database initialized successfully
+2026-02-17 14:32:43,541 - ERROR - Scraper failed: cannot import name 'fetch_and_prepare_for_database' from 'data_fetcher' (C:\Users\Bpitt\Desktop\vctscorigami\data_fetcher.py)
+2026-02-17 14:35:00,545 - INFO - ============================================================
+2026-02-17 14:35:00,545 - INFO - VCT Scorigami Scraper Started at 2026-02-17 14:35:00.545005
+2026-02-17 14:35:00,545 - INFO - ============================================================
+2026-02-17 14:35:00,550 - INFO - Database initialized successfully
+2026-02-17 14:35:00,696 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-17 14:35:00,696 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-17 14:35:01,023 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-17 14:35:02,524 - INFO - Found 3 matches
+2026-02-17 14:35:02,524 - INFO - Processing match 1/3: ID 303086
+2026-02-17 14:35:04,454 - INFO - Processing match 2/3: ID 303087
+2026-02-17 14:35:06,237 - INFO - Processing match 3/3: ID 303088
+2026-02-17 14:35:08,199 - INFO - Total player records fetched: 110
+2026-02-17 14:35:08,206 - INFO - Batch insert complete: 90 added, 20 skipped, 0 failed
+2026-02-17 14:35:08,206 - INFO - Completed Valorant Champions 2024: 90 added, 20 skipped
+2026-02-17 14:35:08,206 - INFO - ============================================================
+2026-02-17 14:35:08,206 - INFO - SCRAPER SUMMARY
+2026-02-17 14:35:08,206 - INFO - ============================================================
+2026-02-17 14:35:08,207 - INFO - Duration: 0:00:07.661834
+2026-02-17 14:35:08,207 - INFO - Tournaments processed: 1/1
+2026-02-17 14:35:08,207 - INFO - Total records added: 90
+2026-02-17 14:35:08,207 - INFO - Total records skipped (duplicates): 20
+2026-02-17 14:35:08,207 - INFO - Total failures: 0
+2026-02-17 14:35:08,208 - INFO - Database now has: 90 total records
+2026-02-17 14:35:08,208 - INFO - ============================================================
+2026-02-17 14:50:09,758 - INFO - ============================================================
+2026-02-17 14:50:09,758 - INFO - VCT Scorigami Scraper Started at 2026-02-17 14:50:09.758698
+2026-02-17 14:50:09,759 - INFO - ============================================================
+2026-02-17 14:50:09,765 - INFO - Database initialized successfully
+2026-02-17 14:50:09,904 - INFO - Fetching tournament: Valorant Champions 2024 (ID: 1923)
+2026-02-17 14:50:09,904 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-17 14:50:10,234 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-17 14:50:11,736 - INFO - Found 3 matches
+2026-02-17 14:50:11,736 - INFO - Processing match 1/3: ID 303086
+2026-02-17 14:50:13,690 - INFO - Processing match 2/3: ID 303087
+2026-02-17 14:50:15,505 - INFO - Processing match 3/3: ID 303088
+2026-02-17 14:50:17,474 - INFO - Total player records fetched: 110
+2026-02-17 14:50:17,481 - INFO - Batch insert complete: 90 added, 20 skipped, 0 failed
+2026-02-17 14:50:17,481 - INFO - Completed Valorant Champions 2024: 90 added, 20 skipped
+2026-02-17 14:50:17,481 - INFO - ============================================================
+2026-02-17 14:50:17,482 - INFO - SCRAPER SUMMARY
+2026-02-17 14:50:17,482 - INFO - ============================================================
+2026-02-17 14:50:17,482 - INFO - Duration: 0:00:07.723197
+2026-02-17 14:50:17,482 - INFO - Tournaments processed: 1/1
+2026-02-17 14:50:17,482 - INFO - Total records added: 90
+2026-02-17 14:50:17,482 - INFO - Total records skipped (duplicates): 20
+2026-02-17 14:50:17,482 - INFO - Total failures: 0
+2026-02-17 14:50:17,483 - INFO - Database now has: 90 total records
+2026-02-17 14:50:17,484 - INFO - ============================================================
+2026-02-17 15:16:39,634 - INFO - ============================================================
+2026-02-17 15:16:39,634 - INFO - VCT Scorigami Scraper Started at 2026-02-17 15:16:39.634712
+2026-02-17 15:16:39,635 - INFO - ============================================================
+2026-02-17 15:16:39,640 - INFO - Database initialized successfully
+2026-02-17 15:16:39,776 - INFO - Fetching tournament ID: 1923
+2026-02-17 15:16:39,776 - INFO - Fetching tournament: https://www.vlr.gg/event/1923
+2026-02-17 15:16:40,293 - INFO - Tournament: Champions Tour 2024: Americas Kickoff
+2026-02-17 15:16:41,795 - INFO - Found 3 matches
+2026-02-17 15:16:41,795 - INFO - Processing match 1/3: ID 303086
+2026-02-17 15:16:43,717 - INFO - Processing match 2/3: ID 303087
+2026-02-17 15:16:45,531 - INFO - Processing match 3/3: ID 303088
+2026-02-17 15:16:47,526 - INFO - Total player records fetched: 110
+2026-02-17 15:16:47,538 - INFO - Batch insert complete: 110 added, 0 skipped, 0 failed
+2026-02-17 15:16:47,538 - INFO - Completed tournament 1923: 110 added, 0 skipped
+2026-02-17 15:16:47,538 - INFO - ============================================================
+2026-02-17 15:16:47,538 - INFO - SCRAPER SUMMARY
+2026-02-17 15:16:47,538 - INFO - ============================================================
+2026-02-17 15:16:47,538 - INFO - Duration: 0:00:07.903769
+2026-02-17 15:16:47,538 - INFO - Tournaments processed: 1/1
+2026-02-17 15:16:47,538 - INFO - Total records added: 110
+2026-02-17 15:16:47,539 - INFO - Total records skipped (duplicates): 0
+2026-02-17 15:16:47,539 - INFO - Total failures: 0
+2026-02-17 15:16:47,541 - INFO - Database now has: 110 total records
+2026-02-17 15:16:47,541 - INFO - ============================================================
