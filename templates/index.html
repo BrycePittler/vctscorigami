@@ -2,204 +2,648 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Valorant Scorigami - COWSRCOOL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCT Scorigami (2023-2026)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #1a1a1a; /* Dark background */
-            color: #e0e0e0; /* Light text */
-            margin: 0; /* Remove default body margin */
-        }
-        h1 { color: #e0e0e0; }
-        a { color: #4dabf7; } /* Link color */
-        a:hover { color: #74c0fc; } /* Link hover */
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            margin: 20px;
-        }
-        .grid-wrapper {
-            max-width: 800px; /* Fit grid within typical screens */
-            margin-right: 20px;
-        }
-        .tile {
-            width: 15px; /* Reduced tile size */
-            height: 15px;
-            background: #333; /* Dark gray for empty tiles */
-            border: 1px solid #555; /* Subtle border */
-            position: relative;
-            cursor: pointer;
-            box-sizing: border-box; /* Ensure borders don't affect size */
-        }
-        .tile:hover {
-            border: 2px solid #4dabf7; /* Blue border on hover */
-        }
-        .tile.active .tooltip {
-            visibility: visible; /* Show tooltip when tile is clicked */
-        }
-        .tile.highlight {
-            background: #444; /* Highlight for row/column */
-            border: 1px solid #666;
-        }
-        .tooltip {
-            visibility: hidden;
-            position: absolute;
-            background: #333; /* Dark tooltip */
-            color: #e0e0e0; /* Light text */
-            padding: 8px;
-            border-radius: 4px;
-            font-size: 12px; /* Smaller for smaller grid */
-            white-space: pre-wrap;
-            z-index: 1;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px; /* Reduced width for smaller grid */
-            border: 1px solid #555;
-        }
-        .axis-label {
-            text-align: center;
-            font-weight: bold;
-            font-size: 10px; /* Smaller for smaller grid */
-            line-height: 15px; /* Match tile height */
-            height: 15px; /* Match tile height */
-            width: 15px; /* Match tile width for x-axis */
-            color: #e0e0e0; /* Light text */
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        .axis-label.y-label {
-            width: 25px; /* Slightly smaller for y-axis */
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #1a1a22;
+            color: #e8e8ec;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        
+        .page-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.8rem;
+        }
+        
+        .subtitle a {
+            color: #aaa;
+            text-decoration: none;
+        }
+        
+        .subtitle a:hover {
+            color: #ccc;
+        }
+        
+        .filters-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-size: 0.7rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        select {
+            background: #26262e;
+            color: #d0d0d4;
+            border: 1px solid #3a3a44;
+            padding: 8px 30px 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 140px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23777' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        
+        select:hover {
+            border-color: #4a4a54;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #5a5a64;
+        }
+        
+        .matchup-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vs-text {
+            color: #777;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .timeline-container {
+            max-width: 400px;
+            margin: 0 auto 25px;
+            padding: 12px 15px;
+        }
+        
+        .timeline-current {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-current span {
+            color: #b0b0b4;
+        }
+        
+        .timeline-slider {
+            width: 100%;
+            height: 3px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #3a3a44;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .timeline-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #5a5a64;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .timeline-slider::-webkit-slider-thumb:hover {
+            background: #6a6a74;
+        }
+        
+        .timeline-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #5a5a64;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .timeline-dates {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 0.65rem;
+            color: #666;
+        }
+        
+        .main-content {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .grid-section {
+            flex: 0 0 auto;
+        }
+        
+        .grid-with-axes {
+            display: flex;
+        }
+        
+        .y-axis-container {
+            display: flex;
+            flex-direction: column;
+            margin-right: 6px;
+        }
+        
+        .axis-title-y {
+            font-size: 0.6rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             text-align: right;
-            padding-right: 5px; /* Space from grid */
+            padding-right: 2px;
+            height: 15px;
+            line-height: 15px;
         }
-        .axis-label.highlight {
-            background: #444; /* Highlight for axis labels */
-        }
+        
         .y-axis {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            margin-right: 5px; /* Tight alignment */
         }
-        .x-axis {
+        
+        .y-label {
+            height: 15px;
+            width: 20px;
+            font-size: 0.6rem;
+            color: #555;
+            text-align: right;
+            line-height: 15px;
             display: flex;
-            justify-content: flex-start; /* Corrected: align to the start */
-            margin-left: 25px; /* Aligns with the y-axis width */
+            align-items: center;
+            justify-content: flex-end;
         }
-        .leaderboard {
-            width: 200px;
-            text-align: left;
-            padding: 10px;
-            border: 1px solid #555; /* Subtle border */
-            border-radius: 4px;
-            margin-bottom: 20px;
-            background: #2a2a2a; /* Dark background */
+        
+        .y-label.highlight {
+            color: #aaa;
         }
-        .leaderboard h2 {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-            color: #e0e0e0;
+        
+        .grid-area {
+            position: relative;
         }
-        .leaderboard ul {
-            list-style: none;
-            padding: 0;
+        
+        .grid-spacer {
+            height: 15px;
         }
-        .leaderboard li {
-            margin: 5px 0;
-            color: #d0d0d0;
-        }
-        .dropdowns {
+        
+        .grid {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin: 10px;
         }
-        select {
-            background: #2a2a2a;
-            color: #e0e0e0;
-            border: 1px solid #555;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        select:focus {
-            outline: none;
-            border-color: #4dabf7;
-        }
-        /* New CSS for scrollable leaderboards */
-        .scrollable-list {
-            max-height: 150px;
-            overflow-y: scroll;
-            padding-right: 5px;
-        }
-        .scrollable-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        .scrollable-list::-webkit-scrollbar-track {
-            background: #3a3a3a;
-            border-radius: 10px;
-        }
-        .scrollable-list::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 10px;
-            border: 2px solid #3a3a3a;
-        }
-        .total-stats {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #2a2a2a;
-            border-radius: 4px;
-            border: 1px solid #555;
-            display: inline-block;
-        }
-        .grid-and-labels {
+        
+        .grid-column {
             display: flex;
             flex-direction: column;
+        }
+        
+        .tile {
+            width: 15px;
+            height: 15px;
+            background: #2a2a32;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        
+        .tile:hover {
+            border-color: #666;
+        }
+        
+        .tile.highlight {
+            border-color: #555;
+        }
+        
+        .x-axis-container {
+            margin-left: 36px;
+            margin-top: 4px;
+        }
+        
+        .x-axis {
+            display: flex;
+        }
+        
+        .x-label {
+            width: 15px;
+            font-size: 0.6rem;
+            color: #555;
+            text-align: center;
+            line-height: 15px;
+            display: flex;
             align-items: center;
+            justify-content: center;
+        }
+        
+        .x-label.highlight {
+            color: #aaa;
+        }
+        
+        .axis-title-x {
+            font-size: 0.6rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .leaderboards-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 220px;
+        }
+        
+        .leaderboard {
+            background: #222228;
+            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid #333;
+        }
+        
+        .leaderboard h2 {
+            font-size: 0.65rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .leaderboard-list {
+            list-style: none;
+        }
+        
+        .leaderboard-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 0.75rem;
+            color: #a0a0a4;
+            border-bottom: 1px solid #2e2e36;
+        }
+        
+        .leaderboard-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .rank {
+            width: 16px;
+            height: 16px;
+            background: #333;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #777;
+            flex-shrink: 0;
+        }
+        
+        .rank.gold {
+            background: #3d3520;
+            color: #d4a82a;
+        }
+        
+        .rank.silver {
+            background: #38383c;
+            color: #b0b0b0;
+        }
+        
+        .rank.bronze {
+            background: #382e28;
+            color: #c08040;
+        }
+        
+        .player-name-lb {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+        
+        .score {
+            font-weight: 500;
+            color: #c0c0c4;
+            flex-shrink: 0;
+        }
+        
+        .scrollable-list {
+            max-height: 120px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-track {
+            background: #2a2a32;
+            border-radius: 3px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+        
+        .scrollable-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .total-stats {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        .total-stats .kills-num {
+            color: #7aa87a;
+        }
+        
+        .total-stats .deaths-num {
+            color: #a87a7a;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .tooltip {
+            position: fixed;
+            background: #26262e;
+            color: #e0e0e4;
+            padding: 0;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1000;
+            width: 340px;
+            max-height: 400px;
+            overflow: hidden;
+            border: 1px solid #3a3a44;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            visibility: hidden;
+        }
+        
+        .tooltip.visible {
+            visibility: visible;
+        }
+        
+        .tooltip-header {
+            background: #2e2e38;
+            padding: 12px 15px;
+            position: relative;
+            border-bottom: 1px solid #3a3a44;
+        }
+        
+        .tooltip h3 {
+            margin: 0;
+            color: #d0d0d4;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .tooltip-close {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .tooltip-close:hover {
+            color: #999;
+        }
+        
+        .tooltip-content {
+            padding: 10px 15px 15px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        
+        .tooltip-content::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .tooltip-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .tooltip-content::-webkit-scrollbar-thumb {
+            background: #3a3a44;
+            border-radius: 2px;
+        }
+        
+        .match-entry {
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .match-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .match-entry .player-map {
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+        
+        .match-entry .player-name {
+            font-weight: 500;
+            color: #c0c0c4;
+        }
+        
+        .match-entry .map-name {
+            color: #8ab88a;
+        }
+        
+        .match-entry .match-info {
+            font-size: 0.75rem;
+            color: #777;
+            margin-bottom: 2px;
+        }
+        
+        .match-entry .result-win {
+            color: #8ab88a;
+        }
+        
+        .match-entry .result-loss {
+            color: #b88a8a;
+        }
+        
+        .match-entry .tournament {
+            font-size: 0.7rem;
+            color: #666;
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .leaderboards-section {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .leaderboard {
+                flex: 1;
+                min-width: 180px;
+                max-width: 260px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .filters-container {
+                gap: 12px;
+            }
+            
+            select {
+                min-width: 120px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>VCT Scorigami (2023-2026)</h1>
-    <p style="font-size: 0.9em;">Made by COWSRCOOL</p>
-    <p style="font-size: 0.8em;">Follow <a href="https://twitter.com/vctscorigami" target="_blank">vctscorigami</a> on twitter.</p>
-    <div class="dropdowns">
-        <div>
-            <label for="player-select">Select Player: </label>
-            <select id="player-select">
-                <option value="all" {% if selected_player == 'all' %}selected{% endif %}>All Players</option>
-                {% for p in unique_players %}
-                    <option value="{{ p.player }}" {% if selected_player == p.player %}selected{% endif %}>{{ p.player }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label for="tournament-select">Select Tournament: </label>
-            <select id="tournament-select">
-                <option value="all" {% if selected_tournament == 'all' %}selected{% endif %}>All Tournaments</option>
-                {% for t in unique_tournaments %}
-                    <option value="{{ t }}" {% if selected_tournament == t %}selected{% endif %}>{{ t }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="grid-wrapper">
-            <div class="grid-and-labels">
-                <div style="display: flex;">
-                    <div class="y-axis">
-                        <div class="axis-label">Kills</div>
-                        {% for k in range(50, -1, -1) %}
-                            <div class="axis-label y-label" data-kills="{{ k }}">{{ k }}</div>
+    <div class="page-wrapper">
+        <header>
+            <h1>VCT Scorigami</h1>
+            <p class="subtitle">Follow <a href="https://twitter.com/vctscorigami" target="_blank">@vctscorigami</a> on twitter.</p>
+        </header>
+        
+        <div class="filters-container">
+            <div class="filter-group">
+                <label>View</label>
+                <select id="view-select">
+                    <option value="gradient" {% if selected_view == 'gradient' %}selected{% endif %}>Gradient</option>
+                    <option value="winpct" {% if selected_view == 'winpct' %}selected{% endif %}>Win %</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Player</label>
+                <select id="player-select">
+                    <option value="all" {% if selected_player == 'all' %}selected{% endif %}>All Players</option>
+                    {% for p in unique_players %}
+                        <option value="{{ p[0] }}" {% if selected_player == p[0] %}selected{% endif %}>{{ p[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Matchup</label>
+                <div class="matchup-group">
+                    <select id="team1-select">
+                        <option value="all" {% if selected_team1 == 'all' %}selected{% endif %}>All Teams</option>
+                        {% for t in unique_teams %}
+                            <option value="{{ t }}" {% if selected_team1 == t %}selected{% endif %}>{{ t }}</option>
                         {% endfor %}
+                    </select>
+                    <span class="vs-text">vs</span>
+                    <select id="team2-select">
+                        <option value="all" {% if selected_team2 == 'all' %}selected{% endif %}>All Teams</option>
+                        {% for t in unique_teams %}
+                            <option value="{{ t }}" {% if selected_team2 == t %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-current">Showing data from <span id="timeline-current-date">{{ min_date }}</span></div>
+            <input type="range" class="timeline-slider" id="timeline-slider" min="0" max="100" value="{{ timeline_value }}">
+            <div class="timeline-dates">
+                <span>{{ min_date }}</span>
+                <span>{{ max_date }}</span>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="grid-section">
+                <div class="grid-with-axes">
+                    <div class="y-axis-container">
+                        <div class="axis-title-y">Kills</div>
+                        <div class="y-axis">
+                            {% for k in range(50, -1, -1) %}
+                                <div class="y-label" data-kills="{{ k }}">{{ k }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div>
-                        <div style="height: 15px;"></div>
-                        <div style="display: flex;">
+                    <div class="grid-area">
+                        <div class="grid-spacer"></div>
+                        <div class="grid" id="grid">
                             {% for d in range(51) %}
-                                <div style="display: flex; flex-direction: column;">
+                                <div class="grid-column">
                                     {% for k in range(50, -1, -1) %}
                                         {% set key = (k, d) %}
                                         {% if key in scores %}
@@ -207,8 +651,16 @@
                                             {% set count = info['count'] %}
                                             {% set color = '' %}
                                             
-                                            {# Check if this tile is an overall scorigami #}
-                                            {% if (k, d) in overall_scorigamis %}
+                                            {% if selected_view == 'winpct' %}
+                                                {% set win_pct = info['win_pct'] %}
+                                                {% if win_pct is not none %}
+                                                    {% set hue = (win_pct * 1.5) %}
+                                                    {% set lightness = 35 + (win_pct * 0.15) %}
+                                                    {% set color = 'hsl(' ~ hue ~ ', 75%, ' ~ lightness ~ '%)' %}
+                                                {% else %}
+                                                    {% set color = '#3a3a44' %}
+                                                {% endif %}
+                                            {% elif (k, d) in overall_scorigamis %}
                                                 {% set color = '#28a745' %}
                                             {% else %}
                                                 {% set fraction = (count - 1.0) / (max_count - 1) if max_count > 1 else 0 %}
@@ -216,14 +668,7 @@
                                                 {% set color = 'hsl(' ~ (hue + 210) ~ ', 70%, 60%)' %}
                                             {% endif %}
                                             
-                                            <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}" style="background: {{ color }};">
-                                                <div class="tooltip">
-                                                    Kills: {{ k }} | Deaths: {{ d }}<br>
-                                                    Occurrences: {{ count }}<br>
-                                                    Examples:<br>
-                                                    {{ info['details'] | replace('\n', '<br>') | safe }}
-                                                </div>
-                                            </div>
+                                            <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}" data-count="{{ count }}" data-details="{{ info['details'] }}" style="background: {{ color }};"></div>
                                         {% else %}
                                             <div class="tile" data-kills="{{ k }}" data-deaths="{{ d }}"></div>
                                         {% endif %}
@@ -233,113 +678,240 @@
                         </div>
                     </div>
                 </div>
-                <div class="x-axis">
-                    {% for d in range(51) %}
-                        <div class="axis-label x-label" data-deaths="{{ d }}">{{ d }}</div>
-                    {% endfor %}
-                </div>
-                <div class="axis-label" style="margin-top: 10px;">Deaths</div>
-            </div>
-            {# The .total-stats div that was here has been removed #}
-        </div>
-
-        <div>
-            <div class="leaderboard">
-                <h2>Tile Leaderboard</h2>
-                <div class="scrollable-list">
-                    <ul>
-                        {% for player in leaderboard_unique %}
-                            <li>{{ player.rank }}. {{ player.player }}: {{ player.unique_scores }} Tiles</li>
+                <div class="x-axis-container">
+                    <div class="x-axis">
+                        {% for d in range(51) %}
+                            <div class="x-label" data-deaths="{{ d }}">{{ d }}</div>
                         {% endfor %}
-                    </ul>
+                    </div>
+                    <div class="axis-title-x">Deaths</div>
                 </div>
             </div>
-            <div class="leaderboard">
-                <h2>Scorigami Leaderboard</h2>
-                <div class="scrollable-list">
-                    <ul>
-                        {% for player in leaderboard_exclusive %}
-                            <li>{{ player.rank }}. {{ player.player }}: {{ player.exclusive_scores }} Scorigami</li>
-                        {% endfor %}
-                    </ul>
+            
+            <div class="leaderboards-section">
+                <div class="leaderboard">
+                    <h2>Tile Leaders</h2>
+                    <div class="scrollable-list">
+                        <ul class="leaderboard-list">
+                            {% for player in leaderboard_unique %}
+                                <li>
+                                    <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
+                                    <span class="player-name-lb">{{ player.player }}</span>
+                                    <span class="score">{{ player.unique_scores }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="leaderboard">
+                    <h2>Scorigami Leaders</h2>
+                    <div class="scrollable-list">
+                        <ul class="leaderboard-list">
+                            {% for player in leaderboard_exclusive %}
+                                <li>
+                                    <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
+                                    <span class="player-name-lb">{{ player.player }}</span>
+                                    <span class="score">{{ player.exclusive_scores }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="leaderboard">
+                    <h2>Maps Played</h2>
+                    <div class="scrollable-list">
+                        <ul class="leaderboard-list">
+                            {% for player in leaderboard_maps_played %}
+                                <li>
+                                    <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
+                                    <span class="player-name-lb">{{ player.player }}</span>
+                                    <span class="score">{{ player.total_matches }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="leaderboard">
+                    <h2>K-D Differential</h2>
+                    <div class="scrollable-list">
+                        <ul class="leaderboard-list">
+                            {% for player in leaderboard_kd %}
+                                <li>
+                                    <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
+                                    <span class="player-name-lb">{{ player.player }}</span>
+                                    <span class="score">{{ player.kill_death_difference }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-        <div class="leaderboard">
-            <h2>Maps Played Leaderboard</h2>
-            <div class="scrollable-list">
-                <ul>
-                    {% for player in leaderboard_maps_played %}
-                        <li>{{ player.rank }}. {{ player.player }}: {{ player.total_matches }} Maps</li>
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
-
-        <div class="leaderboard">
-            <h2>Kills - Deaths Leaderboard</h2>
-            <div class="scrollable-list">
-                <ul>
-                    {% for player in leaderboard_kd %}
-                        <li>{{ player.rank }}. {{ player.player }}: {{ player.kill_death_difference }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            </div>
+        
+        <div class="total-stats">
+            Total: <span class="kills-num">{{ total_kills }}</span> Kills / <span class="deaths-num">{{ total_deaths }}</span> Deaths
         </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-header">
+            <h3 id="tooltip-title"></h3>
+            <span class="tooltip-close" onclick="closeTooltip()">×</span>
+        </div>
+        <div class="tooltip-content" id="tooltip-content"></div>
     </div>
 
     <script>
-        // Handle click to toggle tooltip
-        document.querySelectorAll('.tile').forEach(tile => {
+        const overlay = document.getElementById('overlay');
+        const tooltip = document.getElementById('tooltip');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipContent = document.getElementById('tooltip-content');
+        const timelineSlider = document.getElementById('timeline-slider');
+        const timelineCurrentDate = document.getElementById('timeline-current-date');
+        
+        const minDate = '{{ min_date }}';
+        const maxDate = '{{ max_date }}';
+
+        function calculateDate(value) {
+            if (value == 100) {
+                return maxDate;
+            }
+            const start = new Date(minDate);
+            const end = new Date(maxDate);
+            const diff = end - start;
+            const currentDate = new Date(start.getTime() + (diff * value / 100));
+            return currentDate.toISOString().split('T')[0];
+        }
+
+        timelineCurrentDate.textContent = calculateDate({{ timeline_value }});
+
+        function parseDetails(detailsStr) {
+            if (!detailsStr) return [];
+            const entries = detailsStr.split('\n\n');
+            const matches = [];
+            
+            entries.forEach(entry => {
+                if (!entry.trim()) return;
+                
+                const lines = entry.split('\n');
+                let player = '', map = '', team = '', result = '', date = '', tournament = '';
+                
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line.includes(' on ')) {
+                        const mainPart = line.split(' | ');
+                        const playerMap = mainPart[0].split(' on ');
+                        player = playerMap[0].trim();
+                        map = playerMap[1].trim();
+                        if (mainPart.length > 1) result = mainPart[1].trim();
+                        if (mainPart.length > 2) date = mainPart[2].trim();
+                    } else if (line.startsWith('Team:')) {
+                        team = line.replace('Team:', '').trim();
+                    } else if (line && !line.startsWith('Team:')) {
+                        tournament = line;
+                    }
+                });
+                
+                if (player || map) {
+                    matches.push({
+                        player: player,
+                        map: map,
+                        team: team,
+                        result: result,
+                        date: date,
+                        tournament: tournament
+                    });
+                }
+            });
+            
+            return matches;
+        }
+
+        function showTooltip(kills, deaths, count, details) {
+            tooltipTitle.textContent = `${kills} Kills / ${deaths} Deaths — ${count} occurrence${count !== 1 ? 's' : ''}`;
+            
+            const matches = parseDetails(details);
+            
+            if (matches.length === 0) {
+                tooltipContent.innerHTML = '<div class="match-entry">No details available</div>';
+            } else {
+                let html = '';
+                matches.forEach(m => {
+                    const resultClass = m.result === 'Win' ? 'result-win' : (m.result === 'Loss' ? 'result-loss' : '');
+                    html += `
+                        <div class="match-entry">
+                            <div class="player-map"><span class="player-name">${m.player}</span> on <span class="map-name">${m.map}</span></div>
+                            ${m.team || m.result || m.date ? `<div class="match-info">${m.team ? m.team : ''}${m.result ? ` | <span class="${resultClass}">${m.result}</span>` : ''}${m.date ? ` | ${m.date}` : ''}</div>` : ''}
+                            ${m.tournament ? `<div class="tournament">${m.tournament}</div>` : ''}
+                        </div>
+                    `;
+                });
+                tooltipContent.innerHTML = html;
+            }
+            
+            overlay.classList.add('active');
+            tooltip.classList.add('visible');
+        }
+
+        function closeTooltip() {
+            overlay.classList.remove('active');
+            tooltip.classList.remove('visible');
+        }
+
+        document.querySelectorAll('.tile[data-details]').forEach(tile => {
             tile.addEventListener('click', function(e) {
-                // Remove active from all tiles
-                document.querySelectorAll('.tile.active').forEach(t => t.classList.remove('active'));
-                // Toggle active on clicked tile
-                this.classList.toggle('active');
-                // Prevent click from bubbling to document
+                const kills = this.dataset.kills;
+                const deaths = this.dataset.deaths;
+                const count = this.dataset.count;
+                const details = this.dataset.details;
+                showTooltip(kills, deaths, count, details);
                 e.stopPropagation();
             });
         });
 
-        // Hide tooltip when clicking anywhere else
-        document.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('tile')) {
-                document.querySelectorAll('.tile.active').forEach(t => t.classList.remove('active'));
-            }
-        });
+        overlay.addEventListener('click', closeTooltip);
 
-        // Handle player dropdown change
-        document.getElementById('player-select').addEventListener('change', function() {
-            const player = this.value;
-            const tournament = document.getElementById('tournament-select').value;
-            window.location.href = '?player=' + encodeURIComponent(player) + '&tournament=' + encodeURIComponent(tournament);
-        });
-
-        // Handle tournament dropdown change
-        document.getElementById('tournament-select').addEventListener('change', function() {
-            const tournament = this.value;
+        function updateUrl() {
+            const view = document.getElementById('view-select').value;
             const player = document.getElementById('player-select').value;
-            window.location.href = '?player=' + encodeURIComponent(player) + '&tournament=' + encodeURIComponent(tournament);
+            const team1 = document.getElementById('team1-select').value;
+            const team2 = document.getElementById('team2-select').value;
+            const timeline = timelineSlider.value;
+            window.location.href = '?view=' + encodeURIComponent(view) + '&player=' + encodeURIComponent(player) + '&team1=' + encodeURIComponent(team1) + '&team2=' + encodeURIComponent(team2) + '&timeline=' + timeline;
+        }
+
+        document.getElementById('view-select').addEventListener('change', updateUrl);
+        document.getElementById('player-select').addEventListener('change', updateUrl);
+        document.getElementById('team1-select').addEventListener('change', updateUrl);
+        document.getElementById('team2-select').addEventListener('change', updateUrl);
+
+        let timelineTimeout;
+        timelineSlider.addEventListener('input', function() {
+            const value = this.value;
+            const dateStr = calculateDate(value);
+            timelineCurrentDate.textContent = dateStr;
+            
+            clearTimeout(timelineTimeout);
+            timelineTimeout = setTimeout(updateUrl, 300);
         });
 
-        // Handle tile hover for row and column highlighting
         document.querySelectorAll('.tile').forEach(tile => {
             tile.addEventListener('mouseenter', function() {
                 const kills = this.dataset.kills;
                 const deaths = this.dataset.deaths;
-                // Highlight row (same kills)
                 document.querySelectorAll(`.tile[data-kills="${kills}"]`).forEach(t => t.classList.add('highlight'));
-                // Highlight column (same deaths)
                 document.querySelectorAll(`.tile[data-deaths="${deaths}"]`).forEach(t => t.classList.add('highlight'));
-                // Highlight y-axis label
                 document.querySelector(`.y-label[data-kills="${kills}"]`).classList.add('highlight');
-                // Highlight x-axis label
                 document.querySelector(`.x-label[data-deaths="${deaths}"]`).classList.add('highlight');
             });
             tile.addEventListener('mouseleave', function() {
-                // Remove highlights
                 document.querySelectorAll('.tile.highlight').forEach(t => t.classList.remove('highlight'));
-                document.querySelectorAll('.axis-label.highlight').forEach(l => l.classList.remove('highlight'));
+                document.querySelectorAll('.y-label.highlight').forEach(l => l.classList.remove('highlight'));
+                document.querySelectorAll('.x-label.highlight').forEach(l => l.classList.remove('highlight'));
             });
         });
     </script>

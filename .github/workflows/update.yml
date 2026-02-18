@@ -31,7 +31,7 @@ jobs:
     - name: Run updater
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      run: python update_matches.py --all
+      run: python update_matches.py
       
     - name: Commit database changes
       run: |
