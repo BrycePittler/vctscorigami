@@ -4,7 +4,7 @@ import bcrypt
 import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
 PASSWORD_HASH = b"$2b$12$UxfOKV7MadrhIWPhy1Sozu3r0fhwr8pgshjd9t08XhSEvA791fWZO"
 
@@ -74,8 +74,12 @@ def index():
     
     overall_scorigamis = {(s[0], s[1]) for s in overall_scorigamis_raw}
     
-    # Get unique players
-    cur = execute_db(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
+    # Get unique players - PostgreSQL-safe query
+    cur = execute_db(conn, '''
+        SELECT player FROM matches 
+        GROUP BY player 
+        ORDER BY LOWER(player)
+    ''')
     unique_players = cur.fetchall()
     if USE_POSTGRES:
         cur.close()
@@ -84,6 +88,11 @@ def index():
     
     # Leaderboard queries
     cur = execute_db(conn, '''
+        SELECT player, COUNT(DISTINCT kills::text || '-' || deaths::text) as unique_scores
+        FROM matches
+        GROUP BY player
+        ORDER BY unique_scores DESC
+    ''') if USE_POSTGRES else execute_db(conn, '''
         SELECT player, COUNT(DISTINCT kills || '-' || deaths) as unique_scores
         FROM matches
         GROUP BY player
@@ -94,6 +103,15 @@ def index():
         cur.close()
     
     cur = execute_db(conn, '''
+        SELECT player, COUNT(DISTINCT kills::text || '-' || deaths::text) as exclusive_scores
+        FROM matches m1
+        WHERE NOT EXISTS (
+            SELECT 1 FROM matches m2 
+            WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
+        )
+        GROUP BY player
+        ORDER BY exclusive_scores DESC
+    ''') if USE_POSTGRES else execute_db(conn, '''
         SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
         FROM matches m1
         WHERE NOT EXISTS (
@@ -151,16 +169,10 @@ def index():
     conn.close()
     
     # Convert tuples to dicts for ranking
-    if USE_POSTGRES:
-        leaderboard_unique_raw = [{'player': r[0], 'unique_scores': r[1]} for r in leaderboard_unique_raw]
-        leaderboard_exclusive_raw = [{'player': r[0], 'exclusive_scores': r[1]} for r in leaderboard_exclusive_raw]
-        leaderboard_maps_played_raw = [{'player': r[0], 'total_matches': r[1]} for r in leaderboard_maps_played_raw]
-        leaderboard_kd_raw = [{'player': r[0], 'kill_death_difference': r[1]} for r in leaderboard_kd_raw]
-    else:
-        leaderboard_unique_raw = [{'player': r['player'], 'unique_scores': r['unique_scores']} for r in leaderboard_unique_raw]
-        leaderboard_exclusive_raw = [{'player': r['player'], 'exclusive_scores': r['exclusive_scores']} for r in leaderboard_exclusive_raw]
-        leaderboard_maps_played_raw = [{'player': r['player'], 'total_matches': r['total_matches']} for r in leaderboard_maps_played_raw]
-        leaderboard_kd_raw = [{'player': r['player'], 'kill_death_difference': r['kill_death_difference']} for r in leaderboard_kd_raw]
+    leaderboard_unique_raw = [{'player': r[0], 'unique_scores': r[1]} for r in leaderboard_unique_raw]
+    leaderboard_exclusive_raw = [{'player': r[0], 'exclusive_scores': r[1]} for r in leaderboard_exclusive_raw]
+    leaderboard_maps_played_raw = [{'player': r[0], 'total_matches': r[1]} for r in leaderboard_maps_played_raw]
+    leaderboard_kd_raw = [{'player': r[0], 'kill_death_difference': r[1]} for r in leaderboard_kd_raw]
     
     leaderboard_unique = rank_leaderboard(leaderboard_unique_raw, 'unique_scores')
     leaderboard_exclusive = rank_leaderboard(leaderboard_exclusive_raw, 'exclusive_scores')
