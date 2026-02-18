@@ -578,8 +578,8 @@
 <body>
     <div class="page-wrapper">
         <header>
-            <h1>VCT Scorigami</h1>
-            <p class="subtitle">Follow <a href="https://twitter.com/vctscorigami" target="_blank">@vctscorigami</a> on twitter.</p>
+            <h1>VCT Scorigami (2023-2026)</h1>
+            <p class="subtitle">Follow <a href="https://twitter.com/vctscorigami" target="_blank">@vctscorigami</a> on twitter. Made by COWSRCOOL.</p>
         </header>
         
         <div class="filters-container">
@@ -654,8 +654,8 @@
                                             {% if selected_view == 'winpct' %}
                                                 {% set win_pct = info['win_pct'] %}
                                                 {% if win_pct is not none %}
-                                                    {% set hue = (win_pct * 1.5) %}
-                                                    {% set lightness = 35 + (win_pct * 0.15) %}
+                                                    {% set hue = (win_pct * 1.1) %}
+                                                    {% set lightness = 35 + (win_pct * 0.3) %}
                                                     {% set color = 'hsl(' ~ hue ~ ', 75%, ' ~ lightness ~ '%)' %}
                                                 {% else %}
                                                     {% set color = '#3a3a44' %}
