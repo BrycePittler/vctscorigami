@@ -123,6 +123,23 @@ def extract_kills_from_cell(cell) -> Optional[int]:
     
     return None
 
+from bs4 import BeautifulSoup
+
+def is_match_complete(html_content: str) -> bool:
+    """Check if a VLR.gg match page is for a completed match."""
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Check for "LIVE" badge
+    live_badge = soup.find(class_='ml-status')  # or 'match-live', check VLR's current HTML
+    if live_badge and 'live' in live_badge.get_text().lower():
+        return False
+    
+    # Check for winner display
+    winner = soup.find(class_='match-winner')
+    if not winner:
+        return False
+    
+    return True
 
 def extract_deaths_from_cell(cell) -> Optional[int]:
     """Extract total deaths from a deaths cell."""
