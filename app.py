@@ -176,8 +176,66 @@ def index():
     
     # Get unique players and teams
     unique_players = conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()
-    unique_teams = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
-    unique_teams = [row['team'] for row in unique_teams]
+    unique_teams_raw = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
+    unique_teams = [row['team'] for row in unique_teams_raw]
+    
+    # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
+    # These are matches where the kills/deaths combo has only occurred once globally
+    recent_scorigamis_query = '''
+        SELECT m.kills, m.deaths, m.player, m.map, m.team, m.result, m.match_date, m.description
+        FROM matches m
+        INNER JOIN (
+            SELECT kills, deaths
+            FROM matches
+            GROUP BY kills, deaths
+            HAVING COUNT(*) = 1
+        ) unique_scores ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths
+        ORDER BY m.match_date DESC
+    '''
+    recent_scorigamis_raw = conn.execute(recent_scorigamis_query).fetchall()
+    
+    recent_scorigamis = []
+    for row in recent_scorigamis_raw:
+        # Extract opponent team from description
+        # Description format: "Tournament Stage Type Team1 vs Team2"
+        opponent = None
+        if row['description'] and row['team']:
+            desc = row['description']
+            if ' vs ' in desc:
+                parts = desc.split(' vs ')
+                if len(parts) > 1:
+                    team2 = parts[1].strip()
+                    before_vs = parts[0].strip()
+                    
+                    # If player's team matches team2, find opponent in before_vs
+                    if row['team'] == team2:
+                        # Try to match known team names at the end of before_vs
+                        words = before_vs.split()
+                        found_opponent = None
+                        
+                        # Try to find a known team name (check longest matches first)
+                        for num_words in range(min(4, len(words)), 0, -1):
+                            potential_team = ' '.join(words[-num_words:])
+                            if potential_team in unique_teams and potential_team != row['team']:
+                                found_opponent = potential_team
+                                break
+                        
+                        opponent = found_opponent
+                    else:
+                        # Player is on team1, opponent is team2
+                        opponent = team2
+        
+        recent_scorigamis.append({
+            'kills': row['kills'],
+            'deaths': row['deaths'],
+            'player': row['player'],
+            'map': row['map'],
+            'team': row['team'],
+            'opponent': opponent,
+            'result': row['result'],
+            'match_date': row['match_date'],
+            'description': row['description']
+        })
     
     # Get totals
     total_query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches' + where_clause
@@ -240,7 +298,8 @@ def index():
         max_date=max_date,
         total_kills=total_kills,
         total_deaths=total_deaths,
-        overall_scorigamis=overall_scorigamis
+        overall_scorigamis=overall_scorigamis,
+        recent_scorigamis=recent_scorigamis
     )
 
 @app.route('/update', methods=['GET', 'POST'])

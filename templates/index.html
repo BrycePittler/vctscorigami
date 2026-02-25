@@ -71,7 +71,7 @@
         
         .filter-group label {
             font-size: 0.7rem;
-            color: #777;
+            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -108,7 +108,7 @@
         }
         
         .vs-text {
-            color: #777;
+            color: #999;
             font-size: 0.75rem;
             font-weight: 500;
         }
@@ -169,7 +169,7 @@
             justify-content: space-between;
             margin-top: 6px;
             font-size: 0.65rem;
-            color: #666;
+            color: #999;
         }
         
         .main-content {
@@ -177,6 +177,103 @@
             justify-content: center;
             gap: 25px;
             flex-wrap: wrap;
+        }
+        
+        .recent-scorigamis-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 260px;
+        }
+        
+        .recent-scorigamis {
+            background: #222228;
+            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid #333;
+        }
+        
+        .recent-scorigamis h2 {
+            font-size: 0.65rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .recent-scorigamis-list {
+            list-style: none;
+        }
+        
+        .recent-scorigamis-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #2e2e36;
+            font-size: 0.75rem;
+        }
+        
+        .recent-scorigamis-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .recent-scorigamis-list .score-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .recent-scorigamis-list .score-badge {
+            background: #28a745;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .recent-scorigamis-list .player-name {
+            color: #c0c0c4;
+            font-weight: 500;
+        }
+        
+        .recent-scorigamis-list .map-name {
+            color: #c0c0c4;
+        }
+        
+        .recent-scorigamis-list .team-vs {
+            font-size: 0.7rem;
+            color: #b0b0b4;
+            margin-bottom: 2px;
+        }
+        
+        .recent-scorigamis-list .team-vs .team-highlight {
+            color: #c0c0c4;
+            font-weight: 500;
+        }
+        
+        .recent-scorigamis-list .match-info {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        
+        .recent-scorigamis-list .match-info .result-win {
+            color: #8ab88a;
+        }
+        
+        .recent-scorigamis-list .match-info .result-loss {
+            color: #b88a8a;
+        }
+        
+        .recent-scorigamis-list .date-info {
+            font-size: 0.65rem;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        .recent-scorigamis-list .team-info {
+            font-size: 0.65rem;
+            color: #999;
         }
         
         .grid-section {
@@ -195,7 +292,7 @@
         
         .axis-title-y {
             font-size: 0.6rem;
-            color: #666;
+            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-align: right;
@@ -214,7 +311,7 @@
             height: 15px;
             width: 20px;
             font-size: 0.6rem;
-            color: #555;
+            color: #999;
             text-align: right;
             line-height: 15px;
             display: flex;
@@ -246,17 +343,17 @@
         .tile {
             width: 15px;
             height: 15px;
-            background: #2a2a32;
-            border: 1px solid #333;
+            background: #333333;
+            border: 1px solid #555;
             cursor: pointer;
         }
         
         .tile:hover {
-            border-color: #666;
+            border-color: #999;
         }
         
         .tile.highlight {
-            border-color: #555;
+            border-color: #999;
         }
         
         .x-axis-container {
@@ -271,7 +368,7 @@
         .x-label {
             width: 15px;
             font-size: 0.6rem;
-            color: #555;
+            color: #999;
             text-align: center;
             line-height: 15px;
             display: flex;
@@ -285,7 +382,7 @@
         
         .axis-title-x {
             font-size: 0.6rem;
-            color: #666;
+            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-align: center;
@@ -308,7 +405,7 @@
         
         .leaderboard h2 {
             font-size: 0.65rem;
-            color: #777;
+            color: #999;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
@@ -342,7 +439,7 @@
             justify-content: center;
             font-size: 0.6rem;
             font-weight: 500;
-            color: #777;
+            color: #999;
             flex-shrink: 0;
         }
         
@@ -396,14 +493,38 @@
         }
         
         .scrollable-list::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #999;
+        }
+        
+        .scrollable-list-lg {
+            max-height: 660px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .scrollable-list-lg::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollable-list-lg::-webkit-scrollbar-track {
+            background: #2a2a32;
+            border-radius: 3px;
+        }
+        
+        .scrollable-list-lg::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+        
+        .scrollable-list-lg::-webkit-scrollbar-thumb:hover {
+            background: #999;
         }
         
         .total-stats {
             text-align: center;
             margin-top: 25px;
             font-size: 0.8rem;
-            color: #777;
+            color: #999;
         }
         
         .total-stats .kills-num {
@@ -471,7 +592,7 @@
             right: 12px;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #666;
+            color: #999;
             font-size: 18px;
         }
         
@@ -523,7 +644,7 @@
         
         .match-entry .match-info {
             font-size: 0.75rem;
-            color: #777;
+            color: #999;
             margin-bottom: 2px;
         }
         
@@ -537,13 +658,26 @@
         
         .match-entry .tournament {
             font-size: 0.7rem;
-            color: #666;
+            color: #999;
         }
         
-        @media (max-width: 1000px) {
+        @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
                 align-items: center;
+            }
+            
+            .recent-scorigamis-section {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .recent-scorigamis {
+                flex: 1;
+                min-width: 280px;
+                max-width: 400px;
             }
             
             .leaderboards-section {
@@ -629,6 +763,38 @@
         </div>
         
         <div class="main-content">
+            <div class="recent-scorigamis-section">
+                <div class="recent-scorigamis">
+                    <h2>Recent Scorigamis</h2>
+                    <div class="scrollable-list-lg">
+                        <ul class="recent-scorigamis-list">
+                            {% for scorigami in recent_scorigamis %}
+                                <li>
+                                    <div class="score-line">
+                                        <span class="score-badge">{{ scorigami.kills }}-{{ scorigami.deaths }}</span>
+                                        <span class="player-name">{{ scorigami.player }}</span> on <span class="map-name">{{ scorigami.map }}</span>
+                                    </div>
+                                    {% if scorigami.team %}
+                                        <div class="team-vs">
+                                            <span class="team-highlight">{{ scorigami.team }}</span>{% if scorigami.opponent %} vs {{ scorigami.opponent }}{% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if scorigami.result or scorigami.match_date %}
+                                        <div class="match-info">
+                                            {% if scorigami.result %}
+                                                <span class="{% if scorigami.result == 'Win' %}result-win{% else %}result-loss{% endif %}">{{ scorigami.result }}</span>
+                                            {% endif %}
+                                            {% if scorigami.result and scorigami.match_date %} | {% endif %}
+                                            {% if scorigami.match_date %}{{ scorigami.match_date }}{% endif %}
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
             <div class="grid-section">
                 <div class="grid-with-axes">
                     <div class="y-axis-container">
