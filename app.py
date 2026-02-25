@@ -249,24 +249,29 @@ def index():
         FROM matches {where_clause} GROUP BY player ORDER BY unique_scores DESC
     ''', params).fetchall(), 'unique_scores')
     
-    leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
-        SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
-        FROM matches m1
-        {where_clause.replace('WHERE', 'WHERE') if conditions else ''}
-        {' AND ' if conditions else 'WHERE NOT '} EXISTS (
-            SELECT 1 FROM matches m2 
-            WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
-        )
-        GROUP BY player ORDER BY exclusive_scores DESC
-    ''', params).fetchall() if conditions else conn.execute('''
-        SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
-        FROM matches m1
-        WHERE NOT EXISTS (
-            SELECT 1 FROM matches m2 
-            WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
-        )
-        GROUP BY player ORDER BY exclusive_scores DESC
-    ''').fetchall(), 'exclusive_scores')
+    # Scorigami Leaders: players with unique K/D combos that no other player has (within filtered data)
+    # First find all K/D combos that only one player has achieved
+    if conditions:
+        leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
+            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
+            FROM matches m1
+            {where_clause}
+            AND NOT EXISTS (
+                SELECT 1 FROM matches m2 
+                WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
+            )
+            GROUP BY player ORDER BY exclusive_scores DESC
+        ''', params).fetchall(), 'exclusive_scores')
+    else:
+        leaderboard_exclusive = rank_leaderboard(conn.execute('''
+            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
+            FROM matches m1
+            WHERE NOT EXISTS (
+                SELECT 1 FROM matches m2 
+                WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
+            )
+            GROUP BY player ORDER BY exclusive_scores DESC
+        ''').fetchall(), 'exclusive_scores')
     
     leaderboard_maps_played = rank_leaderboard(conn.execute(f'''
         SELECT player, COUNT(*) as total_matches
