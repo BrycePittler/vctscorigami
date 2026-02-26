@@ -33,6 +33,15 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: python update_matches.py
       
+    # Twitter Bot - Check and post new scorigamis
+    - name: Check and post new scorigamis to Twitter
+      env:
+        TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+        TWITTER_API_KEY_SECRET: ${{ secrets.TWITTER_API_KEY_SECRET }}
+        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      run: python twitter_bot.py
+      
     - name: Commit database changes
       run: |
         git config --local user.email "action@github.com"
