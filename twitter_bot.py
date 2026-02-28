@@ -95,11 +95,11 @@ class ScorigamiTwitterBot:
             match_context = ""
         
         # Build tweet
-        parts = [f"SCORIGAMI!"]
+        parts = [f"Scorigami!"]
         parts.append(f"{player} went {kd_str} on {map_name}")
         
         if match_context:
-            parts.append(f"({match_context})")
+            parts.append(f"({match_context} via: vctscorigami.com)")
         
         if result:
             emoji = "✅" if result == "Win" else "❌"
@@ -112,7 +112,7 @@ class ScorigamiTwitterBot:
         # Ensure tweet is under 280 characters
         if len(tweet) > 280:
             # Shorten by removing some details
-            tweet = f"SCORIGAMI!\n{player}: {kd_str} on {map_name}\n#vct #valorant #vctscorigami"
+            tweet = f"Scorigami!\n{player}: {kd_str} on {map_name}\n#vct #valorant #vctscorigami"
         
         return tweet
     

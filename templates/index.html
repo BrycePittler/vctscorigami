@@ -164,14 +164,6 @@
             border: none;
         }
         
-        .timeline-dates {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-            font-size: 0.65rem;
-            color: #999;
-        }
-        
         .main-content {
             display: flex;
             justify-content: center;
@@ -661,6 +653,38 @@
             color: #999;
         }
         
+        /* Loading indicator */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 34, 0.7);
+            z-index: 998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #3a3a44;
+            border-top: 3px solid #5a5a64;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
@@ -767,7 +791,7 @@
                 <div class="recent-scorigamis">
                     <h2>Recent Scorigamis</h2>
                     <div class="scrollable-list-lg">
-                        <ul class="recent-scorigamis-list">
+                        <ul class="recent-scorigamis-list" id="recent-scorigamis-list">
                             {% for scorigami in recent_scorigamis %}
                                 <li>
                                     <div class="score-line">
@@ -856,14 +880,14 @@
             
             <div class="leaderboards-section">
                 <div class="leaderboard">
-                    <h2>Tile Leaders</h2>
+                    <h2>Total Kills</h2>
                     <div class="scrollable-list">
-                        <ul class="leaderboard-list">
-                            {% for player in leaderboard_unique %}
+                        <ul class="leaderboard-list" id="leaderboard-total-kills">
+                            {% for player in leaderboard_total_kills %}
                                 <li>
                                     <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
                                     <span class="player-name-lb">{{ player.player }}</span>
-                                    <span class="score">{{ player.unique_scores }}</span>
+                                    <span class="score">{{ player.total_kills }}</span>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -873,7 +897,7 @@
                 <div class="leaderboard">
                     <h2>Scorigami Leaders</h2>
                     <div class="scrollable-list">
-                        <ul class="leaderboard-list">
+                        <ul class="leaderboard-list" id="leaderboard-exclusive">
                             {% for player in leaderboard_exclusive %}
                                 <li>
                                     <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
@@ -888,7 +912,7 @@
                 <div class="leaderboard">
                     <h2>Maps Played</h2>
                     <div class="scrollable-list">
-                        <ul class="leaderboard-list">
+                        <ul class="leaderboard-list" id="leaderboard-maps">
                             {% for player in leaderboard_maps_played %}
                                 <li>
                                     <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
@@ -903,7 +927,7 @@
                 <div class="leaderboard">
                     <h2>K-D Differential</h2>
                     <div class="scrollable-list">
-                        <ul class="leaderboard-list">
+                        <ul class="leaderboard-list" id="leaderboard-kd">
                             {% for player in leaderboard_kd %}
                                 <li>
                                     <span class="rank {{ player.rank_class }}">{{ player.rank }}</span>
@@ -918,8 +942,12 @@
         </div>
         
         <div class="total-stats">
-            Total: <span class="kills-num">{{ total_kills }}</span> Kills / <span class="deaths-num">{{ total_deaths }}</span> Deaths
+            Total: <span class="kills-num" id="total-kills">{{ total_kills }}</span> Kills / <span class="deaths-num" id="total-deaths">{{ total_deaths }}</span> Deaths
         </div>
+    </div>
+    
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
     </div>
     
     <div class="overlay" id="overlay"></div>
@@ -938,9 +966,14 @@
         const tooltipContent = document.getElementById('tooltip-content');
         const timelineSlider = document.getElementById('timeline-slider');
         const timelineCurrentDate = document.getElementById('timeline-current-date');
+        const loadingOverlay = document.getElementById('loading-overlay');
         
         const minDate = '{{ min_date }}';
         const maxDate = '{{ max_date }}';
+        
+        // Store current state
+        let currentData = null;
+        let isLoading = false;
 
         function calculateDate(value) {
             if (value == 100) {
@@ -1028,33 +1061,219 @@
             tooltip.classList.remove('visible');
         }
 
-        document.querySelectorAll('.tile[data-details]').forEach(tile => {
-            tile.addEventListener('click', function(e) {
-                const kills = this.dataset.kills;
-                const deaths = this.dataset.deaths;
-                const count = this.dataset.count;
-                const details = this.dataset.details;
-                showTooltip(kills, deaths, count, details);
-                e.stopPropagation();
+        // Tile click handlers
+        function attachTileClickHandlers() {
+            document.querySelectorAll('.tile[data-details]').forEach(tile => {
+                tile.addEventListener('click', function(e) {
+                    const kills = this.dataset.kills;
+                    const deaths = this.dataset.deaths;
+                    const count = this.dataset.count;
+                    const details = this.dataset.details;
+                    showTooltip(kills, deaths, count, details);
+                    e.stopPropagation();
+                });
             });
-        });
+        }
+        
+        attachTileClickHandlers();
 
         overlay.addEventListener('click', closeTooltip);
 
+        // Update URL without page reload
         function updateUrl() {
             const view = document.getElementById('view-select').value;
             const player = document.getElementById('player-select').value;
             const team1 = document.getElementById('team1-select').value;
             const team2 = document.getElementById('team2-select').value;
             const timeline = timelineSlider.value;
-            window.location.href = '?view=' + encodeURIComponent(view) + '&player=' + encodeURIComponent(player) + '&team1=' + encodeURIComponent(team1) + '&team2=' + encodeURIComponent(team2) + '&timeline=' + timeline;
+            
+            const params = new URLSearchParams({
+                view: view,
+                player: player,
+                team1: team1,
+                team2: team2,
+                timeline: timeline
+            });
+            
+            const newUrl = window.location.pathname + '?' + params.toString();
+            window.history.pushState({ view, player, team1, team2, timeline }, '', newUrl);
+        }
+        
+        // Fetch data via AJAX and update DOM
+        async function fetchData() {
+            if (isLoading) return;
+            isLoading = true;
+            loadingOverlay.classList.add('active');
+            
+            const view = document.getElementById('view-select').value;
+            const player = document.getElementById('player-select').value;
+            const team1 = document.getElementById('team1-select').value;
+            const team2 = document.getElementById('team2-select').value;
+            const timeline = timelineSlider.value;
+            
+            const params = new URLSearchParams({
+                view: view,
+                player: player,
+                team1: team1,
+                team2: team2,
+                timeline: timeline
+            });
+            
+            try {
+                const response = await fetch('/api/data?' + params.toString());
+                const data = await response.json();
+                currentData = data;
+                
+                updateGrid(data);
+                updateLeaderboards(data);
+                updateTotals(data);
+                updateRecentScorigamis(data);
+                updateUrl();
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            } finally {
+                isLoading = false;
+                loadingOverlay.classList.remove('active');
+            }
+        }
+        
+        // Update the grid tiles
+        function updateGrid(data) {
+            const { scores, max_count, overall_scorigamis } = data;
+            const selectedView = document.getElementById('view-select').value;
+            
+            // Convert overall_scorigamis array to Set for quick lookup
+            const scorigamiSet = new Set(overall_scorigamis.map(s => `${s[0]},${s[1]}`));
+            
+            document.querySelectorAll('.tile').forEach(tile => {
+                const kills = parseInt(tile.dataset.kills);
+                const deaths = parseInt(tile.dataset.deaths);
+                const key = `${kills},${deaths}`;
+                
+                // Remove old data attributes
+                delete tile.dataset.count;
+                delete tile.dataset.details;
+                
+                if (scores[key]) {
+                    const info = scores[key];
+                    const count = info.count;
+                    let color;
+                    
+                    if (selectedView === 'winpct') {
+                        const winPct = info.win_pct;
+                        if (winPct !== null) {
+                            const hue = winPct * 1.1;
+                            const lightness = 35 + (winPct * 0.3);
+                            color = `hsl(${hue}, 75%, ${lightness}%)`;
+                        } else {
+                            color = '#3a3a44';
+                        }
+                    } else if (scorigamiSet.has(key)) {
+                        color = '#28a745';
+                    } else {
+                        const fraction = max_count > 1 ? (count - 1.0) / (max_count - 1) : 0;
+                        const hue = Math.round(fraction * 180);
+                        color = `hsl(${hue + 210}, 70%, 60%)`;
+                    }
+                    
+                    tile.style.background = color;
+                    tile.dataset.count = count;
+                    tile.dataset.details = info.details;
+                } else {
+                    tile.style.background = '#333333';
+                }
+            });
+            
+            // Re-attach click handlers for tiles with details
+            attachTileClickHandlers();
+        }
+        
+        // Update leaderboards
+        function updateLeaderboards(data) {
+            const { leaderboard_total_kills, leaderboard_exclusive, leaderboard_maps_played, leaderboard_kd } = data;
+            
+            // Total Kills
+            const totalKillsList = document.getElementById('leaderboard-total-kills');
+            totalKillsList.innerHTML = leaderboard_total_kills.map(p => `
+                <li>
+                    <span class="rank ${p.rank_class}">${p.rank}</span>
+                    <span class="player-name-lb">${p.player}</span>
+                    <span class="score">${p.total_kills}</span>
+                </li>
+            `).join('');
+            
+            // Scorigami Leaders
+            const exclusiveList = document.getElementById('leaderboard-exclusive');
+            exclusiveList.innerHTML = leaderboard_exclusive.map(p => `
+                <li>
+                    <span class="rank ${p.rank_class}">${p.rank}</span>
+                    <span class="player-name-lb">${p.player}</span>
+                    <span class="score">${p.exclusive_scores}</span>
+                </li>
+            `).join('');
+            
+            // Maps Played
+            const mapsList = document.getElementById('leaderboard-maps');
+            mapsList.innerHTML = leaderboard_maps_played.map(p => `
+                <li>
+                    <span class="rank ${p.rank_class}">${p.rank}</span>
+                    <span class="player-name-lb">${p.player}</span>
+                    <span class="score">${p.total_matches}</span>
+                </li>
+            `).join('');
+            
+            // K-D Differential
+            const kdList = document.getElementById('leaderboard-kd');
+            kdList.innerHTML = leaderboard_kd.map(p => `
+                <li>
+                    <span class="rank ${p.rank_class}">${p.rank}</span>
+                    <span class="player-name-lb">${p.player}</span>
+                    <span class="score">${p.kill_death_difference}</span>
+                </li>
+            `).join('');
+        }
+        
+        // Update totals
+        function updateTotals(data) {
+            document.getElementById('total-kills').textContent = data.total_kills;
+            document.getElementById('total-deaths').textContent = data.total_deaths;
+        }
+        
+        // Update recent scorigamis
+        function updateRecentScorigamis(data) {
+            const list = document.getElementById('recent-scorigamis-list');
+            list.innerHTML = data.recent_scorigamis.map(s => {
+                const resultClass = s.result === 'Win' ? 'result-win' : (s.result === 'Loss' ? 'result-loss' : '');
+                return `
+                    <li>
+                        <div class="score-line">
+                            <span class="score-badge">${s.kills}-${s.deaths}</span>
+                            <span class="player-name">${s.player}</span> on <span class="map-name">${s.map}</span>
+                        </div>
+                        ${s.team ? `
+                            <div class="team-vs">
+                                <span class="team-highlight">${s.team}</span>${s.opponent ? ` vs ${s.opponent}` : ''}
+                            </div>
+                        ` : ''}
+                        ${s.result || s.match_date ? `
+                            <div class="match-info">
+                                ${s.result ? `<span class="${resultClass}">${s.result}</span>` : ''}
+                                ${s.result && s.match_date ? ' | ' : ''}
+                                ${s.match_date ? s.match_date : ''}
+                            </div>
+                        ` : ''}
+                    </li>
+                `;
+            }).join('');
         }
 
-        document.getElementById('view-select').addEventListener('change', updateUrl);
-        document.getElementById('player-select').addEventListener('change', updateUrl);
-        document.getElementById('team1-select').addEventListener('change', updateUrl);
-        document.getElementById('team2-select').addEventListener('change', updateUrl);
+        // Event listeners for filter changes
+        document.getElementById('view-select').addEventListener('change', fetchData);
+        document.getElementById('player-select').addEventListener('change', fetchData);
+        document.getElementById('team1-select').addEventListener('change', fetchData);
+        document.getElementById('team2-select').addEventListener('change', fetchData);
 
+        // Timeline slider with debounce
         let timelineTimeout;
         timelineSlider.addEventListener('input', function() {
             const value = this.value;
@@ -1062,9 +1281,26 @@
             timelineCurrentDate.textContent = dateStr;
             
             clearTimeout(timelineTimeout);
-            timelineTimeout = setTimeout(updateUrl, 300);
+            timelineTimeout = setTimeout(fetchData, 300);
         });
 
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                // Restore filter values from state
+                document.getElementById('view-select').value = event.state.view || 'gradient';
+                document.getElementById('player-select').value = event.state.player || 'all';
+                document.getElementById('team1-select').value = event.state.team1 || 'all';
+                document.getElementById('team2-select').value = event.state.team2 || 'all';
+                timelineSlider.value = event.state.timeline || 100;
+                timelineCurrentDate.textContent = calculateDate(event.state.timeline || 100);
+                
+                // Fetch data for restored state
+                fetchData();
+            }
+        });
+
+        // Tile hover handlers
         document.querySelectorAll('.tile').forEach(tile => {
             tile.addEventListener('mouseenter', function() {
                 const kills = this.dataset.kills;
