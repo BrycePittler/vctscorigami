@@ -132,8 +132,42 @@ def init_db():
     
     conn.close()
 
+def match_exists(description: str, map_name: str, player: str, match_id: str = None) -> bool:
+    """Check if a match record already exists."""
+    conn = get_db_connection()
+    row = fetchone(conn, 'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1',
+                   (description, map_name, player, match_id))
+    conn.close()
+    return row is not None
+
+def add_match(description: str, map_name: str, player: str, kills: int, deaths: int,
+              match_date: str = None, result: str = None, team: str = None,
+              tournament_id: int = None, match_id: str = None) -> bool:
+    """Add a single match record."""
+    conn = get_db_connection()
+    try:
+        if USE_POSTGRES:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (description, map, player, match_id) DO NOTHING
+            ''', (description, map_name, player, kills, deaths, match_date, result, team, tournament_id, match_id))
+        else:
+            conn.execute('''
+                INSERT OR IGNORE INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (description, map_name, player, kills, deaths, match_date, result, team, tournament_id, match_id))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error adding match: {e}")
+        return False
+    finally:
+        conn.close()
+
 def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
-    """Bulk insert with ON CONFLICT - single query."""
+    """Bulk insert with ON CONFLICT - single query instead of thousands."""
     if not matches:
         return 0, 0
     
@@ -219,25 +253,84 @@ def get_scores(player: str = None, tournament: str = None):
     
     return result
 
+def get_total_matches() -> int:
+    """Get total number of match records."""
+    conn = get_db_connection()
+    row = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')
+    conn.close()
+    return row['count']
+
+def get_recent_matches(limit: int = 10) -> List[Dict]:
+    """Get most recent matches."""
+    conn = get_db_connection()
+    rows = fetchall(conn, 'SELECT * FROM matches ORDER BY created_at DESC LIMIT ?', (limit,))
+    conn.close()
+    return rows
+
+def get_unique_players_list() -> List[str]:
+    """Get list of all unique players."""
+    conn = get_db_connection()
+    rows = fetchall(conn, "SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)")
+    conn.close()
+    return [row['player'] for row in rows]
+
+def get_unique_tournaments_list() -> List[str]:
+    """Get list of all unique tournament descriptions."""
+    conn = get_db_connection()
+    rows = fetchall(conn, 'SELECT description FROM matches GROUP BY description ORDER BY description')
+    conn.close()
+    return [row['description'] for row in rows]
+
+def verify_kill_death_balance() -> int:
+    """Verify that total kills equals total deaths."""
+    conn = get_db_connection()
+    row = fetchone(conn, 'SELECT SUM(kills) - SUM(deaths) as diff FROM matches')
+    conn.close()
+    return row['diff'] if row and row['diff'] else 0
+
 def get_database_stats() -> Dict:
     """Get database statistics."""
     conn = get_db_connection()
     
     stats = {}
-    for key, query in [
-        ('total_matches', 'SELECT COUNT(*) as val FROM matches'),
-        ('unique_players', 'SELECT COUNT(DISTINCT player) as val FROM matches'),
-        ('unique_maps', 'SELECT COUNT(DISTINCT map) as val FROM matches'),
-        ('unique_tournaments', 'SELECT COUNT(DISTINCT description) as val FROM matches'),
-        ('total_kills', 'SELECT SUM(kills) as val FROM matches'),
-        ('total_deaths', 'SELECT SUM(deaths) as val FROM matches'),
-    ]:
-        row = fetchone(conn, query)
-        stats[key] = row['val'] if row['val'] else 0
+    row = fetchone(conn, 'SELECT COUNT(*) as total_matches FROM matches')
+    stats['total_matches'] = row['total_matches']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT player) as unique_players FROM matches')
+    stats['unique_players'] = row['unique_players']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT map) as unique_maps FROM matches')
+    stats['unique_maps'] = row['unique_maps']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT description) as unique_tournaments FROM matches')
+    stats['unique_tournaments'] = row['unique_tournaments']
+    
+    row = fetchone(conn, 'SELECT SUM(kills) as total_kills FROM matches')
+    stats['total_kills'] = row['total_kills'] if row['total_kills'] else 0
+    
+    row = fetchone(conn, 'SELECT SUM(deaths) as total_deaths FROM matches')
+    stats['total_deaths'] = row['total_deaths'] if row['total_deaths'] else 0
     
     stats['kd_balance'] = stats['total_kills'] - stats['total_deaths']
     conn.close()
     return stats
+
+
+MASTERS_CHAMPIONS_TOURNAMENTS = [
+    "Champions Tour 2023: Lock-In Sao Paulo",
+    "Champions Tour 2023: Masters Tokyo",
+    "Valorant Champions 2023",
+    "Champions Tour 2024: Masters Madrid",
+    "Champions Tour 2024: Masters Shanghai",
+    "Valorant Champions 2024",
+    "VCT 2025: Masters Bangkok",
+    "VCT 2025: Masters Toronto",
+    "Valorant Champions 2025"
+]
+
+def get_unique_tournaments():
+    """Get unique tournaments - for backwards compatibility."""
+    return sorted(MASTERS_CHAMPIONS_TOURNAMENTS)
 
 
 if __name__ == '__main__':
