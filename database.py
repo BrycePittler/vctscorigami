@@ -3,18 +3,19 @@ import os
 from typing import List, Dict, Tuple, Optional
 
 # Check if PostgreSQL is being used
-USE_POSTGRES = os.environ.get('DATABASE_URL') is not None
-
-if USE_POSTGRES:
-    import psycopg2
-    from psycopg2 import extras
+USE_POSTGRES = False
+try:
+    if os.environ.get('DATABASE_URL'):
+        import psycopg2
+        from psycopg2 import extras
+        USE_POSTGRES = True
+except ImportError:
+    pass  # psycopg2 not installed, use SQLite
 
 def get_db_connection():
     """Get a database connection - PostgreSQL or SQLite."""
     if USE_POSTGRES:
         conn = psycopg2.connect(os.environ.get('DATABASE_URL'))
-        # Set row factory for dict-like access
-        extras.register_default_json(loads=lambda x: x)
         return conn
     else:
         conn = sqlite3.connect('matches.db', timeout=30)
@@ -24,22 +25,45 @@ def get_db_connection():
         conn.execute('PRAGMA synchronous=NORMAL')
         return conn
 
-def execute_query(conn, query, params=(), fetch=False):
-    """Execute a query with params, handling differences between SQLite and PostgreSQL."""
+def execute(conn, query, params=()):
+    """
+    Execute a query and return cursor.
+    Handles differences between SQLite and PostgreSQL.
+    """
     if USE_POSTGRES:
+        cursor = conn.cursor()
         # Convert ? to %s for PostgreSQL
         pg_query = query.replace('?', '%s')
-        cursor = conn.cursor()
         cursor.execute(pg_query, params)
-        if fetch:
-            columns = [desc[0] for desc in cursor.description]
-            return [dict(zip(columns, row)) for row in cursor.fetchall()]
         return cursor
     else:
-        cursor = conn.execute(query, params)
-        if fetch:
-            return [dict(row) for row in cursor.fetchall()]
-        return cursor
+        return conn.execute(query, params)
+
+def fetchone(conn, query, params=()):
+    """Execute query and fetch one result as dict."""
+    if USE_POSTGRES:
+        cursor = conn.cursor()
+        pg_query = query.replace('?', '%s')
+        cursor.execute(pg_query, params)
+        row = cursor.fetchone()
+        if row:
+            columns = [desc[0] for desc in cursor.description]
+            return dict(zip(columns, row))
+        return None
+    else:
+        row = conn.execute(query, params).fetchone()
+        return dict(row) if row else None
+
+def fetchall(conn, query, params=()):
+    """Execute query and fetch all results as list of dicts."""
+    if USE_POSTGRES:
+        cursor = conn.cursor()
+        pg_query = query.replace('?', '%s')
+        cursor.execute(pg_query, params)
+        columns = [desc[0] for desc in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    else:
+        return [dict(row) for row in conn.execute(query, params).fetchall()]
 
 def init_db():
     """Initialize the database with the updated schema."""
@@ -130,17 +154,10 @@ def init_db():
 def match_exists(description: str, map_name: str, player: str, match_id: str = None) -> bool:
     """Check if a match record already exists."""
     conn = get_db_connection()
-    cursor = conn.cursor() if USE_POSTGRES else conn
-    query = 'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1'
-    
-    if USE_POSTGRES:
-        cursor.execute(query.replace('?', '%s'), (description, map_name, player, match_id))
-    else:
-        cursor.execute(query, (description, map_name, player, match_id))
-    
-    exists = cursor.fetchone() is not None
+    row = fetchone(conn, 'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1',
+                   (description, map_name, player, match_id))
     conn.close()
-    return exists
+    return row is not None
 
 def add_match(description: str, map_name: str, player: str, kills: int, deaths: int,
               match_date: str = None, result: str = None, team: str = None,
@@ -183,12 +200,7 @@ def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     conn = get_db_connection()
     
     # Get current count before insert
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM matches')
-        count_before = cursor.fetchone()[0]
-    else:
-        count_before = conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0]
+    count_before = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')['count']
     
     # Prepare values
     values = [
@@ -225,11 +237,7 @@ def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     conn.commit()
     
     # Get count after insert to calculate inserted
-    if USE_POSTGRES:
-        cursor.execute('SELECT COUNT(*) FROM matches')
-        count_after = cursor.fetchone()[0]
-    else:
-        count_after = conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0]
+    count_after = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')['count']
     
     inserted = count_after - count_before
     skipped = len(matches) - inserted
@@ -255,14 +263,7 @@ def get_scores(player: str = None, tournament: str = None):
     if conditions:
         query += ' WHERE ' + ' AND '.join(conditions)
     
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute(query.replace('?', '%s'), params)
-        columns = [desc[0] for desc in cursor.description]
-        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    else:
-        rows = [dict(row) for row in conn.execute(query, params).fetchall()]
-    
+    rows = fetchall(conn, query, params)
     conn.close()
     
     # Group by kills, deaths
@@ -298,103 +299,60 @@ def get_scores(player: str = None, tournament: str = None):
 def get_total_matches() -> int:
     """Get total number of match records."""
     conn = get_db_connection()
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM matches')
-        count = cursor.fetchone()[0]
-    else:
-        count = conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0]
+    row = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')
     conn.close()
-    return count
+    return row['count']
 
 def get_recent_matches(limit: int = 10) -> List[Dict]:
     """Get most recent matches."""
     conn = get_db_connection()
-    query = 'SELECT * FROM matches ORDER BY created_at DESC LIMIT ?'
-    
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute(query.replace('?', '%s'), (limit,))
-        columns = [desc[0] for desc in cursor.description]
-        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    else:
-        rows = [dict(row) for row in conn.execute(query, (limit,)).fetchall()]
-    
+    rows = fetchall(conn, 'SELECT * FROM matches ORDER BY created_at DESC LIMIT ?', (limit,))
     conn.close()
     return rows
 
 def get_unique_players_list() -> List[str]:
     """Get list of all unique players."""
     conn = get_db_connection()
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
-        rows = [row[0] for row in cursor.fetchall()]
-    else:
-        rows = [row['player'] for row in conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()]
+    rows = fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
     conn.close()
-    return rows
+    return [row['player'] for row in rows]
 
 def get_unique_tournaments_list() -> List[str]:
     """Get list of all unique tournament descriptions."""
     conn = get_db_connection()
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute('SELECT DISTINCT description FROM matches ORDER BY description')
-        rows = [row[0] for row in cursor.fetchall()]
-    else:
-        rows = [row['description'] for row in conn.execute('SELECT DISTINCT description FROM matches ORDER BY description').fetchall()]
+    rows = fetchall(conn, 'SELECT DISTINCT description FROM matches ORDER BY description')
     conn.close()
-    return rows
+    return [row['description'] for row in rows]
 
 def verify_kill_death_balance() -> int:
     """Verify that total kills equals total deaths."""
     conn = get_db_connection()
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        cursor.execute('SELECT SUM(kills) - SUM(deaths) as diff FROM matches')
-        result = cursor.fetchone()[0]
-    else:
-        result = conn.execute('SELECT SUM(kills) - SUM(deaths) as diff FROM matches').fetchone()['diff']
+    row = fetchone(conn, 'SELECT SUM(kills) - SUM(deaths) as diff FROM matches')
     conn.close()
-    return result if result else 0
+    return row['diff'] if row and row['diff'] else 0
 
 def get_database_stats() -> Dict:
     """Get database statistics."""
     conn = get_db_connection()
     
-    if USE_POSTGRES:
-        cursor = conn.cursor()
-        stats = {}
-        
-        cursor.execute('SELECT COUNT(*) FROM matches')
-        stats['total_matches'] = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT COUNT(DISTINCT player) FROM matches')
-        stats['unique_players'] = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT COUNT(DISTINCT map) FROM matches')
-        stats['unique_maps'] = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT COUNT(DISTINCT description) FROM matches')
-        stats['unique_tournaments'] = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT SUM(kills) FROM matches')
-        result = cursor.fetchone()[0]
-        stats['total_kills'] = result if result else 0
-        
-        cursor.execute('SELECT SUM(deaths) FROM matches')
-        result = cursor.fetchone()[0]
-        stats['total_deaths'] = result if result else 0
-    else:
-        stats = {
-            'total_matches': conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0],
-            'unique_players': conn.execute('SELECT COUNT(DISTINCT player) FROM matches').fetchone()[0],
-            'unique_maps': conn.execute('SELECT COUNT(DISTINCT map) FROM matches').fetchone()[0],
-            'unique_tournaments': conn.execute('SELECT COUNT(DISTINCT description) FROM matches').fetchone()[0],
-            'total_kills': conn.execute('SELECT SUM(kills) FROM matches').fetchone()[0] or 0,
-            'total_deaths': conn.execute('SELECT SUM(deaths) FROM matches').fetchone()[0] or 0,
-        }
+    stats = {}
+    row = fetchone(conn, 'SELECT COUNT(*) as total_matches FROM matches')
+    stats['total_matches'] = row['total_matches']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT player) as unique_players FROM matches')
+    stats['unique_players'] = row['unique_players']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT map) as unique_maps FROM matches')
+    stats['unique_maps'] = row['unique_maps']
+    
+    row = fetchone(conn, 'SELECT COUNT(DISTINCT description) as unique_tournaments FROM matches')
+    stats['unique_tournaments'] = row['unique_tournaments']
+    
+    row = fetchone(conn, 'SELECT SUM(kills) as total_kills FROM matches')
+    stats['total_kills'] = row['total_kills'] if row['total_kills'] else 0
+    
+    row = fetchone(conn, 'SELECT SUM(deaths) as total_deaths FROM matches')
+    stats['total_deaths'] = row['total_deaths'] if row['total_deaths'] else 0
     
     stats['kd_balance'] = stats['total_kills'] - stats['total_deaths']
     conn.close()

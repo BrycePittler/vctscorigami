@@ -11,19 +11,6 @@ PASSWORD_HASH = b"$2b$12$UxfOKV7MadrhIWPhy1Sozu3r0fhwr8pgshjd9t08XhSEvA791fWZO"
 # Initialize database on startup
 database.init_db()
 
-# Check if using PostgreSQL
-USE_POSTGRES = os.environ.get('DATABASE_URL') is not None
-
-
-def execute_db(conn, query, params=()):
-    """Execute a query with proper cursor handling."""
-    if USE_POSTGRES:
-        cur = conn.cursor()
-        cur.execute(query, params)
-        return cur
-    else:
-        return conn.execute(query, params)
-
 
 def rank_leaderboard(leaderboard_data, score_key):
     """
@@ -80,7 +67,7 @@ def index():
     conn = database.get_db_connection()
     
     # Get date range
-    date_range = conn.execute('SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches').fetchone()
+    date_range = database.fetchone(conn, 'SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches')
     min_date = date_range['min_date'] or '2023-01-01'
     max_date = date_range['max_date'] or '2026-12-31'
     
@@ -123,7 +110,7 @@ def index():
         FROM matches
         {where_clause}
     '''
-    rows = conn.execute(query, params).fetchall()
+    rows = database.fetchall(conn, query, params)
     
     # Group by kills, deaths
     scores = {}
@@ -171,12 +158,12 @@ def index():
         GROUP BY kills, deaths
         HAVING COUNT(*) = 1
     '''
-    overall_scorigamis_raw = conn.execute(scorigami_query, params).fetchall()
+    overall_scorigamis_raw = database.fetchall(conn, scorigami_query, params)
     overall_scorigamis = {(s['kills'], s['deaths']) for s in overall_scorigamis_raw}
     
     # Get unique players and teams
-    unique_players = conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()
-    unique_teams_raw = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
+    unique_players = database.fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
+    unique_teams_raw = database.fetchall(conn, 'SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team')
     unique_teams = [row['team'] for row in unique_teams_raw]
     
     # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
@@ -192,7 +179,7 @@ def index():
         ) unique_scores ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths
         ORDER BY m.match_date DESC
     '''
-    recent_scorigamis_raw = conn.execute(recent_scorigamis_query).fetchall()
+    recent_scorigamis_raw = database.fetchall(conn, recent_scorigamis_query)
     
     recent_scorigamis = []
     for row in recent_scorigamis_raw:
@@ -239,20 +226,20 @@ def index():
     
     # Get totals
     total_query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches' + where_clause
-    totals = conn.execute(total_query, params).fetchone()
+    totals = database.fetchone(conn, total_query, params)
     total_kills = totals['total_kills'] if totals and totals['total_kills'] else 0
     total_deaths = totals['total_deaths'] if totals and totals['total_deaths'] else 0
     
     # Leaderboards (filtered)
-    leaderboard_total_kills = rank_leaderboard(conn.execute(f'''
+    leaderboard_total_kills = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, SUM(kills) as total_kills
         FROM matches {where_clause} GROUP BY player ORDER BY total_kills DESC
-    ''', params).fetchall(), 'total_kills')
+    ''', params), 'total_kills')
     
     # Scorigami Leaders: players with unique K/D combos that no other player has (within filtered data)
     # First find all K/D combos that only one player has achieved
     if conditions:
-        leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
+        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, f'''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             {where_clause}
@@ -261,9 +248,9 @@ def index():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''', params).fetchall(), 'exclusive_scores')
+        ''', params), 'exclusive_scores')
     else:
-        leaderboard_exclusive = rank_leaderboard(conn.execute('''
+        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, '''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             WHERE NOT EXISTS (
@@ -271,17 +258,17 @@ def index():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''').fetchall(), 'exclusive_scores')
+        '''), 'exclusive_scores')
     
-    leaderboard_maps_played = rank_leaderboard(conn.execute(f'''
+    leaderboard_maps_played = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, COUNT(*) as total_matches
         FROM matches {where_clause} GROUP BY player ORDER BY total_matches DESC
-    ''', params).fetchall(), 'total_matches')
+    ''', params), 'total_matches')
     
-    leaderboard_kd = rank_leaderboard(conn.execute(f'''
+    leaderboard_kd = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, SUM(kills) - SUM(deaths) AS kill_death_difference
         FROM matches {where_clause} GROUP BY player ORDER BY kill_death_difference DESC
-    ''', params).fetchall(), 'kill_death_difference')
+    ''', params), 'kill_death_difference')
     
     conn.close()
     
@@ -319,7 +306,7 @@ def api_data():
     conn = database.get_db_connection()
     
     # Get date range
-    date_range = conn.execute('SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches').fetchone()
+    date_range = database.fetchone(conn, 'SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches')
     min_date = date_range['min_date'] or '2023-01-01'
     max_date = date_range['max_date'] or '2026-12-31'
     
@@ -362,7 +349,7 @@ def api_data():
         FROM matches
         {where_clause}
     '''
-    rows = conn.execute(query, params).fetchall()
+    rows = database.fetchall(conn, query, params)
     
     # Group by kills, deaths
     scores = {}
@@ -410,12 +397,12 @@ def api_data():
         GROUP BY kills, deaths
         HAVING COUNT(*) = 1
     '''
-    overall_scorigamis_raw = conn.execute(scorigami_query, params).fetchall()
+    overall_scorigamis_raw = database.fetchall(conn, scorigami_query, params)
     overall_scorigamis = [[s['kills'], s['deaths']] for s in overall_scorigamis_raw]
     
     # Get unique players and teams
-    unique_players = conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()
-    unique_teams_raw = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
+    unique_players = database.fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
+    unique_teams_raw = database.fetchall(conn, 'SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team')
     unique_teams = [row['team'] for row in unique_teams_raw]
     
     # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
@@ -430,7 +417,7 @@ def api_data():
         ) unique_scores ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths
         ORDER BY m.match_date DESC
     '''
-    recent_scorigamis_raw = conn.execute(recent_scorigamis_query).fetchall()
+    recent_scorigamis_raw = database.fetchall(conn, recent_scorigamis_query)
     
     recent_scorigamis = []
     for row in recent_scorigamis_raw:
@@ -472,19 +459,19 @@ def api_data():
     
     # Get totals
     total_query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches' + where_clause
-    totals = conn.execute(total_query, params).fetchone()
+    totals = database.fetchone(conn, total_query, params)
     total_kills = totals['total_kills'] if totals and totals['total_kills'] else 0
     total_deaths = totals['total_deaths'] if totals and totals['total_deaths'] else 0
     
     # Leaderboards (filtered)
-    leaderboard_total_kills = rank_leaderboard(conn.execute(f'''
+    leaderboard_total_kills = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, SUM(kills) as total_kills
         FROM matches {where_clause} GROUP BY player ORDER BY total_kills DESC
-    ''', params).fetchall(), 'total_kills')
+    ''', params), 'total_kills')
     
     # Scorigami Leaders
     if conditions:
-        leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
+        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, f'''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             {where_clause}
@@ -493,9 +480,9 @@ def api_data():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''', params).fetchall(), 'exclusive_scores')
+        ''', params), 'exclusive_scores')
     else:
-        leaderboard_exclusive = rank_leaderboard(conn.execute('''
+        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, '''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             WHERE NOT EXISTS (
@@ -503,17 +490,17 @@ def api_data():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''').fetchall(), 'exclusive_scores')
+        '''), 'exclusive_scores')
     
-    leaderboard_maps_played = rank_leaderboard(conn.execute(f'''
+    leaderboard_maps_played = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, COUNT(*) as total_matches
         FROM matches {where_clause} GROUP BY player ORDER BY total_matches DESC
-    ''', params).fetchall(), 'total_matches')
+    ''', params), 'total_matches')
     
-    leaderboard_kd = rank_leaderboard(conn.execute(f'''
+    leaderboard_kd = rank_leaderboard(database.fetchall(conn, f'''
         SELECT player, SUM(kills) - SUM(deaths) AS kill_death_difference
         FROM matches {where_clause} GROUP BY player ORDER BY kill_death_difference DESC
-    ''', params).fetchall(), 'kill_death_difference')
+    ''', params), 'kill_death_difference')
     
     conn.close()
     
