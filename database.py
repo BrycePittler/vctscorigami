@@ -51,17 +51,19 @@ def init_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_player ON matches(player)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_description ON matches(description)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_match_date ON matches(match_date)')
-    conn.execute('CREATE INDEX IF NOT EXISTS idx_unique_match ON matches(description, map, player)')
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_match_id ON matches(match_id)')
+    # FIXED: Include match_id in unique index to handle rematches
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_unique_match ON matches(description, map, player, match_id)')
     
     conn.commit()
     conn.close()
 
-def match_exists(description: str, map_name: str, player: str) -> bool:
+def match_exists(description: str, map_name: str, player: str, match_id: str = None) -> bool:
     """Check if a match record already exists."""
     conn = get_db_connection()
     cursor = conn.execute(
-        'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? LIMIT 1',
-        (description, map_name, player)
+        'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1',
+        (description, map_name, player, match_id)
     )
     exists = cursor.fetchone() is not None
     conn.close()
@@ -88,7 +90,7 @@ def add_match(description: str, map_name: str, player: str, kills: int, deaths: 
 def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     """
     Add multiple match records in a batch.
-    Skips duplicates based on (description, map, player).
+    Skips duplicates based on (description, map, player, match_id).
     
     Returns:
         Tuple of (inserted_count, skipped_count)
@@ -98,10 +100,10 @@ def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     skipped = 0
     
     for match in matches:
-        # Check if exists
+        # FIXED: Include match_id in duplicate check
         cursor = conn.execute(
-            'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? LIMIT 1',
-            (match['description'], match['map'], match['player'])
+            'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1',
+            (match['description'], match['map'], match['player'], match.get('match_id'))
         )
         if cursor.fetchone():
             skipped += 1

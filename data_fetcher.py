@@ -2,6 +2,7 @@
 VCT Scorigami Data Fetcher Module
 Fetches match data from VLR.gg using web scraping.
 Includes date and win/loss status for each player per map.
+Only skips matches/maps that are clearly LIVE.
 """
 import time
 import logging
@@ -71,6 +72,39 @@ def get_match_page_urls(tournament_id: int) -> List[str]:
     return unique_matches
 
 
+def is_match_live(html_content: str) -> bool:
+    """
+    Check if a match is currently LIVE.
+    Only returns True if we're CERTAIN the match is in progress.
+    """
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Check for LIVE badge in status
+    live_badge = soup.find('span', class_='ml-status')
+    if live_badge:
+        text = live_badge.get_text(strip=True).upper()
+        if text == 'LIVE':
+            return True
+    
+    # Check match header for live status
+    header_status = soup.find('div', class_='match-header-status')
+    if header_status:
+        text = header_status.get_text(strip=True).upper()
+        if text == 'LIVE':
+            return True
+    
+    return False
+
+
+def is_map_live(game_element) -> bool:
+    """
+    Check if a map is currently being played.
+    Only returns True if the map has 'active' class.
+    """
+    game_classes = game_element.get('class', [])
+    return 'active' in game_classes
+
+
 def extract_date_from_match_page(soup: BeautifulSoup) -> Optional[str]:
     """Extract match date from the match page."""
     date_div = soup.find('div', class_='moment-tz-convert')
@@ -123,23 +157,6 @@ def extract_kills_from_cell(cell) -> Optional[int]:
     
     return None
 
-from bs4 import BeautifulSoup
-
-def is_match_complete(html_content: str) -> bool:
-    """Check if a VLR.gg match page is for a completed match."""
-    soup = BeautifulSoup(html_content, 'html.parser')
-    
-    # Check for "LIVE" badge
-    live_badge = soup.find(class_='ml-status')  # or 'match-live', check VLR's current HTML
-    if live_badge and 'live' in live_badge.get_text().lower():
-        return False
-    
-    # Check for winner display
-    winner = soup.find(class_='match-winner')
-    if not winner:
-        return False
-    
-    return True
 
 def extract_deaths_from_cell(cell) -> Optional[int]:
     """Extract total deaths from a deaths cell."""
@@ -196,6 +213,11 @@ def parse_match_page(html: str, match_url: str) -> Tuple[List[Dict], str, Option
     game_sections = soup.find_all('div', class_='vm-stats-game')
     
     for game in game_sections:
+        # Skip if map is currently live
+        if is_map_live(game):
+            logger.info("Skipping LIVE map")
+            continue
+        
         map_div = game.find('div', class_='map')
         if not map_div:
             continue
@@ -311,6 +333,11 @@ def fetch_tournament_data(tournament_id: int, delay: float = 1.0) -> List[Dict]:
         
         html = fetch_page(match_url)
         if not html:
+            continue
+        
+        # Skip if match is live
+        if is_match_live(html):
+            logger.info(f"Skipping LIVE match: {match_url}")
             continue
         
         matches, tourn_name, _ = parse_match_page(html, match_url)
