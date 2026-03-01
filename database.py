@@ -1,15 +1,11 @@
 import sqlite3
-import os
 from typing import List, Dict, Tuple, Optional
 from datetime import datetime
 
 def get_db_connection():
     """Get a database connection."""
-    conn = sqlite3.connect('matches.db', timeout=30)
+    conn = sqlite3.connect('matches.db')
     conn.row_factory = sqlite3.Row
-    # Enable WAL mode for better concurrency (reads don't block writes)
-    conn.execute('PRAGMA journal_mode=WAL')
-    conn.execute('PRAGMA synchronous=NORMAL')
     return conn
 
 def init_db():
@@ -35,8 +31,7 @@ def init_db():
                 team TEXT,
                 tournament_id INTEGER,
                 match_id TEXT,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(description, map, player, match_id)
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
         ''')
         print("Created new matches table with full schema")
@@ -57,6 +52,8 @@ def init_db():
     conn.execute('CREATE INDEX IF NOT EXISTS idx_description ON matches(description)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_match_date ON matches(match_date)')
     conn.execute('CREATE INDEX IF NOT EXISTS idx_match_id ON matches(match_id)')
+    # FIXED: Include match_id in unique index to handle rematches
+    conn.execute('CREATE INDEX IF NOT EXISTS idx_unique_match ON matches(description, map, player, match_id)')
     
     conn.commit()
     conn.close()
@@ -79,7 +76,7 @@ def add_match(description: str, map_name: str, player: str, kills: int, deaths: 
     conn = get_db_connection()
     try:
         conn.execute('''
-            INSERT OR IGNORE INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
+            INSERT INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (description, map_name, player, kills, deaths, match_date, result, team, tournament_id, match_id))
         conn.commit()
@@ -92,49 +89,48 @@ def add_match(description: str, map_name: str, player: str, kills: int, deaths: 
 
 def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     """
-    Add multiple match records in a batch using bulk INSERT.
-    Uses INSERT OR IGNORE to skip duplicates - SINGLE QUERY instead of thousands.
+    Add multiple match records in a batch.
+    Skips duplicates based on (description, map, player, match_id).
     
     Returns:
         Tuple of (inserted_count, skipped_count)
     """
-    if not matches:
-        return 0, 0
-    
     conn = get_db_connection()
+    inserted = 0
+    skipped = 0
     
-    # Get current count before insert
-    count_before = conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0]
-    
-    # Bulk insert - INSERT OR IGNORE skips duplicates based on UNIQUE constraint
-    values = [
-        (
-            m['description'],
-            m['map'],
-            m['player'],
-            m['kills'],
-            m['deaths'],
-            m.get('match_date'),
-            m.get('result'),
-            m.get('team'),
-            m.get('tournament_id'),
-            m.get('match_id')
+    for match in matches:
+        # FIXED: Include match_id in duplicate check
+        cursor = conn.execute(
+            'SELECT 1 FROM matches WHERE description = ? AND map = ? AND player = ? AND match_id = ? LIMIT 1',
+            (match['description'], match['map'], match['player'], match.get('match_id'))
         )
-        for m in matches
-    ]
-    
-    conn.executemany('''
-        INSERT OR IGNORE INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', values)
+        if cursor.fetchone():
+            skipped += 1
+            continue
+        
+        try:
+            conn.execute('''
+                INSERT INTO matches (description, map, player, kills, deaths, match_date, result, team, tournament_id, match_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                match['description'],
+                match['map'],
+                match['player'],
+                match['kills'],
+                match['deaths'],
+                match.get('match_date'),
+                match.get('result'),
+                match.get('team'),
+                match.get('tournament_id'),
+                match.get('match_id')
+            ))
+            inserted += 1
+        except Exception as e:
+            print(f"Error inserting match: {e}")
+            skipped += 1
     
     conn.commit()
-    
-    # Get count after insert to calculate inserted
-    count_after = conn.execute('SELECT COUNT(*) FROM matches').fetchone()[0]
-    inserted = count_after - count_before
-    skipped = len(matches) - inserted
-    
     conn.close()
     return inserted, skipped
 

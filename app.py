@@ -11,6 +11,19 @@ PASSWORD_HASH = b"$2b$12$UxfOKV7MadrhIWPhy1Sozu3r0fhwr8pgshjd9t08XhSEvA791fWZO"
 # Initialize database on startup
 database.init_db()
 
+# Check if using PostgreSQL
+USE_POSTGRES = os.environ.get('DATABASE_URL') is not None
+
+
+def execute_db(conn, query, params=()):
+    """Execute a query with proper cursor handling."""
+    if USE_POSTGRES:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        return cur
+    else:
+        return conn.execute(query, params)
+
 
 def rank_leaderboard(leaderboard_data, score_key):
     """
