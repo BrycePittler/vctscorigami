@@ -21,17 +21,24 @@ def rank_leaderboard(leaderboard_data, score_key):
         return []
     
     ranked_list = []
+    
+    # Sort the data in descending order of the score
     sorted_data = sorted(leaderboard_data, key=lambda x: x[score_key], reverse=True)
     
     if sorted_data:
         current_rank = 1
         prev_score = None
+        count_at_rank = 0
         
         for i, item in enumerate(sorted_data):
+            # Check for a tie with the previous entry
             if prev_score is not None and item[score_key] != prev_score:
+                # New score, update rank (skip numbers based on how many had previous score)
                 current_rank = i + 1
+            
             prev_score = item[score_key]
             
+            # Determine rank class for coloring
             if current_rank == 1:
                 rank_class = 'gold'
             elif current_rank == 2:
@@ -60,7 +67,7 @@ def index():
     conn = database.get_db_connection()
     
     # Get date range
-    date_range = database.fetchone(conn, 'SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches')
+    date_range = conn.execute('SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches').fetchone()
     min_date = date_range['min_date'] or '2023-01-01'
     max_date = date_range['max_date'] or '2026-12-31'
     
@@ -95,15 +102,15 @@ def index():
         conditions.append('match_date <= ?')
         params.append(cutoff_date)
     
+    # Get scores with filters
     where_clause = ' WHERE ' + ' AND '.join(conditions) if conditions else ''
     
-    # Get scores with filters
     query = f'''
         SELECT kills, deaths, player, map, team, result, match_date, description
         FROM matches
         {where_clause}
     '''
-    rows = database.fetchall(conn, query, params)
+    rows = conn.execute(query, params).fetchall()
     
     # Group by kills, deaths
     scores = {}
@@ -114,6 +121,7 @@ def index():
         
         scores[key]['count'] += 1
         
+        # Track wins for win percentage
         if row['result']:
             scores[key]['total_with_result'] += 1
             if row['result'] == 'Win':
@@ -132,6 +140,7 @@ def index():
         if formatted not in scores[key]['matches']:
             scores[key]['matches'].append(formatted)
     
+    # Calculate win percentages and finalize
     for key in scores:
         scores[key]['details'] = '\n\n'.join(scores[key]['matches'])
         if scores[key]['total_with_result'] > 0:
@@ -149,15 +158,16 @@ def index():
         GROUP BY kills, deaths
         HAVING COUNT(*) = 1
     '''
-    overall_scorigamis_raw = database.fetchall(conn, scorigami_query, params)
+    overall_scorigamis_raw = conn.execute(scorigami_query, params).fetchall()
     overall_scorigamis = {(s['kills'], s['deaths']) for s in overall_scorigamis_raw}
     
-    # Get unique players and teams - PostgreSQL compatible (single quotes, GROUP BY)
-    unique_players = database.fetchall(conn, "SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)")
-    unique_teams_raw = database.fetchall(conn, "SELECT team FROM matches WHERE team IS NOT NULL AND team != '' GROUP BY team ORDER BY team")
+    # Get unique players and teams
+    unique_players = conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()
+    unique_teams_raw = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
     unique_teams = [row['team'] for row in unique_teams_raw]
     
-    # Get recent scorigamis
+    # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
+    # These are matches where the kills/deaths combo has only occurred once globally
     recent_scorigamis_query = '''
         SELECT m.kills, m.deaths, m.player, m.map, m.team, m.result, m.match_date, m.description
         FROM matches m
@@ -169,10 +179,12 @@ def index():
         ) unique_scores ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths
         ORDER BY m.match_date DESC
     '''
-    recent_scorigamis_raw = database.fetchall(conn, recent_scorigamis_query)
+    recent_scorigamis_raw = conn.execute(recent_scorigamis_query).fetchall()
     
     recent_scorigamis = []
     for row in recent_scorigamis_raw:
+        # Extract opponent team from description
+        # Description format: "Tournament Stage Type Team1 vs Team2"
         opponent = None
         if row['description'] and row['team']:
             desc = row['description']
@@ -182,14 +194,22 @@ def index():
                     team2 = parts[1].strip()
                     before_vs = parts[0].strip()
                     
+                    # If player's team matches team2, find opponent in before_vs
                     if row['team'] == team2:
+                        # Try to match known team names at the end of before_vs
                         words = before_vs.split()
+                        found_opponent = None
+                        
+                        # Try to find a known team name (check longest matches first)
                         for num_words in range(min(4, len(words)), 0, -1):
                             potential_team = ' '.join(words[-num_words:])
                             if potential_team in unique_teams and potential_team != row['team']:
-                                opponent = potential_team
+                                found_opponent = potential_team
                                 break
+                        
+                        opponent = found_opponent
                     else:
+                        # Player is on team1, opponent is team2
                         opponent = team2
         
         recent_scorigamis.append({
@@ -206,18 +226,20 @@ def index():
     
     # Get totals
     total_query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches' + where_clause
-    totals = database.fetchone(conn, total_query, params)
+    totals = conn.execute(total_query, params).fetchone()
     total_kills = totals['total_kills'] if totals and totals['total_kills'] else 0
     total_deaths = totals['total_deaths'] if totals and totals['total_deaths'] else 0
     
-    # Leaderboards
-    leaderboard_total_kills = rank_leaderboard(database.fetchall(conn, f'''
+    # Leaderboards (filtered)
+    leaderboard_total_kills = rank_leaderboard(conn.execute(f'''
         SELECT player, SUM(kills) as total_kills
         FROM matches {where_clause} GROUP BY player ORDER BY total_kills DESC
-    ''', params), 'total_kills')
+    ''', params).fetchall(), 'total_kills')
     
+    # Scorigami Leaders: players with unique K/D combos that no other player has (within filtered data)
+    # First find all K/D combos that only one player has achieved
     if conditions:
-        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, f'''
+        leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             {where_clause}
@@ -226,9 +248,9 @@ def index():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''', params), 'exclusive_scores')
+        ''', params).fetchall(), 'exclusive_scores')
     else:
-        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, '''
+        leaderboard_exclusive = rank_leaderboard(conn.execute('''
             SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
             FROM matches m1
             WHERE NOT EXISTS (
@@ -236,17 +258,17 @@ def index():
                 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
             )
             GROUP BY player ORDER BY exclusive_scores DESC
-        '''), 'exclusive_scores')
+        ''').fetchall(), 'exclusive_scores')
     
-    leaderboard_maps_played = rank_leaderboard(database.fetchall(conn, f'''
+    leaderboard_maps_played = rank_leaderboard(conn.execute(f'''
         SELECT player, COUNT(*) as total_matches
         FROM matches {where_clause} GROUP BY player ORDER BY total_matches DESC
-    ''', params), 'total_matches')
+    ''', params).fetchall(), 'total_matches')
     
-    leaderboard_kd = rank_leaderboard(database.fetchall(conn, f'''
+    leaderboard_kd = rank_leaderboard(conn.execute(f'''
         SELECT player, SUM(kills) - SUM(deaths) AS kill_death_difference
         FROM matches {where_clause} GROUP BY player ORDER BY kill_death_difference DESC
-    ''', params), 'kill_death_difference')
+    ''', params).fetchall(), 'kill_death_difference')
     
     conn.close()
     
@@ -274,7 +296,8 @@ def index():
 
 @app.route('/api/data')
 def api_data():
-    """JSON API endpoint for filtered data."""
+    """JSON API endpoint for filtered data - enables AJAX updates without page reload."""
+    selected_view = request.args.get('view', 'gradient')
     selected_player = request.args.get('player', 'all')
     selected_team1 = request.args.get('team1', 'all')
     selected_team2 = request.args.get('team2', 'all')
@@ -282,10 +305,12 @@ def api_data():
     
     conn = database.get_db_connection()
     
-    date_range = database.fetchone(conn, 'SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches')
+    # Get date range
+    date_range = conn.execute('SELECT MIN(match_date) as min_date, MAX(match_date) as max_date FROM matches').fetchone()
     min_date = date_range['min_date'] or '2023-01-01'
     max_date = date_range['max_date'] or '2026-12-31'
     
+    # Calculate cutoff date based on timeline slider
     if timeline_value < 100:
         from datetime import datetime, timedelta
         start = datetime.strptime(min_date, '%Y-%m-%d')
@@ -296,117 +321,211 @@ def api_data():
     else:
         cutoff_date = None
     
+    # Build filter conditions
     conditions = []
     params = []
     
     if selected_player != 'all':
         conditions.append('player = ?')
         params.append(selected_player)
+    
     if selected_team1 != 'all':
         conditions.append('team = ?')
         params.append(selected_team1)
+    
     if selected_team2 != 'all':
         conditions.append('description LIKE ?')
         params.append(f'%{selected_team2}%')
+    
     if cutoff_date:
         conditions.append('match_date <= ?')
         params.append(cutoff_date)
     
+    # Get scores with filters
     where_clause = ' WHERE ' + ' AND '.join(conditions) if conditions else ''
     
-    rows = database.fetchall(conn, f'SELECT kills, deaths, player, map, team, result, match_date, description FROM matches {where_clause}', params)
+    query = f'''
+        SELECT kills, deaths, player, map, team, result, match_date, description
+        FROM matches
+        {where_clause}
+    '''
+    rows = conn.execute(query, params).fetchall()
     
+    # Group by kills, deaths
     scores = {}
     for row in rows:
         key = (row['kills'], row['deaths'])
         if key not in scores:
             scores[key] = {'count': 0, 'matches': [], 'wins': 0, 'total_with_result': 0}
+        
         scores[key]['count'] += 1
+        
+        # Track wins for win percentage
         if row['result']:
             scores[key]['total_with_result'] += 1
             if row['result'] == 'Win':
                 scores[key]['wins'] += 1
+        
         formatted = f"{row['player']} on {row['map']}"
-        if row['result']: formatted += f" | {row['result']}"
-        if row['match_date']: formatted += f" | {row['match_date']}"
-        if row['team']: formatted += f"\nTeam: {row['team']}"
-        if row['description']: formatted += f"\n{row['description']}"
+        if row['result']:
+            formatted += f" | {row['result']}"
+        if row['match_date']:
+            formatted += f" | {row['match_date']}"
+        if row['team']:
+            formatted += f"\nTeam: {row['team']}"
+        if row['description']:
+            formatted += f"\n{row['description']}"
+        
         if formatted not in scores[key]['matches']:
             scores[key]['matches'].append(formatted)
     
+    # Calculate win percentages and finalize
     for key in scores:
         scores[key]['details'] = '\n\n'.join(scores[key]['matches'])
-        scores[key]['win_pct'] = (scores[key]['wins'] / scores[key]['total_with_result'] * 100) if scores[key]['total_with_result'] > 0 else None
+        if scores[key]['total_with_result'] > 0:
+            scores[key]['win_pct'] = (scores[key]['wins'] / scores[key]['total_with_result']) * 100
+        else:
+            scores[key]['win_pct'] = None
     
     max_count = max([info['count'] for info in scores.values()]) if scores else 1
     
-    overall_scorigamis_raw = database.fetchall(conn, f'SELECT kills, deaths FROM matches {where_clause} GROUP BY kills, deaths HAVING COUNT(*) = 1', params)
+    # Get scorigamis (filtered)
+    scorigami_query = f'''
+        SELECT kills, deaths
+        FROM matches
+        {where_clause}
+        GROUP BY kills, deaths
+        HAVING COUNT(*) = 1
+    '''
+    overall_scorigamis_raw = conn.execute(scorigami_query, params).fetchall()
     overall_scorigamis = [[s['kills'], s['deaths']] for s in overall_scorigamis_raw]
     
-    # PostgreSQL compatible (single quotes, GROUP BY)
-    unique_players = database.fetchall(conn, "SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)")
-    unique_teams_raw = database.fetchall(conn, "SELECT team FROM matches WHERE team IS NOT NULL AND team != '' GROUP BY team ORDER BY team")
+    # Get unique players and teams
+    unique_players = conn.execute('SELECT DISTINCT player FROM matches ORDER BY LOWER(player)').fetchall()
+    unique_teams_raw = conn.execute('SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team').fetchall()
     unique_teams = [row['team'] for row in unique_teams_raw]
     
-    recent_scorigamis_raw = database.fetchall(conn, '''
+    # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
+    recent_scorigamis_query = '''
         SELECT m.kills, m.deaths, m.player, m.map, m.team, m.result, m.match_date, m.description
-        FROM matches m INNER JOIN (SELECT kills, deaths FROM matches GROUP BY kills, deaths HAVING COUNT(*) = 1) unique_scores 
-        ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths ORDER BY m.match_date DESC
-    ''')
+        FROM matches m
+        INNER JOIN (
+            SELECT kills, deaths
+            FROM matches
+            GROUP BY kills, deaths
+            HAVING COUNT(*) = 1
+        ) unique_scores ON m.kills = unique_scores.kills AND m.deaths = unique_scores.deaths
+        ORDER BY m.match_date DESC
+    '''
+    recent_scorigamis_raw = conn.execute(recent_scorigamis_query).fetchall()
     
     recent_scorigamis = []
     for row in recent_scorigamis_raw:
+        # Extract opponent team from description
         opponent = None
-        if row['description'] and row['team'] and ' vs ' in row['description']:
-            parts = row['description'].split(' vs ')
-            if len(parts) > 1:
-                team2 = parts[1].strip()
-                before_vs = parts[0].strip()
-                if row['team'] == team2:
-                    words = before_vs.split()
-                    for num_words in range(min(4, len(words)), 0, -1):
-                        potential_team = ' '.join(words[-num_words:])
-                        if potential_team in unique_teams and potential_team != row['team']:
-                            opponent = potential_team
-                            break
-                else:
-                    opponent = team2
-        recent_scorigamis.append({'kills': row['kills'], 'deaths': row['deaths'], 'player': row['player'],
-            'map': row['map'], 'team': row['team'], 'opponent': opponent, 'result': row['result'],
-            'match_date': row['match_date'], 'description': row['description']})
+        if row['description'] and row['team']:
+            desc = row['description']
+            if ' vs ' in desc:
+                parts = desc.split(' vs ')
+                if len(parts) > 1:
+                    team2 = parts[1].strip()
+                    before_vs = parts[0].strip()
+                    
+                    if row['team'] == team2:
+                        words = before_vs.split()
+                        found_opponent = None
+                        
+                        for num_words in range(min(4, len(words)), 0, -1):
+                            potential_team = ' '.join(words[-num_words:])
+                            if potential_team in unique_teams and potential_team != row['team']:
+                                found_opponent = potential_team
+                                break
+                        
+                        opponent = found_opponent
+                    else:
+                        opponent = team2
+        
+        recent_scorigamis.append({
+            'kills': row['kills'],
+            'deaths': row['deaths'],
+            'player': row['player'],
+            'map': row['map'],
+            'team': row['team'],
+            'opponent': opponent,
+            'result': row['result'],
+            'match_date': row['match_date'],
+            'description': row['description']
+        })
     
-    totals = database.fetchone(conn, f'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches {where_clause}', params)
-    total_kills = totals['total_kills'] or 0
-    total_deaths = totals['total_deaths'] or 0
+    # Get totals
+    total_query = 'SELECT SUM(kills) as total_kills, SUM(deaths) as total_deaths FROM matches' + where_clause
+    totals = conn.execute(total_query, params).fetchone()
+    total_kills = totals['total_kills'] if totals and totals['total_kills'] else 0
+    total_deaths = totals['total_deaths'] if totals and totals['total_deaths'] else 0
     
-    leaderboard_total_kills = rank_leaderboard(database.fetchall(conn, f'SELECT player, SUM(kills) as total_kills FROM matches {where_clause} GROUP BY player ORDER BY total_kills DESC', params), 'total_kills')
+    # Leaderboards (filtered)
+    leaderboard_total_kills = rank_leaderboard(conn.execute(f'''
+        SELECT player, SUM(kills) as total_kills
+        FROM matches {where_clause} GROUP BY player ORDER BY total_kills DESC
+    ''', params).fetchall(), 'total_kills')
     
+    # Scorigami Leaders
     if conditions:
-        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, f'''
-            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores FROM matches m1
-            {where_clause} AND NOT EXISTS (SELECT 1 FROM matches m2 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player)
+        leaderboard_exclusive = rank_leaderboard(conn.execute(f'''
+            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
+            FROM matches m1
+            {where_clause}
+            AND NOT EXISTS (
+                SELECT 1 FROM matches m2 
+                WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
+            )
             GROUP BY player ORDER BY exclusive_scores DESC
-        ''', params), 'exclusive_scores')
+        ''', params).fetchall(), 'exclusive_scores')
     else:
-        leaderboard_exclusive = rank_leaderboard(database.fetchall(conn, '''
-            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores FROM matches m1
-            WHERE NOT EXISTS (SELECT 1 FROM matches m2 WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player)
+        leaderboard_exclusive = rank_leaderboard(conn.execute('''
+            SELECT player, COUNT(DISTINCT kills || '-' || deaths) as exclusive_scores
+            FROM matches m1
+            WHERE NOT EXISTS (
+                SELECT 1 FROM matches m2 
+                WHERE m2.kills = m1.kills AND m2.deaths = m1.deaths AND m2.player != m1.player
+            )
             GROUP BY player ORDER BY exclusive_scores DESC
-        '''), 'exclusive_scores')
+        ''').fetchall(), 'exclusive_scores')
     
-    leaderboard_maps_played = rank_leaderboard(database.fetchall(conn, f'SELECT player, COUNT(*) as total_matches FROM matches {where_clause} GROUP BY player ORDER BY total_matches DESC', params), 'total_matches')
-    leaderboard_kd = rank_leaderboard(database.fetchall(conn, f'SELECT player, SUM(kills) - SUM(deaths) AS kill_death_difference FROM matches {where_clause} GROUP BY player ORDER BY kill_death_difference DESC', params), 'kill_death_difference')
+    leaderboard_maps_played = rank_leaderboard(conn.execute(f'''
+        SELECT player, COUNT(*) as total_matches
+        FROM matches {where_clause} GROUP BY player ORDER BY total_matches DESC
+    ''', params).fetchall(), 'total_matches')
+    
+    leaderboard_kd = rank_leaderboard(conn.execute(f'''
+        SELECT player, SUM(kills) - SUM(deaths) AS kill_death_difference
+        FROM matches {where_clause} GROUP BY player ORDER BY kill_death_difference DESC
+    ''', params).fetchall(), 'kill_death_difference')
     
     conn.close()
     
-    scores_json = {f"{k},{d}": {'count': info['count'], 'details': info['details'], 'win_pct': info['win_pct']} for (k, d), info in scores.items()}
+    # Convert scores dict keys to strings for JSON
+    scores_json = {}
+    for (k, d), info in scores.items():
+        scores_json[f"{k},{d}"] = {
+            'count': info['count'],
+            'details': info['details'],
+            'win_pct': info['win_pct']
+        }
     
     return jsonify({
-        'scores': scores_json, 'max_count': max_count, 'overall_scorigamis': overall_scorigamis,
-        'leaderboard_total_kills': leaderboard_total_kills, 'leaderboard_exclusive': leaderboard_exclusive,
-        'leaderboard_maps_played': leaderboard_maps_played, 'leaderboard_kd': leaderboard_kd,
-        'total_kills': total_kills, 'total_deaths': total_deaths, 'recent_scorigamis': recent_scorigamis,
-        'unique_players': [p['player'] for p in unique_players], 'unique_teams': unique_teams
+        'scores': scores_json,
+        'max_count': max_count,
+        'overall_scorigamis': overall_scorigamis,
+        'leaderboard_total_kills': leaderboard_total_kills,
+        'leaderboard_exclusive': leaderboard_exclusive,
+        'leaderboard_maps_played': leaderboard_maps_played,
+        'leaderboard_kd': leaderboard_kd,
+        'total_kills': total_kills,
+        'total_deaths': total_deaths,
+        'recent_scorigamis': recent_scorigamis,
+        'unique_players': [p['player'] for p in unique_players],
+        'unique_teams': unique_teams
     })
 
 @app.route('/update', methods=['GET', 'POST'])
