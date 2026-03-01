@@ -200,7 +200,8 @@ def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     conn = get_db_connection()
     
     # Get current count before insert
-    count_before = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')['count']
+    row = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')
+    count_before = row['count']
     
     # Prepare values
     values = [
@@ -237,7 +238,8 @@ def add_matches_batch(matches: List[Dict]) -> Tuple[int, int]:
     conn.commit()
     
     # Get count after insert to calculate inserted
-    count_after = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')['count']
+    row = fetchone(conn, 'SELECT COUNT(*) as count FROM matches')
+    count_after = row['count']
     
     inserted = count_after - count_before
     skipped = len(matches) - inserted
@@ -313,14 +315,15 @@ def get_recent_matches(limit: int = 10) -> List[Dict]:
 def get_unique_players_list() -> List[str]:
     """Get list of all unique players."""
     conn = get_db_connection()
-    rows = fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
+    # Use GROUP BY instead of DISTINCT for PostgreSQL compatibility with ORDER BY
+    rows = fetchall(conn, 'SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)')
     conn.close()
     return [row['player'] for row in rows]
 
 def get_unique_tournaments_list() -> List[str]:
     """Get list of all unique tournament descriptions."""
     conn = get_db_connection()
-    rows = fetchall(conn, 'SELECT DISTINCT description FROM matches ORDER BY description')
+    rows = fetchall(conn, 'SELECT description FROM matches GROUP BY description ORDER BY description')
     conn.close()
     return [row['description'] for row in rows]
 

@@ -161,9 +161,9 @@ def index():
     overall_scorigamis_raw = database.fetchall(conn, scorigami_query, params)
     overall_scorigamis = {(s['kills'], s['deaths']) for s in overall_scorigamis_raw}
     
-    # Get unique players and teams
-    unique_players = database.fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
-    unique_teams_raw = database.fetchall(conn, 'SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team')
+    # Get unique players and teams - use GROUP BY for PostgreSQL compatibility
+    unique_players = database.fetchall(conn, 'SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)')
+    unique_teams_raw = database.fetchall(conn, 'SELECT team FROM matches WHERE team IS NOT NULL AND team != "" GROUP BY team ORDER BY team')
     unique_teams = [row['team'] for row in unique_teams_raw]
     
     # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
@@ -400,9 +400,9 @@ def api_data():
     overall_scorigamis_raw = database.fetchall(conn, scorigami_query, params)
     overall_scorigamis = [[s['kills'], s['deaths']] for s in overall_scorigamis_raw]
     
-    # Get unique players and teams
-    unique_players = database.fetchall(conn, 'SELECT DISTINCT player FROM matches ORDER BY LOWER(player)')
-    unique_teams_raw = database.fetchall(conn, 'SELECT DISTINCT team FROM matches WHERE team IS NOT NULL AND team != "" ORDER BY team')
+    # Get unique players and teams - use GROUP BY for PostgreSQL compatibility
+    unique_players = database.fetchall(conn, 'SELECT player FROM matches GROUP BY player ORDER BY LOWER(player)')
+    unique_teams_raw = database.fetchall(conn, 'SELECT team FROM matches WHERE team IS NOT NULL AND team != "" GROUP BY team ORDER BY team')
     unique_teams = [row['team'] for row in unique_teams_raw]
     
     # Get ALL recent scorigamis ordered by match date (most recent unique kill/death combinations)
