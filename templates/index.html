@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -527,6 +528,123 @@
             color: #a87a7a;
         }
         
+        /* K-D Race Chart Section */
+        .kd-race-section {
+            margin-top: 35px;
+            padding: 20px;
+            background: #222228;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .kd-race-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .kd-race-header h2 {
+            font-size: 0.9rem;
+            color: #e8e8ec;
+            font-weight: 600;
+        }
+        
+        .kd-race-header .chart-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .kd-race-header .player-count {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        
+        .kd-race-header select {
+            min-width: 80px;
+            padding: 6px 24px 6px 10px;
+            font-size: 0.75rem;
+        }
+        
+        .kd-race-chart {
+            width: 100%;
+            height: 500px;
+            background: #1a1a22;
+            border-radius: 6px;
+        }
+        
+        .kd-race-legend {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            padding: 5px;
+        }
+        
+        .kd-race-legend::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .kd-race-legend::-webkit-scrollbar-track {
+            background: #2a2a32;
+            border-radius: 3px;
+        }
+        
+        .kd-race-legend::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+        
+        .kd-race-legend .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            color: #b0b0b4;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .kd-race-legend .legend-item:hover {
+            background: #333;
+        }
+        
+        .kd-race-legend .legend-item.highlighted {
+            background: #333;
+            border-color: var(--highlight-color, #fff);
+        }
+        
+        .kd-race-legend .legend-color {
+            width: 10px;
+            height: 2px;
+            border-radius: 1px;
+        }
+        
+        .chart-instructions {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: #666;
+        }
+        
+        .chart-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
         .overlay {
             position: fixed;
             top: 0;
@@ -716,6 +834,10 @@
                 min-width: 180px;
                 max-width: 260px;
             }
+            
+            .kd-race-chart {
+                height: 400px;
+            }
         }
         
         @media (max-width: 600px) {
@@ -729,6 +851,10 @@
             
             select {
                 min-width: 120px;
+            }
+            
+            .kd-race-chart {
+                height: 350px;
             }
         }
     </style>
@@ -942,6 +1068,56 @@
         <div class="total-stats">
             Total: <span class="kills-num" id="total-kills">{{ total_kills }}</span> Kills / <span class="deaths-num" id="total-deaths">{{ total_deaths }}</span> Deaths
         </div>
+        
+        <!-- K-D Race Chart Section -->
+        <div class="kd-race-section">
+            <div class="kd-race-header">
+                <h2>K-D Race Leaderboard Over Time</h2>
+                <div class="chart-controls">
+                    <span class="player-count">Showing top <select id="kd-player-count">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                        <option value="250">250</option>
+                    </select> players</span>
+                </div>
+            </div>
+            <div id="kd-race-chart" class="kd-race-chart">
+                <div class="chart-loading">Loading chart data...</div>
+            </div>
+            <div id="kd-race-legend" class="kd-race-legend"></div>
+            <div class="chart-instructions">
+                Drag to pan | Scroll to zoom | Double-click to reset | Hover for details | Click legend to highlight
+            </div>
+        </div>
+        
+        <!-- Total Kills Chart Section -->
+        <div class="kd-race-section">
+            <div class="kd-race-header">
+                <h2>Total Kills Over Time</h2>
+                <div class="chart-controls">
+                    <span class="player-count">Showing top <select id="kills-player-count">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                        <option value="250">250</option>
+                    </select> players</span>
+                </div>
+            </div>
+            <div id="kills-race-chart" class="kd-race-chart">
+                <div class="chart-loading">Loading chart data...</div>
+            </div>
+            <div id="kills-race-legend" class="kd-race-legend"></div>
+            <div class="chart-instructions">
+                Drag to pan | Scroll to zoom | Double-click to reset | Hover for details | Click legend to highlight
+            </div>
+        </div>
     </div>
     
     <div class="loading-overlay" id="loading-overlay">
@@ -972,6 +1148,12 @@
         // Store current state
         let currentData = null;
         let isLoading = false;
+        
+        // K-D Race Chart state
+        let kdRaceData = null;
+        let kdRaceChart = null;
+        let highlightedPlayer = null;
+        let highlightedKillsPlayer = null;
 
         function calculateDate(value) {
             if (value == 100) {
@@ -1314,6 +1496,362 @@
                 document.querySelectorAll('.x-label.highlight').forEach(l => l.classList.remove('highlight'));
             });
         });
+        
+        // ==================== K-D RACE CHART ====================
+        
+        // Color palette for players
+        const playerColors = [
+            '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+            '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+            '#393b79', '#637939', '#8c6d31', '#843c39', '#7b4173',
+            '#5254a3', '#8ca252', '#bd9e39', '#ad494a', '#a55194',
+            '#6b6ecf', '#ceb54c', '#e7ba52', '#d6616b', '#ce6dbd',
+            '#9c9ede', '#cedb9c', '#e7cb94', '#e7969c', '#de9ed6',
+            '#3182bd', '#e6550d', '#31a354', '#756bb1', '#636363',
+            '#6baed6', '#fd8d3c', '#74c476', '#9e9ac8', '#969696',
+            '#9ecae1', '#fdae6b', '#a1d99b', '#bcbddc', '#bdbdbd',
+            '#c6dbef', '#fdd0a2', '#c7e9c0', '#dadaeb', '#d9d9d9'
+        ];
+        
+        function getPlayerColor(index) {
+            return playerColors[index % playerColors.length];
+        }
+        
+        async function fetchKDRaceData() {
+            try {
+                const response = await fetch('/api/kd-race');
+                const data = await response.json();
+                kdRaceData = data;
+                renderKDRaceChart();
+                renderKillsRaceChart();
+            } catch (error) {
+                console.error('Failed to fetch K-D race data:', error);
+                document.getElementById('kd-race-chart').innerHTML = 
+                    '<div class="chart-loading">Failed to load chart data</div>';
+                document.getElementById('kills-race-chart').innerHTML = 
+                    '<div class="chart-loading">Failed to load chart data</div>';
+            }
+        }
+        
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('-');
+            return new Date(parts[0], parts[1] - 1, parts[2]);
+        }
+        
+        function addDays(dateStr, days) {
+            const date = parseDate(dateStr);
+            if (!date) return null;
+            date.setDate(date.getDate() + days);
+            return date.toISOString().split('T')[0];
+        }
+        
+        function renderKDRaceChart() {
+            if (!kdRaceData || !kdRaceData.dates || kdRaceData.dates.length === 0) {
+                document.getElementById('kd-race-chart').innerHTML = 
+                    '<div class="chart-loading">No data available</div>';
+                return;
+            }
+            
+            const playerCount = parseInt(document.getElementById('kd-player-count').value);
+            const players = kdRaceData.players.slice(0, playerCount);
+            const dates = kdRaceData.dates;
+            const data = kdRaceData.data;
+            const maxDate = kdRaceData.max_date;
+            const tournaments = kdRaceData.tournaments || [];
+            
+            // Calculate the cutoff date (60 days before max date)
+            const cutoffDate = maxDate ? addDays(maxDate, -60) : null;
+            
+            // Create background shapes for tournaments
+            const shapes = tournaments.map(t => ({
+                type: 'rect',
+                xref: 'x',
+                yref: 'paper',
+                x0: t.start,
+                x1: t.end,
+                y0: 0,
+                y1: 1,
+                fillcolor: t.type === 'champions' ? 'rgba(255, 215, 0, 0.15)' : 'rgba(147, 112, 219, 0.15)',
+                line: { width: 0 },
+                layer: 'below'
+            }));
+            
+            // Build traces for each player
+            const traces = players.map((player, idx) => {
+                const firstDate = player.first_date;
+                const lastDate = player.last_date;
+                const endDate = lastDate ? addDays(lastDate, 60) : null;
+                
+                const playerData = dates.map(date => {
+                    // Don't show data before player's first game
+                    if (firstDate && date < firstDate) {
+                        return null;
+                    }
+                    // Don't show data after player has been inactive for 60 days
+                    if (endDate && date > endDate) {
+                        return null;
+                    }
+                    
+                    const dayData = data[date];
+                    return dayData ? (dayData[player.player] || null) : null;
+                });
+                
+                const isHighlighted = highlightedPlayer === player.player;
+                
+                return {
+                    x: dates,
+                    y: playerData,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: player.player,
+                    line: {
+                        color: getPlayerColor(idx),
+                        width: isHighlighted ? 5 : 1.5
+                    },
+                    opacity: isHighlighted ? 1 : (highlightedPlayer ? 0.08 : 0.7),
+                    hovertemplate: `<b>${player.player}</b><br>Date: %{x}<br>K-D: %{y:,}<extra></extra>`,
+                    connectgaps: false
+                };
+            });
+            
+            const layout = {
+                paper_bgcolor: '#1a1a22',
+                plot_bgcolor: '#1a1a22',
+                font: {
+                    family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    color: '#b0b0b4'
+                },
+                xaxis: {
+                    title: {
+                        text: 'Date',
+                        font: { size: 12, color: '#888' }
+                    },
+                    gridcolor: '#333',
+                    linecolor: '#444',
+                    tickfont: { size: 10, color: '#888' },
+                    rangeslider: { visible: false }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Kills - Deaths',
+                        font: { size: 12, color: '#888' }
+                    },
+                    gridcolor: '#333',
+                    linecolor: '#444',
+                    tickfont: { size: 10, color: '#888' },
+                    zeroline: true,
+                    zerolinecolor: '#444',
+                    zerolinewidth: 1
+                },
+                hovermode: 'closest',
+                showlegend: false,
+                margin: { l: 60, r: 20, t: 20, b: 50 },
+                dragmode: 'pan',
+                shapes: shapes
+            };
+            
+            const config = {
+                responsive: true,
+                displayModeBar: false,
+                scrollZoom: true,
+                doubleClick: 'reset'
+            };
+            
+            const chartDiv = document.getElementById('kd-race-chart');
+            Plotly.newPlot(chartDiv, traces, layout, config);
+            
+            // Render custom legend
+            renderKDRaceLegend(players);
+        }
+        
+        function renderKDRaceLegend(players) {
+            const legendDiv = document.getElementById('kd-race-legend');
+            legendDiv.innerHTML = players.map((player, idx) => {
+                const isHighlighted = highlightedPlayer === player.player;
+                const color = getPlayerColor(idx);
+                return `
+                    <div class="legend-item ${isHighlighted ? 'highlighted' : ''}" 
+                         data-player="${player.player}" 
+                         style="--highlight-color: ${color}"
+                         onclick="highlightPlayer('${player.player}')">
+                        <span class="legend-color" style="background: ${color}"></span>
+                        <span>${player.player}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function highlightPlayer(playerName) {
+            // Toggle highlight - if clicking the same player, unhighlight
+            if (highlightedPlayer === playerName) {
+                highlightedPlayer = null;
+            } else {
+                highlightedPlayer = playerName;
+            }
+            
+            renderKDRaceChart();
+        }
+        
+        // Player count change handler
+        document.getElementById('kd-player-count').addEventListener('change', function() {
+            highlightedPlayer = null;
+            renderKDRaceChart();
+        });
+        
+        // ==================== TOTAL KILLS CHART ====================
+        
+        function renderKillsRaceChart() {
+            if (!kdRaceData || !kdRaceData.dates || kdRaceData.dates.length === 0) {
+                document.getElementById('kills-race-chart').innerHTML = 
+                    '<div class="chart-loading">No data available</div>';
+                return;
+            }
+            
+            const playerCount = parseInt(document.getElementById('kills-player-count').value);
+            const players = kdRaceData.players.slice(0, playerCount);
+            const dates = kdRaceData.dates;
+            const killsData = kdRaceData.kills_data;
+            const tournaments = kdRaceData.tournaments || [];
+            
+            // Create background shapes for tournaments
+            const shapes = tournaments.map(t => ({
+                type: 'rect',
+                xref: 'x',
+                yref: 'paper',
+                x0: t.start,
+                x1: t.end,
+                y0: 0,
+                y1: 1,
+                fillcolor: t.type === 'champions' ? 'rgba(255, 215, 0, 0.15)' : 'rgba(147, 112, 219, 0.15)',
+                line: { width: 0 },
+                layer: 'below'
+            }));
+            
+            // Build traces for each player
+            const traces = players.map((player, idx) => {
+                const firstDate = player.first_date;
+                const lastDate = player.last_date;
+                const endDate = lastDate ? addDays(lastDate, 60) : null;
+                
+                const playerData = dates.map(date => {
+                    // Don't show data before player's first game
+                    if (firstDate && date < firstDate) {
+                        return null;
+                    }
+                    // Don't show data after player has been inactive for 60 days
+                    if (endDate && date > endDate) {
+                        return null;
+                    }
+                    
+                    const dayData = killsData[date];
+                    return dayData ? (dayData[player.player] || null) : null;
+                });
+                
+                const isHighlighted = highlightedKillsPlayer === player.player;
+                
+                return {
+                    x: dates,
+                    y: playerData,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: player.player,
+                    line: {
+                        color: getPlayerColor(idx),
+                        width: isHighlighted ? 5 : 1.5
+                    },
+                    opacity: isHighlighted ? 1 : (highlightedKillsPlayer ? 0.08 : 0.7),
+                    hovertemplate: `<b>${player.player}</b><br>Date: %{x}<br>Kills: %{y:,}<extra></extra>`,
+                    connectgaps: false
+                };
+            });
+            
+            const layout = {
+                paper_bgcolor: '#1a1a22',
+                plot_bgcolor: '#1a1a22',
+                font: {
+                    family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    color: '#b0b0b4'
+                },
+                xaxis: {
+                    title: {
+                        text: 'Date',
+                        font: { size: 12, color: '#888' }
+                    },
+                    gridcolor: '#333',
+                    linecolor: '#444',
+                    tickfont: { size: 10, color: '#888' },
+                    rangeslider: { visible: false }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Total Kills',
+                        font: { size: 12, color: '#888' }
+                    },
+                    gridcolor: '#333',
+                    linecolor: '#444',
+                    tickfont: { size: 10, color: '#888' },
+                    zeroline: true,
+                    zerolinecolor: '#444',
+                    zerolinewidth: 1
+                },
+                hovermode: 'closest',
+                showlegend: false,
+                margin: { l: 60, r: 20, t: 20, b: 50 },
+                dragmode: 'pan',
+                shapes: shapes
+            };
+            
+            const config = {
+                responsive: true,
+                displayModeBar: false,
+                scrollZoom: true,
+                doubleClick: 'reset'
+            };
+            
+            const chartDiv = document.getElementById('kills-race-chart');
+            Plotly.newPlot(chartDiv, traces, layout, config);
+            
+            // Render custom legend
+            renderKillsRaceLegend(players);
+        }
+        
+        function renderKillsRaceLegend(players) {
+            const legendDiv = document.getElementById('kills-race-legend');
+            legendDiv.innerHTML = players.map((player, idx) => {
+                const isHighlighted = highlightedKillsPlayer === player.player;
+                const color = getPlayerColor(idx);
+                return `
+                    <div class="legend-item ${isHighlighted ? 'highlighted' : ''}" 
+                         data-player="${player.player}" 
+                         style="--highlight-color: ${color}"
+                         onclick="highlightKillsPlayer('${player.player}')">
+                        <span class="legend-color" style="background: ${color}"></span>
+                        <span>${player.player}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function highlightKillsPlayer(playerName) {
+            // Toggle highlight - if clicking the same player, unhighlight
+            if (highlightedKillsPlayer === playerName) {
+                highlightedKillsPlayer = null;
+            } else {
+                highlightedKillsPlayer = playerName;
+            }
+            
+            renderKillsRaceChart();
+        }
+        
+        // Player count change handler for kills chart
+        document.getElementById('kills-player-count').addEventListener('change', function() {
+            highlightedKillsPlayer = null;
+            renderKillsRaceChart();
+        });
+        
+        // Load charts on page load
+        fetchKDRaceData();
     </script>
 </body>
 </html>

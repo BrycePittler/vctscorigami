@@ -541,6 +541,139 @@ def api_data():
         'unique_teams': unique_teams
     })
 
+
+@app.route('/api/kd-race')
+def api_kd_race():
+    """API endpoint for K-D race chart data - returns cumulative K-D over time for top players."""
+    from collections import defaultdict
+    
+    # Configuration
+    track_n_players = 250  # Track top 250 players by maps played
+    
+    # Tournament dates (Masters and Champions)
+    tournaments = [
+        # Champions events (yellow background)
+        {'name': 'Champions 2023', 'start': '2023-08-06', 'end': '2023-08-26', 'type': 'champions'},
+        {'name': 'Champions 2024', 'start': '2024-08-01', 'end': '2024-08-25', 'type': 'champions'},
+        {'name': 'Champions 2025', 'start': '2025-09-12', 'end': '2025-10-05', 'type': 'champions'},
+        {'name': 'Champions 2026', 'start': '2026-09-23', 'end': '2026-10-18', 'type': 'champions'},
+        # Masters events (purple background)
+        {'name': 'Masters Tokyo 2023', 'start': '2023-06-10', 'end': '2023-06-25', 'type': 'masters'},
+        {'name': 'Masters Madrid 2024', 'start': '2024-03-14', 'end': '2024-03-24', 'type': 'masters'},
+        {'name': 'Masters Shanghai 2024', 'start': '2024-05-23', 'end': '2024-06-09', 'type': 'masters'},
+        {'name': 'Masters Bangkok 2025', 'start': '2025-02-20', 'end': '2025-03-02', 'type': 'masters'},
+        {'name': 'Masters Toronto 2025', 'start': '2025-06-07', 'end': '2025-06-22', 'type': 'masters'},
+        {'name': 'Masters Santiago 2026', 'start': '2026-02-28', 'end': '2026-03-15', 'type': 'masters'},
+        {'name': 'Masters London 2026', 'start': '2026-06-05', 'end': '2026-06-21', 'type': 'masters'},
+    ]
+    
+    conn = database.get_db_connection()
+    
+    # Get top N players by maps played
+    top_players_query = '''
+        SELECT player, COUNT(*) as maps_played, SUM(kills) as total_kills, SUM(deaths) as total_deaths
+        FROM matches 
+        GROUP BY player 
+        ORDER BY maps_played DESC 
+        LIMIT ?
+    '''
+    top_players_rows = conn.execute(top_players_query, (track_n_players,)).fetchall()
+    tracked_players = [row['player'] for row in top_players_rows]
+    
+    # Get all matches for tracked players, ordered by date
+    placeholders = ','.join('?' * len(tracked_players))
+    matches_query = f'''
+        SELECT player, kills, deaths, match_date
+        FROM matches 
+        WHERE player IN ({placeholders})
+        ORDER BY match_date
+    '''
+    rows = conn.execute(matches_query, tracked_players).fetchall()
+    
+    conn.close()
+    
+    if not rows:
+        return jsonify({
+            'dates': [],
+            'players': [],
+            'data': {},
+            'kills_data': {},
+            'player_dates': {},
+            'tournaments': tournaments
+        })
+    
+    # Process into date-based cumulative data
+    # First, aggregate kills and deaths per player per date
+    daily_stats = defaultdict(lambda: defaultdict(lambda: {'kills': 0, 'deaths': 0}))
+    all_dates_set = set()
+    
+    # Track first and last appearance for each player
+    player_first_date = {}
+    player_last_date = {}
+    
+    for row in rows:
+        date = row['match_date']
+        player = row['player']
+        daily_stats[date][player]['kills'] += row['kills']
+        daily_stats[date][player]['deaths'] += row['deaths']
+        all_dates_set.add(date)
+        
+        # Track first appearance
+        if player not in player_first_date or date < player_first_date[player]:
+            player_first_date[player] = date
+        # Track last appearance
+        if player not in player_last_date or date > player_last_date[player]:
+            player_last_date[player] = date
+    
+    all_dates = sorted(all_dates_set)
+    
+    # Create cumulative data (kills - deaths) and (total kills)
+    player_kills = defaultdict(int)
+    player_deaths = defaultdict(int)
+    date_data = {}
+    kills_data = {}
+    
+    for date in all_dates:
+        # Update cumulative stats for players who played on this date
+        for player in daily_stats[date]:
+            player_kills[player] += daily_stats[date][player]['kills']
+            player_deaths[player] += daily_stats[date][player]['deaths']
+        
+        # Store KD difference for each tracked player
+        date_data[date] = {
+            p: player_kills.get(p, 0) - player_deaths.get(p, 0) 
+            for p in tracked_players
+        }
+        
+        # Store total kills for each tracked player
+        kills_data[date] = {
+            p: player_kills.get(p, 0)
+            for p in tracked_players
+        }
+    
+    # Build response with player info including first/last dates
+    players_info = []
+    for row in top_players_rows:
+        kd = (row['total_kills'] or 0) - (row['total_deaths'] or 0)
+        players_info.append({
+            'player': row['player'],
+            'maps_played': row['maps_played'],
+            'kd': kd,
+            'total_kills': row['total_kills'] or 0,
+            'first_date': player_first_date.get(row['player']),
+            'last_date': player_last_date.get(row['player'])
+        })
+    
+    return jsonify({
+        'dates': all_dates,
+        'players': players_info,
+        'data': date_data,
+        'kills_data': kills_data,
+        'max_date': all_dates[-1] if all_dates else None,
+        'tournaments': tournaments
+    })
+
+
 @app.route('/update', methods=['GET', 'POST'])
 def update():
     if request.method == 'POST':
