@@ -569,6 +569,46 @@
             font-size: 0.75rem;
         }
         
+        .chart-selector-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .chart-selector-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .chart-selector {
+            padding: 8px 30px 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #2a2a32;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 6px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all 0.2s;
+        }
+        
+        .chart-selector:hover {
+            border-color: #666;
+            background-color: #333;
+        }
+        
+        .chart-selector:focus {
+            outline: none;
+            border-color: #7c3aed;
+        }
+        
         .kd-race-chart {
             width: 100%;
             height: 500px;
@@ -627,6 +667,12 @@
             width: 10px;
             height: 2px;
             border-radius: 1px;
+        }
+        
+        .kd-race-legend .legend-team {
+            font-size: 0.55rem;
+            color: #666;
+            margin-left: 2px;
         }
         
         .chart-instructions {
@@ -1069,51 +1115,37 @@
             Total: <span class="kills-num" id="total-kills">{{ total_kills }}</span> Kills / <span class="deaths-num" id="total-deaths">{{ total_deaths }}</span> Deaths
         </div>
         
-        <!-- K-D Race Chart Section -->
+        <!-- Unified Race Chart Section -->
         <div class="kd-race-section">
             <div class="kd-race-header">
-                <h2>K-D Leaderboard Over Time</h2>
-                <div class="chart-controls">
-                    <span class="player-count">Showing top <select id="kd-player-count">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50" selected>50</option>
-                        <option value="100">100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                        <option value="250">250</option>
-                    </select> players</span>
+                <div class="chart-selector-row">
+                    <div class="chart-selector-group">
+                        <select id="entity-select" class="chart-selector">
+                            <option value="players">Players</option>
+                            <option value="teams">Teams</option>
+                        </select>
+                        <select id="metric-select" class="chart-selector">
+                            <option value="kd">K-D Differential</option>
+                            <option value="kills">Total Kills</option>
+                        </select>
+                    </div>
+                    <div class="chart-controls">
+                        <span class="player-count">Showing top <select id="entity-count">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="150">150</option>
+                            <option value="200">200</option>
+                            <option value="250">250</option>
+                        </select> <span id="entity-label">players</span></span>
+                    </div>
                 </div>
             </div>
-            <div id="kd-race-chart" class="kd-race-chart">
+            <div id="unified-race-chart" class="kd-race-chart">
                 <div class="chart-loading">Loading chart data...</div>
             </div>
-            <div id="kd-race-legend" class="kd-race-legend"></div>
-            <div class="chart-instructions">
-                Drag to pan | Scroll to zoom | Double-click to reset | Hover for details | Click legend to highlight
-            </div>
-        </div>
-        
-        <!-- Total Kills Chart Section -->
-        <div class="kd-race-section">
-            <div class="kd-race-header">
-                <h2>Total Kills Over Time</h2>
-                <div class="chart-controls">
-                    <span class="player-count">Showing top <select id="kills-player-count">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50" selected>50</option>
-                        <option value="100">100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                        <option value="250">250</option>
-                    </select> players</span>
-                </div>
-            </div>
-            <div id="kills-race-chart" class="kd-race-chart">
-                <div class="chart-loading">Loading chart data...</div>
-            </div>
-            <div id="kills-race-legend" class="kd-race-legend"></div>
+            <div id="unified-race-legend" class="kd-race-legend"></div>
             <div class="chart-instructions">
                 Drag to pan | Scroll to zoom | Double-click to reset | Hover for details | Click legend to highlight
             </div>
@@ -1150,10 +1182,13 @@
         let isLoading = false;
         
         // K-D Race Chart state
-        let kdRaceData = null;
-        let kdRaceChart = null;
-        let highlightedPlayer = null;
-        let highlightedKillsPlayer = null;
+        let playerData = null;
+        let teamData = null;
+        let highlightedEntity = null;  // Unified highlight state
+        
+        // Current view state
+        let currentEntity = 'players';  // 'players' or 'teams'
+        let currentMetric = 'kd';       // 'kd' or 'kills'
 
         function calculateDate(value) {
             if (value == 100) {
@@ -1497,10 +1532,10 @@
             });
         });
         
-        // ==================== K-D RACE CHART ====================
+        // ==================== UNIFIED RACE CHART ====================
         
-        // Color palette for players
-        const playerColors = [
+        // Color palette for fallback
+        const fallbackColors = [
             '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
             '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
             '#393b79', '#637939', '#8c6d31', '#843c39', '#7b4173',
@@ -1513,24 +1548,8 @@
             '#c6dbef', '#fdd0a2', '#c7e9c0', '#dadaeb', '#d9d9d9'
         ];
         
-        function getPlayerColor(index) {
-            return playerColors[index % playerColors.length];
-        }
-        
-        async function fetchKDRaceData() {
-            try {
-                const response = await fetch('/api/kd-race');
-                const data = await response.json();
-                kdRaceData = data;
-                renderKDRaceChart();
-                renderKillsRaceChart();
-            } catch (error) {
-                console.error('Failed to fetch K-D race data:', error);
-                document.getElementById('kd-race-chart').innerHTML = 
-                    '<div class="chart-loading">Failed to load chart data</div>';
-                document.getElementById('kills-race-chart').innerHTML = 
-                    '<div class="chart-loading">Failed to load chart data</div>';
-            }
+        function getColor(idx) {
+            return fallbackColors[idx % fallbackColors.length];
         }
         
         function parseDate(dateStr) {
@@ -1546,22 +1565,46 @@
             return date.toISOString().split('T')[0];
         }
         
-        function renderKDRaceChart() {
-            if (!kdRaceData || !kdRaceData.dates || kdRaceData.dates.length === 0) {
-                document.getElementById('kd-race-chart').innerHTML = 
+        async function fetchAllChartData() {
+            try {
+                const [playerRes, teamRes] = await Promise.all([
+                    fetch('/api/kd-race'),
+                    fetch('/api/team-race')
+                ]);
+                playerData = await playerRes.json();
+                teamData = await teamRes.json();
+                renderUnifiedChart();
+            } catch (error) {
+                console.error('Failed to fetch chart data:', error);
+                document.getElementById('unified-race-chart').innerHTML = 
+                    '<div class="chart-loading">Failed to load chart data</div>';
+            }
+        }
+        
+        function renderUnifiedChart() {
+            const entity = currentEntity;
+            const metric = currentMetric;
+            
+            // Get the right data source
+            const dataSource = entity === 'players' ? playerData : teamData;
+            
+            if (!dataSource || !dataSource.dates || dataSource.dates.length === 0) {
+                document.getElementById('unified-race-chart').innerHTML = 
                     '<div class="chart-loading">No data available</div>';
                 return;
             }
             
-            const playerCount = parseInt(document.getElementById('kd-player-count').value);
-            const players = kdRaceData.players.slice(0, playerCount);
-            const dates = kdRaceData.dates;
-            const data = kdRaceData.data;
-            const maxDate = kdRaceData.max_date;
-            const tournaments = kdRaceData.tournaments || [];
+            const count = parseInt(document.getElementById('entity-count').value);
+            const entities = entity === 'players' 
+                ? dataSource.players.slice(0, count)
+                : dataSource.teams.slice(0, count);
+            const dates = dataSource.dates;
+            const metricData = metric === 'kd' ? dataSource.data : dataSource.kills_data;
+            const tournaments = dataSource.tournaments || [];
+            const colorsMap = dataSource.team_colors || {};
             
-            // Calculate the cutoff date (60 days before max date)
-            const cutoffDate = maxDate ? addDays(maxDate, -60) : null;
+            // Update entity label
+            document.getElementById('entity-label').textContent = entity;
             
             // Create background shapes for tournaments
             const shapes = tournaments.map(t => ({
@@ -1572,45 +1615,51 @@
                 x1: t.end,
                 y0: 0,
                 y1: 1,
-                fillcolor: t.type === 'champions' ? 'rgba(255, 215, 0, 0.15)' : 'rgba(147, 112, 219, 0.15)',
+                fillcolor: t.type === 'champions' ? 'rgba(255, 215, 0, 0.15)' : 
+                           t.type === 'lockin' ? 'rgba(144, 238, 144, 0.15)' : 
+                           'rgba(147, 112, 219, 0.15)',
                 line: { width: 0 },
                 layer: 'below'
             }));
             
-            // Build traces for each player
-            const traces = players.map((player, idx) => {
-                const firstDate = player.first_date;
-                const lastDate = player.last_date;
+            const entityKey = entity === 'players' ? 'player' : 'team';
+            
+            // Build traces
+            const traces = entities.map((item, idx) => {
+                const firstDate = item.first_date;
+                const lastDate = item.last_date;
                 const endDate = lastDate ? addDays(lastDate, 60) : null;
+                const name = item[entityKey];
+                const color = item.color || colorsMap[name] || getColor(idx);
                 
-                const playerData = dates.map(date => {
-                    // Don't show data before player's first game
-                    if (firstDate && date < firstDate) {
-                        return null;
-                    }
-                    // Don't show data after player has been inactive for 60 days
-                    if (endDate && date > endDate) {
-                        return null;
-                    }
-                    
-                    const dayData = data[date];
-                    return dayData ? (dayData[player.player] || null) : null;
+                const entityData = dates.map(date => {
+                    if (firstDate && date < firstDate) return null;
+                    if (endDate && date > endDate) return null;
+                    const dayData = metricData[date];
+                    return dayData ? (dayData[name] || null) : null;
                 });
                 
-                const isHighlighted = highlightedPlayer === player.player;
+                const isHighlighted = highlightedEntity === name;
+                
+                // Build hover text
+                let hoverText = `<b>${name}</b>`;
+                if (entity === 'players' && item.team) {
+                    hoverText += `<br>Team: ${item.team}`;
+                }
+                hoverText += `<br>Date: %{x}<br>${metric === 'kd' ? 'K-D' : 'Kills'}: %{y:,}<extra></extra>`;
                 
                 return {
                     x: dates,
-                    y: playerData,
+                    y: entityData,
                     type: 'scatter',
                     mode: 'lines',
-                    name: player.player,
+                    name: name,
                     line: {
-                        color: getPlayerColor(idx),
+                        color: color,
                         width: isHighlighted ? 5 : 1.5
                     },
-                    opacity: isHighlighted ? 1 : (highlightedPlayer ? 0.08 : 0.7),
-                    hovertemplate: `<b>${player.player}</b><br>Date: %{x}<br>K-D: %{y:,}<extra></extra>`,
+                    opacity: isHighlighted ? 1 : (highlightedEntity ? 0.08 : 0.7),
+                    hovertemplate: hoverText,
                     connectgaps: false
                 };
             });
@@ -1623,19 +1672,16 @@
                     color: '#b0b0b4'
                 },
                 xaxis: {
-                    title: {
-                        text: 'Date',
-                        font: { size: 12, color: '#888' }
-                    },
+                    title: { text: 'Date', font: { size: 12, color: '#888' } },
                     gridcolor: '#333',
                     linecolor: '#444',
                     tickfont: { size: 10, color: '#888' },
                     rangeslider: { visible: false }
                 },
                 yaxis: {
-                    title: {
-                        text: 'Kills - Deaths',
-                        font: { size: 12, color: '#888' }
+                    title: { 
+                        text: metric === 'kd' ? 'Kills - Deaths' : 'Total Kills', 
+                        font: { size: 12, color: '#888' } 
                     },
                     gridcolor: '#333',
                     linecolor: '#444',
@@ -1658,200 +1704,54 @@
                 doubleClick: 'reset'
             };
             
-            const chartDiv = document.getElementById('kd-race-chart');
-            Plotly.newPlot(chartDiv, traces, layout, config);
-            
-            // Render custom legend
-            renderKDRaceLegend(players);
+            Plotly.newPlot('unified-race-chart', traces, layout, config);
+            renderUnifiedLegend(entities, entityKey, colorsMap);
         }
         
-        function renderKDRaceLegend(players) {
-            const legendDiv = document.getElementById('kd-race-legend');
-            legendDiv.innerHTML = players.map((player, idx) => {
-                const isHighlighted = highlightedPlayer === player.player;
-                const color = getPlayerColor(idx);
+        function renderUnifiedLegend(entities, entityKey, colorsMap) {
+            const legendDiv = document.getElementById('unified-race-legend');
+            legendDiv.innerHTML = entities.map((item, idx) => {
+                const name = item[entityKey];
+                const isHighlighted = highlightedEntity === name;
+                const color = item.color || colorsMap[name] || getColor(idx);
                 return `
                     <div class="legend-item ${isHighlighted ? 'highlighted' : ''}" 
-                         data-player="${player.player}" 
+                         data-name="${name}" 
                          style="--highlight-color: ${color}"
-                         onclick="highlightPlayer('${player.player}')">
+                         onclick="toggleHighlight('${name}')">
                         <span class="legend-color" style="background: ${color}"></span>
-                        <span>${player.player}</span>
+                        <span>${name}</span>
+                        ${entityKey === 'player' && item.team ? `<span class="legend-team">${item.team}</span>` : ''}
                     </div>
                 `;
             }).join('');
         }
         
-        function highlightPlayer(playerName) {
-            // Toggle highlight - if clicking the same player, unhighlight
-            if (highlightedPlayer === playerName) {
-                highlightedPlayer = null;
-            } else {
-                highlightedPlayer = playerName;
-            }
-            
-            renderKDRaceChart();
+        function toggleHighlight(name) {
+            highlightedEntity = highlightedEntity === name ? null : name;
+            renderUnifiedChart();
         }
         
-        // Player count change handler
-        document.getElementById('kd-player-count').addEventListener('change', function() {
-            highlightedPlayer = null;
-            renderKDRaceChart();
+        // Event listeners for selectors
+        document.getElementById('entity-select').addEventListener('change', function() {
+            currentEntity = this.value;
+            highlightedEntity = null;
+            renderUnifiedChart();
         });
         
-        // ==================== TOTAL KILLS CHART ====================
+        document.getElementById('metric-select').addEventListener('change', function() {
+            currentMetric = this.value;
+            highlightedEntity = null;
+            renderUnifiedChart();
+        });
         
-        function renderKillsRaceChart() {
-            if (!kdRaceData || !kdRaceData.dates || kdRaceData.dates.length === 0) {
-                document.getElementById('kills-race-chart').innerHTML = 
-                    '<div class="chart-loading">No data available</div>';
-                return;
-            }
-            
-            const playerCount = parseInt(document.getElementById('kills-player-count').value);
-            const players = kdRaceData.players.slice(0, playerCount);
-            const dates = kdRaceData.dates;
-            const killsData = kdRaceData.kills_data;
-            const tournaments = kdRaceData.tournaments || [];
-            
-            // Create background shapes for tournaments
-            const shapes = tournaments.map(t => ({
-                type: 'rect',
-                xref: 'x',
-                yref: 'paper',
-                x0: t.start,
-                x1: t.end,
-                y0: 0,
-                y1: 1,
-                fillcolor: t.type === 'champions' ? 'rgba(255, 215, 0, 0.15)' : 'rgba(147, 112, 219, 0.15)',
-                line: { width: 0 },
-                layer: 'below'
-            }));
-            
-            // Build traces for each player
-            const traces = players.map((player, idx) => {
-                const firstDate = player.first_date;
-                const lastDate = player.last_date;
-                const endDate = lastDate ? addDays(lastDate, 60) : null;
-                
-                const playerData = dates.map(date => {
-                    // Don't show data before player's first game
-                    if (firstDate && date < firstDate) {
-                        return null;
-                    }
-                    // Don't show data after player has been inactive for 60 days
-                    if (endDate && date > endDate) {
-                        return null;
-                    }
-                    
-                    const dayData = killsData[date];
-                    return dayData ? (dayData[player.player] || null) : null;
-                });
-                
-                const isHighlighted = highlightedKillsPlayer === player.player;
-                
-                return {
-                    x: dates,
-                    y: playerData,
-                    type: 'scatter',
-                    mode: 'lines',
-                    name: player.player,
-                    line: {
-                        color: getPlayerColor(idx),
-                        width: isHighlighted ? 5 : 1.5
-                    },
-                    opacity: isHighlighted ? 1 : (highlightedKillsPlayer ? 0.08 : 0.7),
-                    hovertemplate: `<b>${player.player}</b><br>Date: %{x}<br>Kills: %{y:,}<extra></extra>`,
-                    connectgaps: false
-                };
-            });
-            
-            const layout = {
-                paper_bgcolor: '#1a1a22',
-                plot_bgcolor: '#1a1a22',
-                font: {
-                    family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                    color: '#b0b0b4'
-                },
-                xaxis: {
-                    title: {
-                        text: 'Date',
-                        font: { size: 12, color: '#888' }
-                    },
-                    gridcolor: '#333',
-                    linecolor: '#444',
-                    tickfont: { size: 10, color: '#888' },
-                    rangeslider: { visible: false }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Total Kills',
-                        font: { size: 12, color: '#888' }
-                    },
-                    gridcolor: '#333',
-                    linecolor: '#444',
-                    tickfont: { size: 10, color: '#888' },
-                    zeroline: true,
-                    zerolinecolor: '#444',
-                    zerolinewidth: 1
-                },
-                hovermode: 'closest',
-                showlegend: false,
-                margin: { l: 60, r: 20, t: 20, b: 50 },
-                dragmode: 'pan',
-                shapes: shapes
-            };
-            
-            const config = {
-                responsive: true,
-                displayModeBar: false,
-                scrollZoom: true,
-                doubleClick: 'reset'
-            };
-            
-            const chartDiv = document.getElementById('kills-race-chart');
-            Plotly.newPlot(chartDiv, traces, layout, config);
-            
-            // Render custom legend
-            renderKillsRaceLegend(players);
-        }
-        
-        function renderKillsRaceLegend(players) {
-            const legendDiv = document.getElementById('kills-race-legend');
-            legendDiv.innerHTML = players.map((player, idx) => {
-                const isHighlighted = highlightedKillsPlayer === player.player;
-                const color = getPlayerColor(idx);
-                return `
-                    <div class="legend-item ${isHighlighted ? 'highlighted' : ''}" 
-                         data-player="${player.player}" 
-                         style="--highlight-color: ${color}"
-                         onclick="highlightKillsPlayer('${player.player}')">
-                        <span class="legend-color" style="background: ${color}"></span>
-                        <span>${player.player}</span>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        function highlightKillsPlayer(playerName) {
-            // Toggle highlight - if clicking the same player, unhighlight
-            if (highlightedKillsPlayer === playerName) {
-                highlightedKillsPlayer = null;
-            } else {
-                highlightedKillsPlayer = playerName;
-            }
-            
-            renderKillsRaceChart();
-        }
-        
-        // Player count change handler for kills chart
-        document.getElementById('kills-player-count').addEventListener('change', function() {
-            highlightedKillsPlayer = null;
-            renderKillsRaceChart();
+        document.getElementById('entity-count').addEventListener('change', function() {
+            highlightedEntity = null;
+            renderUnifiedChart();
         });
         
         // Load charts on page load
-        fetchKDRaceData();
+        fetchAllChartData();
     </script>
 </body>
 </html>

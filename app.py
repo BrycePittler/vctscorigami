@@ -546,12 +546,259 @@ def api_data():
 def api_kd_race():
     """API endpoint for K-D race chart data - returns cumulative K-D over time for top players."""
     from collections import defaultdict
+    import re
     
     # Configuration
     track_n_players = 250  # Track top 250 players by maps played
     
-    # Tournament dates (Masters and Champions)
+    # Team name mapping - maps alternate names to canonical name (same as team-race)
+    team_name_mapping = {
+        'VISA KRÜ': 'KRÜ Esports',
+        'VISA KRÜ(KRÜ Esports)': 'KRÜ Esports',
+        'KRÜ Esports': 'KRÜ Esports',
+        'LEVIATÁN': 'Leviatán',
+        'LOUD': 'LOUD',
+        'FURIA': 'FURIA',
+        'FURIA Esports': 'FURIA',
+        'MIBR': 'MIBR',
+        'MIBR Esports': 'MIBR',
+        '100 Thieves': '100 Thieves',
+        '100T': '100 Thieves',
+        'Cloud9': 'Cloud9',
+        'C9': 'Cloud9',
+        'Evil Geniuses': 'Evil Geniuses',
+        'EG': 'Evil Geniuses',
+        'G2 Esports': 'G2 Esports',
+        'G2': 'G2 Esports',
+        'NRG Esports': 'NRG',
+        'NRG': 'NRG',
+        'Sentinels': 'Sentinels',
+        'SEN': 'Sentinels',
+        'FNATIC': 'FNATIC',
+        'FNC': 'FNATIC',
+        'FUT Esports': 'FUT Esports',
+        'FUT': 'FUT Esports',
+        'Guild Esports': 'Guild Esports',
+        'GUILD': 'Guild Esports',
+        'Team Liquid': 'Team Liquid',
+        'TL': 'Team Liquid',
+        'Team Vitality': 'Team Vitality',
+        'Vitality': 'Team Vitality',
+        'NaVi': 'Natus Vincere',
+        'Natus Vincere': 'Natus Vincere',
+        'NAVI': 'Natus Vincere',
+        'Fnatic': 'FNATIC',
+        'Paper Rex': 'Paper Rex',
+        'PRX': 'Paper Rex',
+        'DRX': 'DRX',
+        'DRX (V/S Gaming)': 'DRX',
+        'Dragon Ranger Gaming': 'Dragon Ranger Gaming',
+        'DRG': 'Dragon Ranger Gaming',
+        'ZETA DIVISION': 'ZETA DIVISION',
+        'ZETA': 'ZETA DIVISION',
+        'DetonatioN FocusMe': 'DetonatioN FocusMe',
+        'DFM': 'DetonatioN FocusMe',
+        'T1': 'T1',
+        'Gen.G': 'Gen.G',
+        'GenG': 'Gen.G',
+        'RRQ': 'Rex Regum Qeon',
+        'Rex Regum Qeon': 'Rex Regum Qeon',
+        'Talon Esports': 'TALON',
+        'TALON': 'TALON',
+        'TLN': 'TALON',
+        'Team Secret': 'Team Secret',
+        'TS': 'Team Secret',
+        'Global Esports': 'Global Esports',
+        'GE': 'Global Esports',
+        'BLEED': 'BLEED',
+        'Team BLEED': 'BLEED',
+        'Edward Gaming': 'Edward Gaming',
+        'EDG': 'Edward Gaming',
+        'FunPlus Phoenix': 'FunPlus Phoenix',
+        'FPX': 'FunPlus Phoenix',
+        'Bilibili Gaming': 'Bilibili Gaming',
+        'BG': 'Bilibili Gaming',
+        'Trace Esports': 'Trace Esports',
+        'TE': 'Trace Esports',
+        'JDG Gaming': 'JDG Esports',
+        'JDG Esports': 'JDG Esports',
+        'JDG': 'JDG Esports',
+        'Titan FC': 'Titan Esports Club',
+        'Titan Esports Club': 'Titan Esports Club',
+        'XLG': 'Xi Lai Gaming',
+        'Xi Lai Gaming': 'Xi Lai Gaming',
+        'Wolves Esports': 'Wolves Esports',
+        'WO': 'Wolves Esports',
+        'Nova Esports': 'Nova Esports',
+        'NOVA': 'Nova Esports',
+        'Attack All Around': 'Attack All Around',
+        'AAA': 'Attack All Around',
+        'ONIC G': 'ONIC G',
+        'ONIC': 'ONIC G',
+        'Alter Ego': 'Alter Ego',
+        'AE': 'Alter Ego',
+        'BOOM Esports': 'BOOM Esports',
+        'BOOM': 'BOOM Esports',
+        'Rise': 'Rise',
+        'XSET': 'XSET',
+        'The Guard': 'The Guard',
+        'Guard': 'The Guard',
+        'OpTic Gaming': 'OpTic Gaming',
+        'OpTic': 'OpTic Gaming',
+        'Optic': 'OpTic Gaming',
+        'Version1': 'Version1',
+        'V1': 'Version1',
+        'Gambit Esports': 'Gambit Esports',
+        'Gambit': 'Gambit Esports',
+        'Masters Seoul': 'Masters Seoul',
+        'Acend': 'Acend',
+        'ACE': 'Acend',
+        'SuperMassive Blaze': 'SuperMassive Blaze',
+        'SMB': 'SuperMassive Blaze',
+        'Oxygen Esports': 'Oxygen Esports',
+        'OXG': 'Oxygen Esports',
+        'G store in': 'G store in',
+        'G2 Gozen': 'G2 Gozen',
+        'GUILD EK': 'GUILD EK',
+        'FOKUS': 'FOKUS',
+        'FOKUS ME': 'FOKUS',
+        'Heretics': 'Team Heretics',
+        'Team Heretics': 'Team Heretics',
+        'TH': 'Team Heretics',
+        'KOI': 'KOI',
+        'Giants': 'Giants',
+        'GIANTX': 'Giants',
+        'GiantX': 'Giants',
+        'Giants Gaming': 'Giants',
+        'Vodafone Giants': 'Giants',
+        'BBL Esports': 'BBL Esports',
+        'BBL': 'BBL Esports',
+        'Fire Flux Esports': 'Fire Flux Esports',
+        'Fire Flux': 'Fire Flux Esports',
+        'S2V Esports': 'S2V Esports',
+        'S2V': 'S2V Esports',
+        'Case Esports': 'Case Esports',
+        'CASE': 'Case Esports',
+        'M3 Champions': 'M3 Champions',
+        'M3C': 'M3 Champions',
+        'LDLC OL': 'LDLC OL',
+        'LDLC': 'LDLC OL',
+        'Funplus Phoenix': 'FunPlus Phoenix',
+        'Liquid': 'Team Liquid',
+        'Navi': 'Natus Vincere',
+        'Secret': 'Team Secret',
+        'Talon': 'TALON',
+        'Rex Regum': 'Rex Regum Qeon',
+        'Paper': 'Paper Rex',
+        'DetonatioN': 'DetonatioN FocusMe',
+        'Edward': 'Edward Gaming',
+        'Bilibili': 'Bilibili Gaming',
+        'Wolves': 'Wolves Esports',
+        'TYLOO': 'TYLOO',
+        'TyLoo': 'TYLOO',
+        'Karmine Corp': 'Karmine Corp',
+        'KC': 'Karmine Corp',
+        'Gentle Mates': 'Gentle Mates',
+        'All Gamers': 'All Gamers',
+        'AG': 'All Gamers',
+        'Nongshim RedForce': 'Nongshim RedForce',
+        'NS': 'Nongshim RedForce',
+        '2Game Esports': '2Game Esports',
+        'Apeks': 'Apeks',
+    }
+    
+    # Team brand colors (same as team-race)
+    team_colors = {
+        'Paper Rex': '#FF69B4',           # Pink
+        'FNATIC': '#FF6B00',              # Orange
+        'Edward Gaming': '#FFFFFF',       # White
+        'DRX': '#003366',                 # Dark Blue
+        'Gen.G': '#FFD700',               # Gold
+        'Team Heretics': '#FFFF00',       # Yellow
+        'Sentinels': '#FF0000',           # Red
+        'T1': '#DC143C',                  # Red (slightly darker crimson)
+        'Team Liquid': '#0066CC',         # Blue
+        'G2 Esports': '#FF6B6B',          # Light Red
+        'NRG': '#FF8C00',                 # Orange (darker than FNATIC)
+        'Leviatán': '#87CEEB',            # Light Blue
+        'Bilibili Gaming': '#ADD8E6',     # Light Blue (slightly different)
+        'LOUD': '#00FF00',                # Green
+        'FUT Esports': '#808080',         # Grey
+        'Rex Regum Qeon': '#DAA520',      # Gold (slightly darker than Gen.G)
+        'Natus Vincere': '#FFD700',       # Yellow
+        'Evil Geniuses': '#20B2AA',       # Blueish Green
+        'Team Vitality': '#FFCC00',       # Yellow (slightly different)
+        '100 Thieves': '#B22222',         # Red (firebrick)
+        'KRÜ Esports': '#FF69B4',         # Pink
+        'MIBR': '#4169E1',                # Blue
+        'Cloud9': '#87CEEB',              # Light Blue
+        'Karmine Corp': '#1E90FF',        # Blue
+        'FunPlus Phoenix': '#FF4500',     # Red (orange-red)
+        'Trace Esports': '#FFFFFF',       # White
+        'Dragon Ranger Gaming': '#228B22',# Green (forest)
+        'TALON': '#FF4444',               # Red (bright)
+        'Team Secret': '#FFFFFF',         # White
+        'BBL Esports': '#FFD700',         # Gold
+        'ZETA DIVISION': '#FFFFFF',       # White
+        'Giants': '#9370DB',              # Any - purple
+        'FURIA': '#FF8C00',               # Any - orange
+        'DetonatioN FocusMe': '#0000CD',  # Blue (medium)
+        'TYLOO': '#8B0000',               # Dark Red
+        'Global Esports': '#00CED1',      # Any - dark turquoise
+        'KOI': '#4169E1',                 # Blue
+        'Wolves Esports': '#FFD700',      # Gold
+        'Nova Esports': '#800080',        # Purple
+        'JDG Esports': '#FF0000',         # Red
+        'Titan Esports Club': '#708090',  # Any - slate gray
+        'Xi Lai Gaming': '#32CD32',       # Green
+        'Gentle Mates': '#FFB6C1',        # Pink (light)
+        'All Gamers': '#FF0000',          # Red
+        'Nongshim RedForce': '#CC0000',   # Red
+        'Giants Gaming': '#BA55D3',       # Any - medium orchid
+        'BOOM Esports': '#8B0000',        # Dark Red
+        'BLEED': '#9932CC',               # Any - dark orchid
+        'Apeks': '#FFA500',               # Orange
+        '2Game Esports': '#8B008B',       # Purple (dark magenta)
+        # Additional teams
+        'XSET': '#800080',                # Purple
+        'OpTic Gaming': '#00FF00',        # Green
+        'The Guard': '#FFD700',           # Gold
+        'Version1': '#FF0000',            # Red
+        'Gambit Esports': '#FF0000',      # Red
+        'Acend': '#00FFFF',               # Cyan
+        'G2 Gozen': '#FF69B4',            # Pink
+        'Guild Esports': '#00FF00',       # Green
+        'SuperMassive Blaze': '#FF4500',  # Orange Red
+        'Oxygen Esports': '#00FFFF',      # Cyan
+        'Attack All Around': '#FFD700',   # Gold
+        'ONIC G': '#FFD700',              # Gold
+        'Alter Ego': '#FF0000',           # Red
+        'Rise': '#FFD700',                # Gold
+    }
+    
+    def normalize_team_name(team_name):
+        """Normalize team name by mapping to canonical name and extracting from parentheses."""
+        if not team_name:
+            return team_name
+        
+        # Check if it's in our mapping
+        if team_name in team_name_mapping:
+            return team_name_mapping[team_name]
+        
+        # Try to extract name from parentheses like "VISA KRÜ(KRÜ Esports)"
+        match = re.search(r'\(([^)]+)\)', team_name)
+        if match:
+            extracted = match.group(1)
+            if extracted in team_name_mapping:
+                return team_name_mapping[extracted]
+            return extracted
+        
+        return team_name
+    
+    # Tournament dates (Masters, Champions, LOCK//IN)
     tournaments = [
+        # LOCK//IN event (green background)
+        {'name': 'LOCK//IN 2023', 'start': '2023-02-13', 'end': '2023-03-04', 'type': 'lockin'},
         # Champions events (yellow background)
         {'name': 'Champions 2023', 'start': '2023-08-06', 'end': '2023-08-26', 'type': 'champions'},
         {'name': 'Champions 2024', 'start': '2024-08-01', 'end': '2024-08-25', 'type': 'champions'},
@@ -580,10 +827,10 @@ def api_kd_race():
     top_players_rows = conn.execute(top_players_query, (track_n_players,)).fetchall()
     tracked_players = [row['player'] for row in top_players_rows]
     
-    # Get all matches for tracked players, ordered by date
+    # Get all matches for tracked players, ordered by date (include team)
     placeholders = ','.join('?' * len(tracked_players))
     matches_query = f'''
-        SELECT player, kills, deaths, match_date
+        SELECT player, kills, deaths, match_date, team
         FROM matches 
         WHERE player IN ({placeholders})
         ORDER BY match_date
@@ -610,6 +857,8 @@ def api_kd_race():
     # Track first and last appearance for each player
     player_first_date = {}
     player_last_date = {}
+    # Track most recent team for each player (by date)
+    player_recent_team = {}
     
     for row in rows:
         date = row['match_date']
@@ -621,9 +870,16 @@ def api_kd_race():
         # Track first appearance
         if player not in player_first_date or date < player_first_date[player]:
             player_first_date[player] = date
-        # Track last appearance
+        # Track last appearance and most recent team
         if player not in player_last_date or date > player_last_date[player]:
             player_last_date[player] = date
+            # Update most recent team when we see a newer date
+            if row['team']:
+                player_recent_team[player] = normalize_team_name(row['team'])
+        elif player in player_last_date and date == player_last_date[player]:
+            # Same date, still update team if available
+            if row['team']:
+                player_recent_team[player] = normalize_team_name(row['team'])
     
     all_dates = sorted(all_dates_set)
     
@@ -651,17 +907,21 @@ def api_kd_race():
             for p in tracked_players
         }
     
-    # Build response with player info including first/last dates
+    # Build response with player info including first/last dates and team color
     players_info = []
     for row in top_players_rows:
         kd = (row['total_kills'] or 0) - (row['total_deaths'] or 0)
+        player_team = player_recent_team.get(row['player'])
+        player_color = team_colors.get(player_team) if player_team else None
         players_info.append({
             'player': row['player'],
             'maps_played': row['maps_played'],
             'kd': kd,
             'total_kills': row['total_kills'] or 0,
             'first_date': player_first_date.get(row['player']),
-            'last_date': player_last_date.get(row['player'])
+            'last_date': player_last_date.get(row['player']),
+            'team': player_team,
+            'color': player_color
         })
     
     return jsonify({
@@ -671,6 +931,423 @@ def api_kd_race():
         'kills_data': kills_data,
         'max_date': all_dates[-1] if all_dates else None,
         'tournaments': tournaments
+    })
+
+
+@app.route('/api/team-race')
+def api_team_race():
+    """API endpoint for team K-D race chart data - returns cumulative K-D over time for top teams."""
+    from collections import defaultdict
+    import re
+    
+    # Configuration
+    min_maps_played = 4  # Minimum maps played to be included (filters out teams with 3 or less)
+    
+    # Team name mapping - maps alternate names to canonical name
+    team_name_mapping = {
+        'VISA KRÜ': 'KRÜ Esports',
+        'VISA KRÜ(KRÜ Esports)': 'KRÜ Esports',
+        'KRÜ Esports': 'KRÜ Esports',
+        'LEVIATÁN': 'Leviatán',
+        'LOUD': 'LOUD',
+        'FURIA': 'FURIA',
+        'FURIA Esports': 'FURIA',
+        'MIBR': 'MIBR',
+        'MIBR Esports': 'MIBR',
+        '100 Thieves': '100 Thieves',
+        '100T': '100 Thieves',
+        'Cloud9': 'Cloud9',
+        'C9': 'Cloud9',
+        'Evil Geniuses': 'Evil Geniuses',
+        'EG': 'Evil Geniuses',
+        'G2 Esports': 'G2 Esports',
+        'G2': 'G2 Esports',
+        'NRG Esports': 'NRG',
+        'NRG': 'NRG',
+        'Sentinels': 'Sentinels',
+        'SEN': 'Sentinels',
+        'FNATIC': 'FNATIC',
+        'FNC': 'FNATIC',
+        'FUT Esports': 'FUT Esports',
+        'FUT': 'FUT Esports',
+        'Guild Esports': 'Guild Esports',
+        'GUILD': 'Guild Esports',
+        'Team Liquid': 'Team Liquid',
+        'TL': 'Team Liquid',
+        'Team Vitality': 'Team Vitality',
+        'Vitality': 'Team Vitality',
+        'NaVi': 'Natus Vincere',
+        'Natus Vincere': 'Natus Vincere',
+        'NAVI': 'Natus Vincere',
+        'Fnatic': 'FNATIC',
+        'Paper Rex': 'Paper Rex',
+        'PRX': 'Paper Rex',
+        'DRX': 'DRX',
+        'DRX (V/S Gaming)': 'DRX',
+        'Dragon Ranger Gaming': 'Dragon Ranger Gaming',
+        'DRG': 'Dragon Ranger Gaming',
+        'ZETA DIVISION': 'ZETA DIVISION',
+        'ZETA': 'ZETA DIVISION',
+        'DetonatioN FocusMe': 'DetonatioN FocusMe',
+        'DFM': 'DetonatioN FocusMe',
+        'T1': 'T1',
+        'Gen.G': 'Gen.G',
+        'GenG': 'Gen.G',
+        'RRQ': 'Rex Regum Qeon',
+        'Rex Regum Qeon': 'Rex Regum Qeon',
+        'Talon Esports': 'TALON',
+        'TALON': 'TALON',
+        'TLN': 'TALON',
+        'Team Secret': 'Team Secret',
+        'TS': 'Team Secret',
+        'Global Esports': 'Global Esports',
+        'GE': 'Global Esports',
+        'BLEED': 'BLEED',
+        'Team BLEED': 'BLEED',
+        'Edward Gaming': 'Edward Gaming',
+        'EDG': 'Edward Gaming',
+        'FunPlus Phoenix': 'FunPlus Phoenix',
+        'FPX': 'FunPlus Phoenix',
+        'Bilibili Gaming': 'Bilibili Gaming',
+        'BG': 'Bilibili Gaming',
+        'Trace Esports': 'Trace Esports',
+        'TE': 'Trace Esports',
+        'JDG Gaming': 'JDG Esports',
+        'JDG Esports': 'JDG Esports',
+        'JDG': 'JDG Esports',
+        'Titan FC': 'Titan Esports Club',
+        'Titan Esports Club': 'Titan Esports Club',
+        'XLG': 'Xi Lai Gaming',
+        'Xi Lai Gaming': 'Xi Lai Gaming',
+        'Wolves Esports': 'Wolves Esports',
+        'WO': 'Wolves Esports',
+        'Nova Esports': 'Nova Esports',
+        'NOVA': 'Nova Esports',
+        'Attack All Around': 'Attack All Around',
+        'AAA': 'Attack All Around',
+        'ONIC G': 'ONIC G',
+        'ONIC': 'ONIC G',
+        'Alter Ego': 'Alter Ego',
+        'AE': 'Alter Ego',
+        'BOOM Esports': 'BOOM Esports',
+        'BOOM': 'BOOM Esports',
+        'Rise': 'Rise',
+        'XSET': 'XSET',
+        'The Guard': 'The Guard',
+        'Guard': 'The Guard',
+        'OpTic Gaming': 'OpTic Gaming',
+        'OpTic': 'OpTic Gaming',
+        'Optic': 'OpTic Gaming',
+        'Version1': 'Version1',
+        'V1': 'Version1',
+        'Gambit Esports': 'Gambit Esports',
+        'Gambit': 'Gambit Esports',
+        'Masters Seoul': 'Masters Seoul',
+        'Acend': 'Acend',
+        'ACE': 'Acend',
+        'SuperMassive Blaze': 'SuperMassive Blaze',
+        'SMB': 'SuperMassive Blaze',
+        'Oxygen Esports': 'Oxygen Esports',
+        'OXG': 'Oxygen Esports',
+        'G store in': 'G store in',
+        'G2 Gozen': 'G2 Gozen',
+        'GUILD EK': 'GUILD EK',
+        'FOKUS': 'FOKUS',
+        'FOKUS ME': 'FOKUS',
+        'Heretics': 'Team Heretics',
+        'Team Heretics': 'Team Heretics',
+        'TH': 'Team Heretics',
+        'KOI': 'KOI',
+        'Giants': 'Giants',
+        'GIANTX': 'Giants',
+        'GiantX': 'Giants',
+        'Giants Gaming': 'Giants',
+        'Vodafone Giants': 'Giants',
+        'BBL Esports': 'BBL Esports',
+        'BBL': 'BBL Esports',
+        'Fire Flux Esports': 'Fire Flux Esports',
+        'Fire Flux': 'Fire Flux Esports',
+        'S2V Esports': 'S2V Esports',
+        'S2V': 'S2V Esports',
+        'Case Esports': 'Case Esports',
+        'CASE': 'Case Esports',
+        'M3 Champions': 'M3 Champions',
+        'M3C': 'M3 Champions',
+        'LDLC OL': 'LDLC OL',
+        'LDLC': 'LDLC OL',
+        'Funplus Phoenix': 'FunPlus Phoenix',
+        'Liquid': 'Team Liquid',
+        'Vitality': 'Team Vitality',
+        'Navi': 'Natus Vincere',
+        'Secret': 'Team Secret',
+        'Talon': 'TALON',
+        'Rex Regum': 'Rex Regum Qeon',
+        'Paper': 'Paper Rex',
+        'DetonatioN': 'DetonatioN FocusMe',
+        'Edward': 'Edward Gaming',
+        'Bilibili': 'Bilibili Gaming',
+        'Wolves': 'Wolves Esports',
+        'TYLOO': 'TYLOO',
+        'TyLoo': 'TYLOO',
+        'Karmine Corp': 'Karmine Corp',
+        'KC': 'Karmine Corp',
+        'Gentle Mates': 'Gentle Mates',
+        'All Gamers': 'All Gamers',
+        'AG': 'All Gamers',
+        'Nongshim RedForce': 'Nongshim RedForce',
+        'NS': 'Nongshim RedForce',
+        '2Game Esports': '2Game Esports',
+        'Apeks': 'Apeks',
+    }
+    
+    # Team brand colors with variations
+    team_colors = {
+        'Paper Rex': '#FF69B4',           # Pink
+        'FNATIC': '#FF6B00',              # Orange
+        'Edward Gaming': '#FFFFFF',       # White
+        'DRX': '#003366',                 # Dark Blue
+        'Gen.G': '#FFD700',               # Gold
+        'Team Heretics': '#FFFF00',       # Yellow
+        'Sentinels': '#FF0000',           # Red
+        'T1': '#DC143C',                  # Red (slightly darker crimson)
+        'Team Liquid': '#0066CC',         # Blue
+        'G2 Esports': '#FF6B6B',          # Light Red
+        'NRG': '#FF8C00',                 # Orange (darker than FNATIC)
+        'Leviatán': '#87CEEB',            # Light Blue
+        'Bilibili Gaming': '#ADD8E6',     # Light Blue (slightly different)
+        'LOUD': '#00FF00',                # Green
+        'FUT Esports': '#808080',         # Grey
+        'Rex Regum Qeon': '#DAA520',      # Gold (slightly darker than Gen.G)
+        'Natus Vincere': '#FFD700',       # Yellow
+        'Evil Geniuses': '#20B2AA',       # Blueish Green
+        'Team Vitality': '#FFCC00',       # Yellow (slightly different)
+        '100 Thieves': '#B22222',         # Red (firebrick)
+        'KRÜ Esports': '#FF69B4',         # Pink
+        'MIBR': '#4169E1',                # Blue
+        'Cloud9': '#87CEEB',              # Light Blue
+        'Karmine Corp': '#1E90FF',        # Blue
+        'FunPlus Phoenix': '#FF4500',     # Red (orange-red)
+        'Trace Esports': '#FFFFFF',       # White
+        'Dragon Ranger Gaming': '#228B22',# Green (forest)
+        'TALON': '#FF4444',               # Red (bright)
+        'Team Secret': '#FFFFFF',         # White
+        'BBL Esports': '#FFD700',         # Gold
+        'ZETA DIVISION': '#FFFFFF',       # White
+        'Giants': '#9370DB',              # Any - purple
+        'FURIA': '#FF8C00',               # Any - orange
+        'DetonatioN FocusMe': '#0000CD',  # Blue (medium)
+        'TYLOO': '#8B0000',               # Dark Red
+        'Global Esports': '#00CED1',      # Any - dark turquoise
+        'KOI': '#4169E1',                 # Blue
+        'Wolves Esports': '#FFD700',      # Gold
+        'Nova Esports': '#800080',        # Purple
+        'JDG Esports': '#FF0000',         # Red
+        'Titan Esports Club': '#708090',  # Any - slate gray
+        'Xi Lai Gaming': '#32CD32',       # Green
+        'Gentle Mates': '#FFB6C1',        # Pink (light)
+        'All Gamers': '#FF0000',          # Red
+        'Nongshim RedForce': '#CC0000',   # Red
+        'Giants Gaming': '#BA55D3',       # Any - medium orchid
+        'BOOM Esports': '#8B0000',        # Dark Red
+        'BLEED': '#9932CC',               # Any - dark orchid
+        'Apeks': '#FFA500',               # Orange
+        '2Game Esports': '#8B008B',       # Purple (dark magenta)
+        # Additional teams
+        'XSET': '#800080',                # Purple
+        'OpTic Gaming': '#00FF00',        # Green
+        'The Guard': '#FFD700',           # Gold
+        'Version1': '#FF0000',            # Red
+        'Gambit Esports': '#FF0000',      # Red
+        'Acend': '#00FFFF',               # Cyan
+        'G2 Gozen': '#FF69B4',            # Pink
+        'Guild Esports': '#00FF00',       # Green
+        'SuperMassive Blaze': '#FF4500',  # Orange Red
+        'Oxygen Esports': '#00FFFF',      # Cyan
+        'Attack All Around': '#FFD700',   # Gold
+        'ONIC G': '#FFD700',              # Gold
+        'Alter Ego': '#FF0000',           # Red
+        'Rise': '#FFD700',                # Gold
+    }
+    
+    # Tournament dates (Masters, Champions, LOCK//IN)
+    tournaments = [
+        # LOCK//IN event (green background)
+        {'name': 'LOCK//IN 2023', 'start': '2023-02-13', 'end': '2023-03-04', 'type': 'lockin'},
+        # Champions events (yellow background)
+        {'name': 'Champions 2023', 'start': '2023-08-06', 'end': '2023-08-26', 'type': 'champions'},
+        {'name': 'Champions 2024', 'start': '2024-08-01', 'end': '2024-08-25', 'type': 'champions'},
+        {'name': 'Champions 2025', 'start': '2025-09-12', 'end': '2025-10-05', 'type': 'champions'},
+        {'name': 'Champions 2026', 'start': '2026-09-23', 'end': '2026-10-18', 'type': 'champions'},
+        # Masters events (purple background)
+        {'name': 'Masters Tokyo 2023', 'start': '2023-06-10', 'end': '2023-06-25', 'type': 'masters'},
+        {'name': 'Masters Madrid 2024', 'start': '2024-03-14', 'end': '2024-03-24', 'type': 'masters'},
+        {'name': 'Masters Shanghai 2024', 'start': '2024-05-23', 'end': '2024-06-09', 'type': 'masters'},
+        {'name': 'Masters Bangkok 2025', 'start': '2025-02-20', 'end': '2025-03-02', 'type': 'masters'},
+        {'name': 'Masters Toronto 2025', 'start': '2025-06-07', 'end': '2025-06-22', 'type': 'masters'},
+        {'name': 'Masters Santiago 2026', 'start': '2026-02-28', 'end': '2026-03-15', 'type': 'masters'},
+        {'name': 'Masters London 2026', 'start': '2026-06-05', 'end': '2026-06-21', 'type': 'masters'},
+    ]
+    
+    def normalize_team_name(team_name):
+        """Normalize team name by mapping to canonical name and extracting from parentheses."""
+        if not team_name:
+            return team_name
+        
+        # Check if it's in our mapping
+        if team_name in team_name_mapping:
+            return team_name_mapping[team_name]
+        
+        # Try to extract name from parentheses like "VISA KRÜ(KRÜ Esports)"
+        match = re.search(r'\(([^)]+)\)', team_name)
+        if match:
+            extracted = match.group(1)
+            if extracted in team_name_mapping:
+                return team_name_mapping[extracted]
+            return extracted
+        
+        return team_name
+    
+    conn = database.get_db_connection()
+    
+    # Get all matches with team info
+    all_matches_query = '''
+        SELECT team, kills, deaths, match_date
+        FROM matches 
+        WHERE team IS NOT NULL AND team != ''
+        ORDER BY match_date
+    '''
+    rows = conn.execute(all_matches_query).fetchall()
+    conn.close()
+    
+    if not rows:
+        return jsonify({
+            'dates': [],
+            'teams': [],
+            'data': {},
+            'kills_data': {},
+            'tournaments': tournaments,
+            'team_colors': team_colors
+        })
+    
+    # Normalize team names and aggregate
+    normalized_matches = []
+    for row in rows:
+        normalized_team = normalize_team_name(row['team'])
+        normalized_matches.append({
+            'team': normalized_team,
+            'kills': row['kills'],
+            'deaths': row['deaths'],
+            'match_date': row['match_date']
+        })
+    
+    # Count maps per normalized team
+    team_maps = defaultdict(int)
+    for match in normalized_matches:
+        team_maps[match['team']] += 1
+    
+    # Showmatch/exhibition teams to exclude (these are not real competitive teams)
+    showmatch_teams = {
+        'Team tarik',
+        'Team Alpha',
+        'Team EMEA',
+        'Team SuperBusS',
+        'Team FRTTT',
+        'Team Toast',
+        'Glory Once Again',
+        'Team Omega',
+        'Team France',
+        'Team World',
+        'Team Bunny',
+    }
+    
+    # Filter teams with minimum maps played AND not in showmatch teams
+    valid_teams = {
+        team for team, count in team_maps.items() 
+        if count >= min_maps_played and team not in showmatch_teams
+    }
+    
+    # Process into date-based cumulative data
+    daily_stats = defaultdict(lambda: defaultdict(lambda: {'kills': 0, 'deaths': 0}))
+    all_dates_set = set()
+    
+    # Track first and last appearance for each team
+    team_first_date = {}
+    team_last_date = {}
+    
+    for match in normalized_matches:
+        team = match['team']
+        if team not in valid_teams:
+            continue
+            
+        date = match['match_date']
+        daily_stats[date][team]['kills'] += match['kills']
+        daily_stats[date][team]['deaths'] += match['deaths']
+        all_dates_set.add(date)
+        
+        # Track first appearance
+        if team not in team_first_date or date < team_first_date[team]:
+            team_first_date[team] = date
+        # Track last appearance
+        if team not in team_last_date or date > team_last_date[team]:
+            team_last_date[team] = date
+    
+    all_dates = sorted(all_dates_set)
+    
+    if not all_dates:
+        return jsonify({
+            'dates': [],
+            'teams': [],
+            'data': {},
+            'kills_data': {},
+            'tournaments': tournaments,
+            'team_colors': team_colors
+        })
+    
+    # Create cumulative data (kills - deaths) and (total kills)
+    team_kills = defaultdict(int)
+    team_deaths = defaultdict(int)
+    date_data = {}
+    kills_data = {}
+    
+    for date in all_dates:
+        # Update cumulative stats for teams who played on this date
+        for team in daily_stats[date]:
+            team_kills[team] += daily_stats[date][team]['kills']
+            team_deaths[team] += daily_stats[date][team]['deaths']
+        
+        # Store KD difference for each valid team
+        date_data[date] = {
+            t: team_kills.get(t, 0) - team_deaths.get(t, 0) 
+            for t in valid_teams
+        }
+        
+        # Store total kills for each valid team
+        kills_data[date] = {
+            t: team_kills.get(t, 0)
+            for t in valid_teams
+        }
+    
+    # Build response with team info sorted by maps played
+    teams_info = []
+    for team in sorted(valid_teams, key=lambda t: team_maps[t], reverse=True):
+        teams_info.append({
+            'team': team,
+            'maps_played': team_maps[team],
+            'kd': team_kills.get(team, 0) - team_deaths.get(team, 0),
+            'total_kills': team_kills.get(team, 0),
+            'first_date': team_first_date.get(team),
+            'last_date': team_last_date.get(team),
+            'color': team_colors.get(team)
+        })
+    
+    return jsonify({
+        'dates': all_dates,
+        'teams': teams_info,
+        'data': date_data,
+        'kills_data': kills_data,
+        'max_date': all_dates[-1] if all_dates else None,
+        'tournaments': tournaments,
+        'team_colors': team_colors
     })
 
 
