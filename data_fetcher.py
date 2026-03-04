@@ -55,18 +55,29 @@ def get_match_page_urls(tournament_id: int) -> List[str]:
 
 
 def is_match_live(html_content: str) -> bool:
-    """Check if a match is currently LIVE."""
+    """Check if a match is currently LIVE.
+    
+    Only checks the match header's note element for the 'mod-live' class.
+    Previously checked for ANY element with 'mod-live' class, which caused
+    false positives when navigation elements or sidebars contained live match
+    indicators for OTHER matches.
+    """
     soup = BeautifulSoup(html_content, 'html.parser')
     
-    # Check for LIVE indicator with mod-live class
+    # Check for LIVE indicator specifically in the match header vs note
+    # This is the element that shows "LIVE" for ongoing matches
     live_note = soup.find('span', class_='match-header-vs-note')
     if live_note and 'mod-live' in live_note.get('class', []):
         return True
     
-    # Also check mod-live on any element
-    mod_live = soup.find(class_='mod-live')
-    if mod_live:
-        return True
+    # Also check if the match-header-vs section itself has mod-live
+    # (some VLR pages structure it this way)
+    vs_section = soup.find('div', class_='match-header-vs')
+    if vs_section and vs_section.find(class_='mod-live'):
+        # But only if it's specifically in the note area, not navigation
+        note_in_vs = vs_section.find('span', class_='match-header-vs-note')
+        if note_in_vs and 'mod-live' in note_in_vs.get('class', []):
+            return True
     
     return False
 

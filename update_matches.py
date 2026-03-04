@@ -27,12 +27,7 @@ logger = logging.getLogger(__name__)
 # Update this when new tournaments start
 ACTIVE_TOURNAMENT_IDS = [
     # 2026 Active Tournaments - Update as tournaments start/end
-    2682,  # VCT 2026: Americas Kickoff
-    2683,  # VCT 2026: Pacific Kickoff  
-    2684,  # VCT 2026: EMEA Kickoff
-    2685,  # VCT 2026: China Kickoff
     2760,  # Valorant Masters Santiago 2026
-    2775,  # VCT 2026: Pacific Stage 1
 ]
 
 # Recent completed tournaments to check (in case of late data updates)
