@@ -6,6 +6,8 @@ import os
 import logging
 import tweepy
 from typing import List, Dict, Optional
+
+# Use the existing database module - IMPORTANT for consistency!
 import database
 
 # Configure logging
@@ -95,24 +97,24 @@ class ScorigamiTwitterBot:
             match_context = ""
         
         # Build tweet
-        parts = [f"Scorigami!"]
+        parts = [f"🎯 NEW SCORIGAMI!"]
         parts.append(f"{player} went {kd_str} on {map_name}")
         
         if match_context:
-            parts.append(f"({match_context} via: vctscorigami.com)")
+            parts.append(f"({match_context})")
         
         if result:
             emoji = "✅" if result == "Win" else "❌"
             parts.append(f"{emoji} {result}")
         
-        parts.append("#vct #valorant #vctscorigami")
+        parts.append("#VCT #Valorant #Scorigami")
         
         tweet = " ".join(parts)
         
         # Ensure tweet is under 280 characters
         if len(tweet) > 280:
             # Shorten by removing some details
-            tweet = f"Scorigami!\n{player}: {kd_str} on {map_name}\n#vct #valorant #vctscorigami"
+            tweet = f"🎯 NEW SCORIGAMI!\n{player}: {kd_str} on {map_name}\n#VCT #Valorant #Scorigami"
         
         return tweet
     
@@ -256,29 +258,29 @@ def get_scorigami_details(kills: int, deaths: int) -> Optional[Dict]:
 def get_posted_scorigamis() -> set:
     """
     Get scorigamis that have already been posted to Twitter.
-    Uses a simple tracking table.
+    Uses the tracking table created by update_matches.py.
     
     Returns:
         Set of tuples (kills, deaths) that have been posted
     """
     conn = database.get_db_connection()
     
-    # Create tracking table if it doesn't exist
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS posted_scorigamis (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            kills INTEGER NOT NULL,
-            deaths INTEGER NOT NULL,
-            tweet_id TEXT,
-            posted_at TEXT DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE(kills, deaths)
-        )
+    # Check if tracking table exists
+    cursor = conn.execute('''
+        SELECT name FROM sqlite_master 
+        WHERE type='table' AND name='posted_scorigamis'
     ''')
-    conn.commit()
+    
+    if not cursor.fetchone():
+        logger.warning("posted_scorigamis table doesn't exist yet!")
+        conn.close()
+        return set()
     
     cursor = conn.execute('SELECT kills, deaths FROM posted_scorigamis')
     posted = {(row['kills'], row['deaths']) for row in cursor.fetchall()}
     conn.close()
+    
+    logger.info(f"Found {len(posted)} already-posted scorigamis in tracking table")
     return posted
 
 
@@ -315,6 +317,9 @@ def check_and_post_new_scorigamis(dry_run: bool = False) -> List[Dict]:
     # Get current scorigamis and already posted ones
     current_scorigamis = get_existing_scorigamis()
     posted_scorigamis = get_posted_scorigamis()
+    
+    logger.info(f"Total current scorigamis: {len(current_scorigamis)}")
+    logger.info(f"Already posted scorigamis: {len(posted_scorigamis)}")
     
     # Find new scorigamis (current - posted)
     new_scorigamis = current_scorigamis - posted_scorigamis

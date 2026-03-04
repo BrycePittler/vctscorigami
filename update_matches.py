@@ -41,6 +41,50 @@ def get_active_tournament_ids():
     return list(set(ids))
 
 
+def init_twitter_tracking():
+    """
+    Initialize the Twitter bot tracking table.
+    Marks all existing scorigamis as 'already posted' so they won't be tweeted.
+    This prevents spamming 100+ tweets when starting the bot.
+    """
+    conn = database.get_db_connection()
+    
+    # Create the tracking table if it doesn't exist
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS posted_scorigamis (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            kills INTEGER NOT NULL,
+            deaths INTEGER NOT NULL,
+            tweet_id TEXT,
+            posted_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(kills, deaths)
+        )
+    ''')
+    
+    # Check if we've already initialized (table has records)
+    count = conn.execute('SELECT COUNT(*) FROM posted_scorigamis').fetchone()[0]
+    
+    if count == 0:
+        # Mark all existing scorigamis as already posted
+        # (K/D combos that have occurred exactly once)
+        conn.execute('''
+            INSERT OR IGNORE INTO posted_scorigamis (kills, deaths, tweet_id)
+            SELECT kills, deaths, NULL
+            FROM matches
+            GROUP BY kills, deaths
+            HAVING COUNT(*) = 1
+        ''')
+        
+        # Get how many were marked
+        new_count = conn.execute('SELECT COUNT(*) FROM posted_scorigamis').fetchone()[0]
+        logger.info(f"Twitter tracking initialized: {new_count} existing scorigamis marked as posted")
+    else:
+        logger.info(f"Twitter tracking already initialized: {count} scorigamis tracked")
+    
+    conn.commit()
+    conn.close()
+
+
 def update_matches(tournament_ids=None, delay=0.5):
     """Fetch new matches for specified tournaments."""
     logger.info("="*60)
@@ -48,6 +92,9 @@ def update_matches(tournament_ids=None, delay=0.5):
     logger.info("="*60)
     
     database.init_db()
+    
+    # Initialize Twitter tracking table (marks existing scorigamis as posted)
+    init_twitter_tracking()
     
     stats_before = database.get_database_stats()
     logger.info(f"Database before: {stats_before['total_matches']} matches")
